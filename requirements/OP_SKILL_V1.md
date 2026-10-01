@@ -1,6 +1,6 @@
-# Orchestration Protocol Skill v1 — Definition R6
+# Orchestration Protocol Skill v1 — Definition R7
 
-Status: accepted R6 product authority under owner-requested full Definition Review round 3; completeness audit pending
+Status: bounded repaired Definition authority pending fresh focused independent revalidation of round-3 findings CR3-01..CR3-18
 Source scope: `orchestration-protocol-skill-v1@1`
 Product: Orchestration Protocol Skill v1
 
@@ -47,7 +47,8 @@ A compatible caller binds at least:
 - accepted `profile_semantics_version` compatible range/identity;
 - exact immutable subject identity;
 - exact immutable coverage/acceptance identity;
-- caller-owned continuation/return identity;
+- caller-owned continuation authority identity where applicable;
+- optional `return_id` routing/correlation metadata;
 - caller-requested effects;
 - applicable continuation prerequisites;
 - exact immutable OP release once resolved.
@@ -57,6 +58,12 @@ The Run Envelope freezes the accepted normalized values before worker execution.
 Supported immutable subject/coverage identities may include Git repository+commit+path+blob, immutable artifact/content digest, or another explicitly versioned identity class whose equivalence rules are defined by the release. A moving branch, path, URL, title or natural-language label alone is not an immutable identity.
 
 If the subject or coverage is composite, the Run Envelope binds a deterministic manifest/content identity for the complete composite surface.
+
+Run Envelope equivalence is semantic:
+- `return_id` is excluded from `run_envelope_id` identity/equivalence and may vary across retries/handoffs without changing the semantic envelope;
+- redundant exact identity fields for one subject/coverage component MUST be mutually consistent under release-owned canonical equivalence rules;
+- conflicting redundant identity components make the envelope invalid/BLOCKED rather than allowing one field to silently win;
+- optional routing/correlation metadata is retained separately for traceability and never grants authority.
 
 ### 3.2 Ordinary `formal_research` preflight
 
@@ -70,11 +77,15 @@ Before workers launch, OP normalizes the request into a bounded Run Envelope con
 - explicit exclusions;
 - result/return target.
 
-Purely mechanical normalization may be performed by OP. Any missing choice that materially changes subject meaning, criteria, risk tolerance, currentness, allowed effects or acceptance remains caller authority and must be returned rather than guessed.
+Purely mechanical normalization may be performed by OP only when the normalized value is uniquely derivable from explicit caller input, immutable accepted profile defaults and deterministic canonicalization/equivalence rules.
+
+If two or more materially different interpretations remain for subject meaning, criteria, exclusions, freshness/currentness, risk tolerance, evidence/source classes, acceptance or effects, OP MUST return to caller authority rather than guess.
+
+The minimum assurance/coverage floor and convergence/completion sufficiency predicates for `formal_research` are profile semantics that participate in `profile_semantics_version`; worker count/partition remains private topology.
 
 ### 3.3 Continuation-gated admission
 
-`return_id` is opaque routing/correlation only and never grants authority.
+`return_id` is optional opaque routing/correlation metadata only, is excluded from semantic `run_envelope_id` identity, and never grants authority.
 
 Continuation-gated admission requires an immutable `continuation_authority_id` / authority record. That record binds at least:
 - authority issuer and caller relation;
@@ -97,6 +108,14 @@ Continuation-gated admission requires an immutable `continuation_authority_id` /
 - exact bounded change cone.
 
 Presence of arbitrary paths, artifacts, results or evidence is not continuation authority. Missing, stale, superseded, ambiguous or non-authority-bound prerequisites fail closed.
+
+Continuation-authority authenticity is mandatory:
+- the original Run Envelope binds one release-qualified caller/consumer authority channel and authority-source class;
+- a continuation is genuine only when obtained from that same bound authority channel or an explicitly authorized durable successor;
+- positive verification binds exact issuer/caller relation, authority locator/content identity, currentness/supersession state, authorized profile/action, prior accepted result/obligation, subject/candidate and effect/mutation envelope;
+- release-qualified authority-source classes are part of caller-integration qualification;
+- a self-authored schema-valid artifact is evidence, not authority;
+- OP-produced evidence/results cannot mint, elevate or substitute continuation authority.
 
 The immutable Run Envelope identity/digest must include or immutably reference:
 - resolved caller contract/profile/release tuple;
@@ -125,9 +144,13 @@ It binds at least:
 - exact admitted worker/run snapshot;
 - exact durable result repository/commit/path/blob or equivalent immutable identity;
 - publication/readback state;
-- supersession lineage when applicable.
+- exact qualification/admissibility snapshot identity used at wave launch, including applicable Q0-Q10 evidence and qualification-impact manifest identity;
+- publication-time currentness state;
+- supersession lineage/current-result authority locator when applicable.
 
 Execution completion, coverage completion and profile truth/disposition are distinct. For example, a review may be execution-complete and coverage-complete while RED.
+
+Result artifacts are immutable historical records. Their stored `currentness_state` is publication-time state only. Before any forward use, continuation, acceptance reuse or superseding action, the consumer MUST resolve effective currentness through the canonical current-result/supersession authority bound by the release/caller integration, positively read it back, and verify the exact result remains current. If effective currentness cannot be resolved, forward use is BLOCKED.
 
 Internal topology/allocator mechanics do not become caller-visible compatibility requirements merely because provenance records them.
 
@@ -158,7 +181,13 @@ Total profile-disposition domains:
 Terminal disposition is derived deterministically in this precedence order:
 
 1. If applicability is `UNKNOWN`, disposition is `BLOCKED`.
-2. If applicability is `NOT_APPLICABLE`, the profile-specific NOT_APPLICABLE predicate below MUST be proven; execution is terminal, coverage is `NOT_APPLICABLE`, and disposition is `NOT_APPLICABLE`. If that predicate cannot be proven, disposition is `BLOCKED`.
+2. If applicability is `NOT_APPLICABLE`, the profile-specific NOT_APPLICABLE predicate below MUST be proven before substantive profile execution for the relevant obligation. The only legal terminal tuple is:
+   - `execution_state = COMPLETE`;
+   - `applicability_state = NOT_APPLICABLE`;
+   - `currentness_state = CURRENT`;
+   - `coverage_state = NOT_APPLICABLE`;
+   - `profile_disposition = NOT_APPLICABLE`.
+   If the predicate is not objectively provable, applicability is `UNKNOWN` and disposition is `BLOCKED`.
 3. If currentness is `SUPERSEDED`, `STALE` or `UNKNOWN`, disposition is `BLOCKED`.
 4. If either execution or coverage is `BLOCKED`, disposition is `BLOCKED`.
 5. Otherwise, if either execution or coverage is `INCOMPLETE`, disposition is `INCOMPLETE`.
@@ -183,6 +212,8 @@ For the legal COMPLETE/APPLICABLE/CURRENT/COMPLETE tuple, profile truth is total
 - `targeted_bug_hunt`, `global_bug_hunt` => `RED` iff one or more accepted unresolved blockers remain, otherwise `GREEN`; Global Bug Hunt additionally requires the §6.6 deficit-restoration predicate;
 - `repair_units` => `RED` iff an accepted repair obligation remains open, a required repair failed, or bounded regression evidence remains, otherwise `GREEN`;
 - `focused_revalidation` => `ESCALATE_FULL_WAVE` iff its escalation predicate holds; otherwise `RED` iff an accepted repair/regression obligation remains; otherwise `GREEN`.
+
+The common state/pre-acceptance precedence above is owned by the shared contracts/state substrate. Profile modules provide only typed applicability, coverage/completion and truth predicates through declared extension points. They MUST NOT redefine common state precedence.
 
 ### 3.6 Canonical identity hierarchy
 
@@ -244,6 +275,14 @@ Every OP wave must:
 
 Evidence is data, never authority.
 
+Before any child claim/reservation, evidence-producing worker read, or consumer/external mutation, OP MUST durably publish and positively read back one immutable wave checkpoint binding the complete normalized Run Envelope, release/policy identity, effective effect envelope, authority/continuation prerequisites, qualification snapshot and wave identity. Recovery always starts from that checkpoint.
+
+Evidence adjudication is evidence-weighted, never vote-counted:
+- one strong reproducible evidence-backed counterexample to a mandatory invariant is sufficient for a blocking finding;
+- if a violation is established, contrary evidence does not convert the result to GREEN;
+- materially credible unresolved conflict that prevents a trustworthy semantic judgment yields BLOCKED, never GREEN;
+- materially distinct dissent remains durable.
+
 ### 5.1 Common coverage states
 
 Every discovery/review/bug-hunt profile exposes:
@@ -268,9 +307,24 @@ The positive sealing transition is machine-verifiable. A result is sealed only w
 A draft, mutable pointer, placeholder, local file, unverified write or chat-only assertion is not sealed.
 
 After sealing:
-- semantic amendment of that result is forbidden;
+- semantic amendment of that sealed result identity is forbidden;
+- the sealed result has one terminal immutable publication identity; later branch/ref fast-forwards cannot amend that sealed identity;
 - any context that reads sibling results cannot later alter the sealed result;
-- if correction is necessary, the old result remains immutable and a new fresh independent attempt is required where independence remains mandatory.
+- if correction is necessary, the old result remains immutable and a new fresh independent attempt with a distinct result identity is required where independence remains mandatory;
+- making a correction current requires an explicit result-supersession transition; the old sealed result remains historical evidence.
+
+If a crash/response loss occurs after publication/readback but before local recording of the seal, recovery MUST re-read the exact declared result identity and mechanical provenance. If exact sealed publication can be proven, reuse that sealed identity; if not, the attempt is non-admissible and a fresh independent attempt is required. Never infer sealing from a mutable branch head alone.
+
+### 5.3 Partial/blocked-wave terminalization
+
+A wave may reach a caller-visible `INCOMPLETE` or `BLOCKED` disposition even when not all mandatory workers produced admissible semantic results.
+
+When mandatory work is missing, blocked or unsealable:
+- freeze one immutable admission snapshot containing every available sealed result plus the exact missing/blocked/non-admissible set and reasons;
+- do not treat missing work as covered;
+- authorize a fresh semantic terminalizer/integrator to read only that immutable snapshot and admitted sealed results;
+- the terminalizer may publish only `INCOMPLETE` or `BLOCKED` unless profile semantics independently prove a stronger negative result from available admissible evidence;
+- coordinator semantic opacity remains intact before this terminalizer handoff.
 
 ## 6. Profile-specific behavior and completion
 
@@ -305,6 +359,10 @@ Disposition:
 
 Popularity never decides truth.
 
+The minimum assurance floor, required evidence classes, conflict-adjudication rule and convergence/completion sufficiency predicates are normative `formal_research` profile semantics and therefore participate in `profile_semantics_version`. Worker/lane topology remains private.
+
+A materially credible unresolved conflict that prevents trustworthy synthesis yields BLOCKED. A strong reproducible counterexample to a mandatory research invariant or caller acceptance criterion is blocking without a vote.
+
 ### 6.2 `definition_review`
 
 Objective: evaluate a frozen Definition for completeness, ambiguity, contradiction, negative space, scope/outcome coherence, authority flow-down and acceptance testability.
@@ -326,7 +384,9 @@ When the owner explicitly requests another full `definition_review` of the same 
 - materially rotate the lens/attack portfolio from the immediately prior full-review package;
 - changing only lane IDs, order, wording, branch names or synonyms does not count as rotation;
 - the coordinator may inspect prior package metadata, coverage matrices and lane prompts to design rotation but MUST NOT read prior semantic lane-result contents merely for lens selection;
-- fresh-round workers MUST NOT read prior full-review lane results, integrated semantic findings or focused-revalidation findings before sealing their own results;
+- fresh-round workers MUST NOT read prior full-review lane-result artifacts, prior integrated-result artifacts or prior focused-revalidation result artifacts before sealing their own results;
+- canonical current product authority is always mandatory subject data, even when that authority contains historical rationale, decision provenance or prior finding identifiers; reading current canonical authority does not count as prohibited prior-result consumption;
+- package prompts MUST make that subject-data exception explicit while continuing to forbid direct prior semantic result artifacts;
 - whole-surface/adversarial structural roles may recur, but their exact attack framing and emphasis must materially change;
 - each review round has its own immutable package/review-round identity, independent results, fresh integrator and durable integrated result.
 
@@ -367,7 +427,17 @@ For the frozen primary batch define `sample_deficit` as the count of reserved pr
 
 A failed/blocked/non-result primary member prevents GREEN coverage closure unless a separately authorized bounded continuation reserves an exact supplemental RUN_ID set before additional runs begin.
 
-A continuation creates a new durable `batch_revision_id`. Valid completed admissible supplemental runs on the exact same frozen subject/coverage/release restore the primary deficit one-for-one. Invalid, blocked or non-result supplemental members restore nothing and never rewrite primary failure provenance.
+A supplemental continuation is one immutable, one-shot continuation-authority action binding:
+- exact parent wave and parent batch revision;
+- exact frozen deficit snapshot;
+- exact subject/coverage/release identities;
+- exact new supplemental RUN_ID set;
+- one action/authorization identity;
+- expected current batch/continuation head.
+
+Its CAS/idempotent execution may create at most one new `batch_revision_id`. Replay of the same authorization either returns the already-created exact revision after readback or fails closed; it never allocates another revision.
+
+Valid completed admissible supplemental runs on the exact same frozen subject/coverage/release restore the primary deficit one-for-one. Invalid, blocked or non-result supplemental members restore nothing and never rewrite primary failure provenance. A late result from an older closed batch remains historical evidence only and cannot join a later deficit-restoration set unless an explicit new continuation treats that exact immutable result as ordinary evidence without changing its old RUN_ID membership.
 
 Coverage may return to COMPLETE only when:
 - every reserved member of every admitted batch revision is terminal; and
@@ -433,9 +503,9 @@ Coverage/completion:
 - `NOT_APPLICABLE`: exact accepted continuation authority establishes that no revalidation obligation applies.
 
 Disposition:
-- `GREEN`: coverage COMPLETE, every accepted repair obligation closed, bounded neighbor/spill checks clear and prior review remains applicable;
+- `GREEN`: coverage COMPLETE, every accepted repair obligation closed, bounded neighbor/spill checks clear and the originating accepted integrated result/obligation set remains applicable;
 - `RED`: coverage COMPLETE but one or more repair/regression obligations remain;
-- `ESCALATE_FULL_WAVE`: coverage COMPLETE and material subject/scope/coverage/acceptance/profile meaning changed, impact cannot be bounded, a materially new defect class appeared, or prior evidence/root-cause assumptions are invalidated;
+- `ESCALATE_FULL_WAVE`: coverage COMPLETE and material subject/scope/coverage/acceptance/profile meaning changed, impact cannot be bounded, a materially new defect class appeared, or the originating accepted integrated result/root-cause assumptions are invalidated;
 - `NOT_APPLICABLE`: coverage NOT_APPLICABLE and no repair/revalidation work applies;
 - `BLOCKED` / `INCOMPLETE` as defined above.
 
@@ -463,12 +533,14 @@ Requirements:
 - only the current generation can satisfy the manifest.
 
 Reclaim:
-- is explicitly authorized;
+- is explicitly authorized by one immutable single-use reclaim action binding exact unit, expected current generation, expected current claim/result state and expected manifest/head;
 - requires exact-state readback proving no valid current terminal result for the reclaimed unit;
-- increments only that unit's generation;
+- advances that unit's generation through CAS/expected-head against the exact bound generation/claim; stale authorization cannot advance a newer generation;
+- replay of the same reclaim action is idempotent to the exact already-created generation or fails closed; it cannot advance repeatedly;
 - retains unaffected valid completed sibling units;
 - preserves old generations as immutable non-current provenance;
-- rejects stale old-generation publication.
+- rejects stale old-generation publication;
+- for mutation-capable repair work, current-generation/current-claim/current-candidate authority MUST be revalidated immediately before every consumer effect, so reclaim revokes stale-generation mutation authority before write time, not merely at result publication.
 
 Timeout, worker disappearance or branch existence alone never authorizes reclaim.
 
@@ -484,7 +556,11 @@ Requirements:
 - exact batch membership under §6.6;
 - durable subject/coverage/release binding;
 - no voting;
-- no retroactive batch-membership mutation.
+- no retroactive batch-membership mutation;
+- each reserved RUN_ID has a durable recovery state machine `RESERVED -> ACTIVE -> COMPLETE | FAILED | BLOCKED | ABANDONED`;
+- the owning batch/recovery authority may terminalize a lost worker only through an exact-state fenced transition;
+- resumption/replacement uses a new attempt identity bound to the same RUN_ID without reusing another worker's attempt identity;
+- once a replacement/terminalization transition becomes current, a late prior attempt is historical/non-admissible and cannot change current RUN_ID state.
 
 ## 8. Recovery and ambiguous remote effects
 
@@ -497,6 +573,15 @@ When remote mutation occurrence is uncertain:
 Force updates are forbidden in ordinary claim/result/integration publication.
 
 Recovery consumes already durable valid results rather than replaying work because a chat/session disappeared.
+
+Repair consumer mutation additionally requires one complete pre-effect predicate:
+- exact authorized repair base and current repair head/candidate ancestry;
+- expected-head/CAS check immediately before write;
+- current continuation authority, current unit generation/claim and current candidate;
+- one durable operation identity with objective intended postcondition;
+- complete realized change-set closure, including aliases, renames, generated/secondary files and other writes causally produced by the repair.
+
+After an ambiguous/lost write response, recover by exact operation identity plus objective postcondition/readback. If exact authorized lineage or complete realized change set cannot be proven, the repair is BLOCKED and MUST NOT be accepted.
 
 ## 9. Independence and integration
 
@@ -527,6 +612,7 @@ Integration:
 - verifies every required current result;
 - rejects contaminated/stale/wrong-base/wrong-generation/wrong-version outputs;
 - deduplicates by root cause/evidence;
+- applies the common evidence-adjudication rule: one strong reproducible mandatory-invariant counterexample blocks; unresolved material conflict that prevents trustworthy judgment yields BLOCKED, never GREEN;
 - preserves dissent;
 - binds one exact immutable admission/completion snapshot.
 
@@ -540,6 +626,8 @@ Before publishing an integrated result, the integrator binds:
 Publication uses CAS/expected-head or an equivalent stale-writer fence, then exact readback.
 
 Prior integrated results remain immutable. Supersession creates a new authorized result/generation and explicit supersession pointer; it never overwrites history opportunistically.
+
+Before any integrated result is reused for forward acceptance/continuation, resolve the canonical current-result/supersession authority and positively read it back. Publication-time `CURRENT` never by itself proves consume-time currentness.
 
 ## 10. Durable storage and provenance
 
@@ -558,12 +646,15 @@ Replacing the repository itself requires future owner/product authority.
 Every wave/result preserves enough identity to reconstruct:
 - caller/run/profile;
 - subject and coverage;
-- OP release;
+- OP release plus current release-policy identity used at launch;
+- exact qualification/admissibility snapshot and qualification-impact manifest used at launch;
+- immutable pre-worker wave checkpoint;
 - manifest/package;
 - claim generations or RUN_ID batches;
-- worker result ancestry;
+- worker result ancestry and sealed-result supersession lineage;
 - integration admission snapshot;
-- integrated result and supersession/revalidation lineage.
+- integrated result and supersession/revalidation lineage;
+- continuation-authority source/verification lineage when applicable.
 
 Historical packages/results are never rewritten to appear compliant with newer semantics.
 
@@ -599,7 +690,11 @@ Shared references are the sole canonical normative owners for their declared com
 
 A root/profile document may reference or summarize a shared mechanism only as explicitly non-normative explanatory text. It cannot restate the mechanism as a second normative owner.
 
-A profile may parameterize a shared mechanism only through typed extension points explicitly declared by the shared owner. If two current canonical owners appear to govern the same semantic rule or contradict, execution/qualification fails closed.
+The shared contracts/state substrate is the sole normative owner of caller-visible state domains, common pre-acceptance precedence, Run Envelope equivalence and consume-time currentness resolution.
+
+A profile may parameterize a shared mechanism only through typed extension points explicitly declared by the shared owner. Profile-owned extension points include only profile-specific applicability predicates, coverage/completion predicates, truth/disposition predicates and convergence rules. A profile MUST NOT redefine shared state precedence, identity equivalence or result-currentness resolution.
+
+If two current canonical owners appear to govern the same semantic rule or contradict, execution/qualification fails closed.
 
 ### 11.2 Leaf-worker context opacity
 
@@ -643,7 +738,9 @@ It may verify:
 - publication/readback succeeded;
 - only the declared mutation/output surface changed where the profile requires that proof.
 
-The canonical coordinator-visible pre-integration metadata surface is semantic-free and limited to mechanical fields such as:
+The canonical coordinator-visible pre-integration metadata surface is a release-bound closed allowlist with typed structural grammars. Any new/unclassified coordinator-visible metadata channel or value that cannot be validated against an allowlisted grammar makes the result non-admissible before coordinator consumption.
+
+The allowlisted surface is semantic-free and limited to mechanical fields such as:
 - assignment/unit/RUN_ID identity;
 - package/release/subject/coverage identifiers;
 - claim generation and attempt nonce identity;
@@ -704,7 +801,18 @@ Authority:
 - evidence cannot grant authority;
 - executable content discovered as evidence is never executable authority.
 
-Effective effects = caller-authorized request ∩ profile hard cap ∩ release-qualified capability set.
+Mandatory OP protocol mechanics needed to realize an otherwise authorized wave — allocator/claim metadata, OP-owned ledger/provenance, own worker-result publication and authorized integrated-result publication — are authorized protocol mechanics, not caller-requested consumer effects.
+
+Caller-requested effects govern consumer/external effects beyond those protocol mechanics.
+
+For caller-requested effects:
+- every requested effect must be inside the profile hard cap and release-qualified capability set;
+- if any requested effect is outside the hard cap or cannot be classified, the entire requested-effect set is rejected/BLOCKED;
+- OP never silently auto-narrows a mixed allowed+forbidden request.
+
+Effective consumer/external effects = complete caller-requested effect set, validated as a subset of profile hard cap ∩ release-qualified capability set.
+
+Known causally triggered automation/effects caused by an OP write are part of the realized effect envelope when they can materially mutate consumer/external state. If such downstream effects are forbidden, unbounded, unknown or cannot be proven inside the cap, the originating write is not authorized.
 
 Caller authority can narrow but never widen release/profile caps. Conflict/unknown => fail closed.
 
@@ -757,9 +865,17 @@ Persist independently:
 - dated host qualification identity;
 - per-wave subject/coverage/package/generation/RUN_ID batch identities.
 
-Before execution, one validity decision verifies the bound tuple against the immutable release compatibility manifest.
+Before execution, one validity decision verifies the bound tuple against the immutable release compatibility manifest and, for moving/current release channels, the current release-policy manifest from the canonical distribution authority already used by the skills-only product.
 
-Unknown, incompatible or stale required identity => fail closed.
+The current release-policy manifest binds at least:
+- policy identity/version and currentness/freshness rule;
+- `minimum_supported_release` or equivalent floor;
+- explicitly revoked release identities/digests;
+- optional supersession/reason metadata.
+
+A historical release is admissible only when integrity/compatibility/qualification checks pass, it is not revoked, and it satisfies the current minimum-supported floor. If required current release policy cannot be resolved/read back or is stale/ambiguous, execution/reuse fails closed.
+
+Unknown, incompatible, revoked or stale required identity => fail closed.
 
 A dated host qualification becomes stale when a materially relevant host capability/surface changes or a required probe fails; affected waves/releases require proportional requalification before relying on that capability again.
 
@@ -816,15 +932,15 @@ PASS covers expected-head/ancestry/readback invariants.
 
 ### Q3 — stale-worker/reclaim/ABA
 
-Property: per-unit generation reclaim rejects stale publications while preserving unaffected valid siblings.
+Property: per-unit generation reclaim is single-use, exact-generation/claim bound, CAS fenced, idempotent on replay, rejects stale publications and revokes stale repair-effect authority before mutation while preserving unaffected valid siblings.
 
-PASS covers crash/reclaim/late-worker/branch-reuse cases.
+PASS covers crash/reclaim/late-worker/branch-reuse/ABA/replayed-authorization cases and verifies current-generation/current-claim/current-candidate checks immediately before repair effects.
 
 ### Q4 — RUN_ID/batch/overflow
 
-Property: RUN_ID allocation has no duplication/reuse and closed batch membership is immutable.
+Property: RUN_ID allocation has no duplication/reuse, every reservation has a fenced crash/recovery state machine, closed batch membership is immutable, and supplemental continuation is one-shot/idempotent.
 
-PASS covers concurrent reservations, exact pre-run batch freeze, terminal membership and bounded continuation.
+PASS covers concurrent reservations, exact pre-run batch freeze, lost-worker terminalization/replacement, late-attempt rejection, terminal membership, deficit restoration and replay of supplemental continuation authority.
 
 ### Q5 — profile contracts
 
@@ -846,13 +962,25 @@ Missing a mandatory fixture branch makes Q5 non-PASS.
 
 ### Q6 — integration/adjudication
 
-Property: integration admits exact valid snapshots, deduplicates causally, preserves dissent, rejects missing/contaminated coverage and supports RED-but-complete results.
+Property: integration admits exact valid snapshots, deduplicates causally, preserves dissent, rejects missing/contaminated coverage, supports RED-but-complete results and applies the normative evidence-adjudication rule.
+
+PASS fixtures include:
+- one strong reproducible mandatory-invariant counterexample amid contrary weaker evidence => blocking/RED;
+- materially credible unresolved conflict that prevents trustworthy judgment => BLOCKED, never GREEN;
+- no vote-count threshold.
 
 ### Q7 — prompt/context/effect behavior
 
 Property: first finding does not stop declared coverage; leaf workers remain assignment-only; subject/evidence instructions cannot widen authority; sealed independence and repair self-acceptance prohibitions hold.
 
 PASS additionally requires a frozen negative metadata-leak fixture for the coordinator pre-integration boundary. The fixture attempts to place semantic findings, profile disposition or free-form semantic conclusions into every coordinator-visible metadata channel exposed by the qualified release/host, including applicable branch/ref names, commit messages, output names/paths, provenance fields and mechanical receipts. The system must deterministically reject/sanitize the semantic metadata before publication or mark the result non-admissible before the coordinator can consume it. Any semantic conclusion reaching the normal coordinator through those pre-integration channels is FAIL.
+
+PASS also requires negative effect-boundary fixtures covering:
+- caller request containing at least one forbidden effect among otherwise allowed effects => whole request rejected/BLOCKED, never auto-narrowed;
+- discovery/review/revalidation attempting consumer mutation => rejected;
+- every forbidden `repair_units` effect class from §13 => rejected;
+- realized mutation-envelope spill through alias/rename/generated/secondary writes => rejected/BLOCKED;
+- UNKNOWN/ambiguous capability or causally triggered downstream effect => not PASS and no originating write.
 
 ### Q8 — helper
 
@@ -948,7 +1076,10 @@ Historical packages/results remain immutable and are interpreted according to th
 
 ## 18. Definition acceptance surface
 
-Definition R6 is complete only when fresh independent focused revalidation of the exact immutable R6 subject establishes:
+Definition R7 is complete only when fresh independent focused revalidation of the exact immutable R7 subject establishes:
+- every canonical round-3 finding CR3-01 through CR3-18 is closed under `decisions/OP_SKILL_V1_R3_RED_RESOLUTION.md`;
+- no round-3 owner choice remains unresolved;
+- round-3 evidence remains applicable to the bounded repair cone;
 - every canonical C01-C16 obligation from the additional full R4 Definition Review is closed, including the final R5 residuals C02, C15 and C16;
 - the eight owner resolutions in `decisions/OP_SKILL_V1_ADDITIONAL_REVIEW_RED_RESOLUTION.md` are represented without contradiction;
 - the repeated-full-review lens-rotation decision is incorporated without reducing complete review coverage or coordinator lane-content opacity;
@@ -963,14 +1094,16 @@ Definition R6 is complete only when fresh independent focused revalidation of th
 - Android skills-only/no-external-backend product boundary remains unchanged;
 - no unresolved owner/product choice remains inside the accepted repair cone.
 
-GREEN focused revalidation requires every accepted repair obligation closed, bounded neighbor/spill checks clear and the additional full-review evidence to remain applicable.
+GREEN focused revalidation requires every accepted CR3 repair obligation closed, bounded neighbor/spill/race/security checks clear and the round-3 full-review evidence to remain applicable.
 
 If focused revalidation proves a material product/profile/security/runtime/coverage/qualification architecture change outside the accepted bounded repair cone, it must escalate to a new full Definition Review.
 
 Owner-selected repeat gate:
-- after the R6 focused revalidation returned GREEN, the owner required one additional full `definition_review` round 3 with exactly 15 independent lanes under `decisions/OP_SKILL_V1_ADDITIONAL_DEFINITION_REVIEW_R3.md`;
-- the Definition completeness audit remains pending until that exact round is durably integrated and consumed;
-- GREEN may restore completeness audit GREEN and Premium A due; RED must be consumed through bounded Definition repair/revalidation.
+- R6 full `definition_review` round 3 completed with 15/15 admitted lanes, COMPLETE coverage, compliant lens rotation and RED disposition;
+- the durable integrated result is `elmakus/project-research@1b64a08474683b8ad8e0d343bda7772d863f1470:projects/orchestration-protocol-skill/v1-definition-review-r3/FINAL_REVIEW.md`;
+- the owner delegated and accepted the seven semantic resolutions in `decisions/OP_SKILL_V1_R3_RED_RESOLUTION.md`;
+- R7 is the bounded CR3-01..CR3-18 repair and remains completeness-pending until fresh focused revalidation is GREEN;
+- Planning remains unauthorized while completeness is pending.
 
 ## 19. Evidence provenance
 
@@ -1065,5 +1198,22 @@ Integrated R6 final focused revalidation:
 
 Durable R6 GREEN consumption:
 - `implementation/workstreams/op-skill-v1/evidence/OP_SKILL_V1_DEFINITION_REVALIDATION_R6_GREEN_CONSUMPTION_2026-10-01.md`
+
+Full Definition Review round 3:
+- repository: `elmakus/project-research`
+- package revision: `22085e477456e29b901f4481d7270978aeb6be54`
+- integration commit: `1b64a08474683b8ad8e0d343bda7772d863f1470`
+- path: `projects/orchestration-protocol-skill/v1-definition-review-r3/FINAL_REVIEW.md`
+- blob: `df1bfad45359f59608cb91754bffc308dd34be10`
+- disposition: RED
+- coverage: COMPLETE
+- admitted lanes: 15/15
+- canonical findings: CR3-01..CR3-18
+
+Durable round-3 RED consumption:
+- `implementation/workstreams/op-skill-v1/evidence/OP_SKILL_V1_DEFINITION_REVIEW_R3_RED_CONSUMPTION_2026-10-01.md`
+
+Round-3 owner resolutions:
+- `decisions/OP_SKILL_V1_R3_RED_RESOLUTION.md`
 
 Research/review artifacts are evidence. Definition/decision files are product authority under PWv2.
