@@ -20,3 +20,7 @@ path = "implementation/workstreams/op-skill-v1/BRAINSTORM.toml"
 [research]
 class = "research"
 path = "implementation/workstreams/op-skill-v1/RESEARCH.toml"
+
+[definition]
+class = "definition"
+path = "implementation/workstreams/op-skill-v1/DEFINITION.toml"

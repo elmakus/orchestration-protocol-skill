@@ -1,0 +1,13 @@
+workstream_id = "op-skill-v1"
+source_scope_subject = "orchestration-protocol-skill-v1@1"
+revision = "R1"
+state = "active"
+completeness_audit = "pending"
+premium_a = "not_due"
+decisions = [
+  { class = "authority", path = "decisions/OP_SKILL_V1_DEFINITION_REVIEW.md" },
+]
+
+[requirements]
+class = "authority"
+path = "requirements/OP_SKILL_V1.md"
