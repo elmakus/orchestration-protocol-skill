@@ -1,0 +1,30 @@
+workstream_id = "op-skill-v1"
+state = "consumed"
+origin_role = "brainstorming"
+origin_subject = "orchestration-protocol-skill-v1@1"
+return_target = "brainstorming"
+return_reconciliation = "applied"
+return_result = "elmakus/project-research@26e2fb04feaca027272e8c86fffd0df1abe73051:projects/orchestration-protocol-skill/v1-architecture/FINAL_SYNTHESIS.md"
+finding = "Completed external architecture Research defines a production v1 recommendation around a portable skills-only ChatGPT plugin, stable caller/run/result contract, typed profile semantics, fenced allocation, durable Git provenance, bounded helper duties, Android qualification, and explicit authority/effect boundaries."
+limitations = "This workstream consumes the supplied completed synthesis rather than rerunning its source collection. The synthesis records remaining host/runtime uncertainty and requires production-shaped Android qualification before release."
+conflicts = "No unresolved owner product choice is reported by the completed synthesis; evidence remains subordinate to the durable product seed and later Definition authority."
+
+[[sources]]
+class = "official_upstream"
+status = "checked"
+weight = "primary"
+
+[[sources]]
+class = "project_runtime"
+status = "checked"
+weight = "direct"
+
+[[sources]]
+class = "tracker_discussion"
+status = "checked"
+weight = "supporting"
+
+[[sources]]
+class = "practitioner_community"
+status = "checked"
+weight = "supporting"

@@ -1,0 +1,9 @@
+workstream_id = "op-skill-v1"
+provider = "github"
+repository = "elmakus/orchestration-protocol-skill"
+dedup_key = "project-workflow:op-skill-v1"
+state = "discovery"
+issue_number = 0
+candidate_issue_numbers = []
+readback_state = "pending"
+final_pr = 0
