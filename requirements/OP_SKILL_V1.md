@@ -1,6 +1,6 @@
-# Orchestration Protocol Skill v1 — Definition R5
+# Orchestration Protocol Skill v1 — Definition R6
 
-Status: bounded repaired Definition authority pending fresh focused independent revalidation of the additional full-review findings
+Status: bounded repaired Definition authority pending fresh focused independent revalidation of the final R5 residuals
 Source scope: `orchestration-protocol-skill-v1@1`
 Product: Orchestration Protocol Skill v1
 
@@ -154,6 +154,35 @@ Total profile-disposition domains:
 - `formal_research`: `COMPLETE | INCOMPLETE | BLOCKED | NOT_APPLICABLE`;
 - `definition_review`, `plan_review`, `execution_package_review`, `targeted_bug_hunt`, `global_bug_hunt`, `repair_units`: `GREEN | RED | INCOMPLETE | BLOCKED | NOT_APPLICABLE`;
 - `focused_revalidation`: `GREEN | RED | ESCALATE_FULL_WAVE | INCOMPLETE | BLOCKED | NOT_APPLICABLE`.
+
+Terminal disposition is derived deterministically in this precedence order:
+
+1. If applicability is `UNKNOWN`, disposition is `BLOCKED`.
+2. If applicability is `NOT_APPLICABLE`, the profile-specific NOT_APPLICABLE predicate below MUST be proven; execution is terminal, coverage is `NOT_APPLICABLE`, and disposition is `NOT_APPLICABLE`. If that predicate cannot be proven, disposition is `BLOCKED`.
+3. If currentness is `SUPERSEDED`, `STALE` or `UNKNOWN`, disposition is `BLOCKED`.
+4. If either execution or coverage is `BLOCKED`, disposition is `BLOCKED`.
+5. Otherwise, if either execution or coverage is `INCOMPLETE`, disposition is `INCOMPLETE`.
+6. Otherwise the only legal acceptance-evaluation tuple is execution `COMPLETE` + applicability `APPLICABLE` + currentness `CURRENT` + coverage `COMPLETE`; apply the profile truth rule below.
+7. Any unlisted or contradictory state tuple is invalid and disposition is `BLOCKED`.
+
+Thus `BLOCKED` takes precedence over `INCOMPLETE`. An APPLICABLE profile whose mandatory work/coverage resolves to an empty set is `BLOCKED` unless its exact profile-specific NOT_APPLICABLE predicate is proven before acceptance evaluation.
+
+Profile-specific NOT_APPLICABLE reachability is:
+- `formal_research`: exact accepted profile/caller semantics prove before evidence sampling that the captured question/decision has no applicable research/evidence obligation;
+- `definition_review`: the exact bound subject is objectively outside the accepted Definition-review applicability class before review coverage begins;
+- `plan_review`: the exact bound subject is objectively outside the accepted Plan-review applicability class before review coverage begins;
+- `execution_package_review`: the exact bound subject is objectively outside the accepted execution-package-review applicability class before review coverage begins;
+- `targeted_bug_hunt`: exact accepted subject/risk semantics prove that no mandatory declared attack/risk cell applies;
+- `global_bug_hunt`: exact accepted subject/qualification semantics prove non-applicability before any primary batch reservation; after any primary RUN_ID is reserved, NOT_APPLICABLE is illegal for that wave;
+- `repair_units`: exact accepted continuation authority establishes that no repair unit applies;
+- `focused_revalidation`: exact accepted continuation authority establishes that no revalidation obligation applies.
+
+For the legal COMPLETE/APPLICABLE/CURRENT/COMPLETE tuple, profile truth is total:
+- `formal_research` => `COMPLETE` when its synthesis obligations are satisfied, otherwise the tuple is invalid and `BLOCKED`;
+- `definition_review`, `plan_review`, `execution_package_review` => `RED` iff one or more accepted blocking findings remain, otherwise `GREEN`;
+- `targeted_bug_hunt`, `global_bug_hunt` => `RED` iff one or more accepted unresolved blockers remain, otherwise `GREEN`; Global Bug Hunt additionally requires the §6.6 deficit-restoration predicate;
+- `repair_units` => `RED` iff an accepted repair obligation remains open, a required repair failed, or bounded regression evidence remains, otherwise `GREEN`;
+- `focused_revalidation` => `ESCALATE_FULL_WAVE` iff its escalation predicate holds; otherwise `RED` iff an accepted repair/regression obligation remains; otherwise `GREEN`.
 
 ### 3.6 Canonical identity hierarchy
 
@@ -823,6 +852,8 @@ Property: integration admits exact valid snapshots, deduplicates causally, prese
 
 Property: first finding does not stop declared coverage; leaf workers remain assignment-only; subject/evidence instructions cannot widen authority; sealed independence and repair self-acceptance prohibitions hold.
 
+PASS additionally requires a frozen negative metadata-leak fixture for the coordinator pre-integration boundary. The fixture attempts to place semantic findings, profile disposition or free-form semantic conclusions into every coordinator-visible metadata channel exposed by the qualified release/host, including applicable branch/ref names, commit messages, output names/paths, provenance fields and mechanical receipts. The system must deterministically reject/sanitize the semantic metadata before publication or mark the result non-admissible before the coordinator can consume it. Any semantic conclusion reaching the normal coordinator through those pre-integration channels is FAIL.
+
 ### Q8 — helper
 
 Property: deterministic helper commands are repeatable; claim nonce generation uses the exact qualified CSPRNG policy with at least 128 bits of entropy; weak/predictable sources and unavailable-RNG cases fail closed before claim; concurrency fixtures exercise collision/uniqueness behavior; helper has no network/credential/semantic authority; mismatches fail closed.
@@ -839,7 +870,10 @@ Property on intended account/device:
 - permission/setup prompts receive an explicit durable owner acceptability disposition;
 - bundled candidate helper executes;
 - qualified worker launch mode satisfies the procedural sibling-exposure predicate while retaining required provider/Git access;
-- end-to-end claim/result/integration publication/readback works.
+- end-to-end claim/result/integration publication/readback works;
+- the installed-surface metadata-leak negative fixture from Q7 attempts semantic leakage through every coordinator-visible metadata channel exposed on that account/device and proves deterministic rejection/non-admission before coordinator semantic exposure;
+- concurrent finite-claim fixtures exercise the exact release-qualified CSPRNG policy: every fresh `attempt_nonce` contains at least 128 bits of cryptographic entropy, accepted claims use no timestamp/counter/model-text/ordinary-PRNG substitute, and concurrent claims retain distinct nonce/claim identities;
+- negative nonce fixtures prove predictable/weak sources are rejected before claim creation and an unavailable/invalid qualified CSPRNG fails closed without creating a claim.
 
 Technical predicates are objective.
 
@@ -849,9 +883,11 @@ Permission/setup acceptability has the terminal owner-disposition domain:
 - `UNKNOWN`: missing, stale, withdrawn, ambiguous or not-yet-given disposition.
 
 For Q10:
-- PASS requires `ACCEPTABLE` plus all technical predicates PASS;
+- PASS requires `ACCEPTABLE` plus all technical predicates PASS, including the metadata-leak and CSPRNG/concurrency fixtures above;
 - `UNACCEPTABLE` is FAIL under the generic terminal-negative rule;
-- `UNKNOWN` is BLOCKED.
+- `UNKNOWN` is BLOCKED;
+- acceptance of a weak/predictable nonce source or semantic metadata leak is FAIL;
+- absence/unavailability of the required qualified CSPRNG or another required installed-surface test capability is BLOCKED unless terminal evidence instead proves a violated predicate, in which case it is FAIL.
 
 Release requires every applicable Q0-Q10 layer PASS for the exact candidate. For v1 all Q0-Q10 are applicable to the production release, though later requalification may rerun only affected layers.
 
@@ -912,8 +948,8 @@ Historical packages/results remain immutable and are interpreted according to th
 
 ## 18. Definition acceptance surface
 
-Definition R5 is complete only when fresh independent focused revalidation of the exact immutable R5 subject establishes:
-- every canonical C01-C16 obligation from the additional full R4 Definition Review is closed;
+Definition R6 is complete only when fresh independent focused revalidation of the exact immutable R6 subject establishes:
+- every canonical C01-C16 obligation from the additional full R4 Definition Review is closed, including the final R5 residuals C02, C15 and C16;
 - the eight owner resolutions in `decisions/OP_SKILL_V1_ADDITIONAL_REVIEW_RED_RESOLUTION.md` are represented without contradiction;
 - the repeated-full-review lens-rotation decision is incorporated without reducing complete review coverage or coordinator lane-content opacity;
 - the caller/result state domains and all eight profile mappings are total and deterministic;
@@ -1001,5 +1037,16 @@ Additional-review owner resolutions:
 
 Repeated-full-review lens rotation:
 - `decisions/OP_SKILL_V1_REPEATED_REVIEW_LENS_ROTATION.md`
+
+Integrated R5 focused revalidation:
+- repository: `elmakus/project-research`
+- commit: `4c04b88e7f07641ec1657f1d5f0a9080a098f785`
+- path: `projects/orchestration-protocol-skill/v1-definition-revalidation-r5/FINAL_REVALIDATION.md`
+- blob: `bfe3ccadb4d1e33a34f9b015913cceade902f988`
+- disposition: RED
+- residual obligations: C02, C15, C16
+
+Durable R5 revalidation RED consumption:
+- `implementation/workstreams/op-skill-v1/evidence/OP_SKILL_V1_DEFINITION_REVALIDATION_R5_RED_CONSUMPTION_2026-10-01.md`
 
 Research/review artifacts are evidence. Definition/decision files are product authority under PWv2.
