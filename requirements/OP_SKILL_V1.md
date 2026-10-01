@@ -1,6 +1,6 @@
-# Orchestration Protocol Skill v1 — Definition R7
+# Orchestration Protocol Skill v1 — Definition R8
 
-Status: bounded repaired Definition authority pending fresh focused independent revalidation of round-3 findings CR3-01..CR3-18
+Status: bounded repaired Definition authority pending fresh focused independent revalidation of the final R7 residuals
 Source scope: `orchestration-protocol-skill-v1@1`
 Product: Orchestration Protocol Skill v1
 
@@ -300,6 +300,8 @@ Where independence is required, a worker's admissible independent result becomes
 The positive sealing transition is machine-verifiable. A result is sealed only when:
 - its complete semantic content is bound to an immutable content identity (for Git/GitHub, exact repository + commit + path + blob; otherwise an equivalently immutable content-addressed identity);
 - that identity is bound to the exact assignment/unit or RUN_ID, subject, coverage, release and current generation/batch identity;
+- for homogeneous RUN_ID work, that identity also binds the exact durable current attempt identity that was current at publication;
+- immediately before publication, the worker positively verifies that its homogeneous attempt identity is still the durable current attempt for that RUN_ID; mismatch, ambiguity or inability to verify makes the publication non-admissible;
 - publication succeeds;
 - positive exact readback proves the published immutable identity;
 - the worker records the sealed identity before any sibling semantic access.
@@ -323,7 +325,9 @@ When mandatory work is missing, blocked or unsealable:
 - freeze one immutable admission snapshot containing every available sealed result plus the exact missing/blocked/non-admissible set and reasons;
 - do not treat missing work as covered;
 - authorize a fresh semantic terminalizer/integrator to read only that immutable snapshot and admitted sealed results;
-- the terminalizer may publish only `INCOMPLETE` or `BLOCKED` unless profile semantics independently prove a stronger negative result from available admissible evidence;
+- the terminalizer derives caller-visible disposition only through the shared canonical precedence in §3.5 and therefore publishes `INCOMPLETE` or `BLOCKED` for such partial/blocked tuples;
+- admissible evidence may still prove and record stronger negative findings/conclusions inside that terminal result, but those findings do not override caller-visible common-state precedence or become a profile truth/disposition until the canonical `COMPLETE/APPLICABLE/CURRENT/COMPLETE` acceptance tuple permits profile-truth evaluation;
+- profile modules MUST NOT override this rule;
 - coordinator semantic opacity remains intact before this terminalizer handoff.
 
 ## 6. Profile-specific behavior and completion
@@ -557,10 +561,15 @@ Requirements:
 - durable subject/coverage/release binding;
 - no voting;
 - no retroactive batch-membership mutation;
-- each reserved RUN_ID has a durable recovery state machine `RESERVED -> ACTIVE -> COMPLETE | FAILED | BLOCKED | ABANDONED`;
-- the owning batch/recovery authority may terminalize a lost worker only through an exact-state fenced transition;
-- resumption/replacement uses a new attempt identity bound to the same RUN_ID without reusing another worker's attempt identity;
-- once a replacement/terminalization transition becomes current, a late prior attempt is historical/non-admissible and cannot change current RUN_ID state.
+- each reserved RUN_ID has one durable recovery state machine `RESERVED -> ACTIVE -> COMPLETE | FAILED | BLOCKED | ABANDONED`;
+- each reserved RUN_ID also owns exactly one durable `current_attempt_id` plus attempt state; every worker attempt has a unique immutable attempt identity bound to that RUN_ID, batch revision, subject, coverage and release;
+- activating the first attempt and every resumption/replacement is an expected-current-attempt/exact-state CAS transition that atomically makes one attempt current;
+- the owning batch/recovery authority may terminalize a lost worker only through an exact-state/current-attempt fenced transition;
+- resumption/replacement creates a fresh attempt identity bound to the same RUN_ID and may become current only if the expected prior current attempt/state still matches;
+- result publication and sealing MUST bind the exact `current_attempt_id` and verify it immediately before publication under §5.2;
+- integration/admission MUST positively resolve the RUN_ID's durable current attempt and admit only a sealed result bound to that exact attempt;
+- once replacement or terminalization becomes current, a late prior attempt is immutable historical/non-admissible evidence and cannot publish/admit a current result or change current RUN_ID state;
+- any ambiguous, stale or unverifiable current-attempt relation fails closed.
 
 ## 8. Recovery and ambiguous remote effects
 
@@ -611,6 +620,7 @@ If sibling exposure cannot be excluded or detected to the qualified standard, in
 Integration:
 - verifies every required current result;
 - rejects contaminated/stale/wrong-base/wrong-generation/wrong-version outputs;
+- for homogeneous RUN_ID work, resolves each RUN_ID's durable current attempt and rejects any result whose sealed attempt identity is absent, stale, superseded, ambiguous or different from the exact current attempt;
 - deduplicates by root cause/evidence;
 - applies the common evidence-adjudication rule: one strong reproducible mandatory-invariant counterexample blocks; unresolved material conflict that prevents trustworthy judgment yields BLOCKED, never GREEN;
 - preserves dissent;
@@ -938,9 +948,9 @@ PASS covers crash/reclaim/late-worker/branch-reuse/ABA/replayed-authorization ca
 
 ### Q4 — RUN_ID/batch/overflow
 
-Property: RUN_ID allocation has no duplication/reuse, every reservation has a fenced crash/recovery state machine, closed batch membership is immutable, and supplemental continuation is one-shot/idempotent.
+Property: RUN_ID allocation has no duplication/reuse, every reservation has a fenced crash/recovery state machine with one durable current-attempt identity, closed batch membership is immutable, and supplemental continuation is one-shot/idempotent.
 
-PASS covers concurrent reservations, exact pre-run batch freeze, lost-worker terminalization/replacement, late-attempt rejection, terminal membership, deficit restoration and replay of supplemental continuation authority.
+PASS covers concurrent reservations, exact pre-run batch freeze, lost-worker terminalization/replacement, expected-current-attempt CAS, replacement-attempt activation, late prior-attempt publication rejection, sealing/admission against exact current attempt, terminal membership, deficit restoration and replay of supplemental continuation authority.
 
 ### Q5 — profile contracts
 
@@ -1076,8 +1086,8 @@ Historical packages/results remain immutable and are interpreted according to th
 
 ## 18. Definition acceptance surface
 
-Definition R7 is complete only when fresh independent focused revalidation of the exact immutable R7 subject establishes:
-- every canonical round-3 finding CR3-01 through CR3-18 is closed under `decisions/OP_SKILL_V1_R3_RED_RESOLUTION.md`;
+Definition R8 is complete only when fresh independent focused revalidation of the exact immutable R8 subject establishes:
+- every canonical round-3 finding CR3-01 through CR3-18 is closed under `decisions/OP_SKILL_V1_R3_RED_RESOLUTION.md`, including the final R7 residuals R7-RV-F01 and R7-RV-F02;
 - no round-3 owner choice remains unresolved;
 - round-3 evidence remains applicable to the bounded repair cone;
 - every canonical C01-C16 obligation from the additional full R4 Definition Review is closed, including the final R5 residuals C02, C15 and C16;
@@ -1102,7 +1112,7 @@ Owner-selected repeat gate:
 - R6 full `definition_review` round 3 completed with 15/15 admitted lanes, COMPLETE coverage, compliant lens rotation and RED disposition;
 - the durable integrated result is `elmakus/project-research@1b64a08474683b8ad8e0d343bda7772d863f1470:projects/orchestration-protocol-skill/v1-definition-review-r3/FINAL_REVIEW.md`;
 - the owner delegated and accepted the seven semantic resolutions in `decisions/OP_SKILL_V1_R3_RED_RESOLUTION.md`;
-- R7 is the bounded CR3-01..CR3-18 repair and remains completeness-pending until fresh focused revalidation is GREEN;
+- R7 bounded repair was independently revalidated RED only on R7-RV-F01 and R7-RV-F02; R8 closes those two residual seams and remains completeness-pending until fresh focused revalidation is GREEN;
 - Planning remains unauthorized while completeness is pending.
 
 ## 19. Evidence provenance
@@ -1215,5 +1225,18 @@ Durable round-3 RED consumption:
 
 Round-3 owner resolutions:
 - `decisions/OP_SKILL_V1_R3_RED_RESOLUTION.md`
+
+Integrated R7 focused revalidation:
+- repository: `elmakus/project-research`
+- commit: `140c1ee91461f778e0f8f2fd36966a6e4d4905e3`
+- path: `projects/orchestration-protocol-skill/v1-definition-revalidation-r7/FINAL_REVALIDATION.md`
+- blob: `95b12407bc05b27902c3879b0dd76359f4f631f6`
+- disposition: RED
+- residual root causes: R7-RV-F01, R7-RV-F02
+- unresolved owner choices: none
+- full-wave escalation: not triggered
+
+Durable R7 revalidation RED consumption:
+- `implementation/workstreams/op-skill-v1/evidence/OP_SKILL_V1_DEFINITION_REVALIDATION_R7_RED_CONSUMPTION_2026-10-01.md`
 
 Research/review artifacts are evidence. Definition/decision files are product authority under PWv2.
