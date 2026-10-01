@@ -1,6 +1,6 @@
 # Orchestration Protocol Skill v1 — Definition R6
 
-Status: bounded repaired Definition authority pending fresh focused independent revalidation of the final R5 residuals
+Status: accepted Definition authority; completeness audit GREEN; Premium A due
 Source scope: `orchestration-protocol-skill-v1@1`
 Product: Orchestration Protocol Skill v1
 
@@ -1048,5 +1048,17 @@ Integrated R5 focused revalidation:
 
 Durable R5 revalidation RED consumption:
 - `implementation/workstreams/op-skill-v1/evidence/OP_SKILL_V1_DEFINITION_REVALIDATION_R5_RED_CONSUMPTION_2026-10-01.md`
+
+Integrated R6 final focused revalidation:
+- repository: `elmakus/project-research`
+- commit: `8baaf6e000003fd991999b815d1c7f84c9be10d9`
+- path: `projects/orchestration-protocol-skill/v1-definition-revalidation-r6/FINAL_REVALIDATION.md`
+- blob: `d99da4fa3d2fb7c577ac0396e47907a3e53cb202`
+- disposition: GREEN
+- residual obligations: none
+- escalation: not triggered
+
+Durable R6 GREEN consumption:
+- `implementation/workstreams/op-skill-v1/evidence/OP_SKILL_V1_DEFINITION_REVALIDATION_R6_GREEN_CONSUMPTION_2026-10-01.md`
 
 Research/review artifacts are evidence. Definition/decision files are product authority under PWv2.
