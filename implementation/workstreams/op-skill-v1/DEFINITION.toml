@@ -1,6 +1,6 @@
 workstream_id = "op-skill-v1"
 source_scope_subject = "orchestration-protocol-skill-v1@1"
-revision = "R6"
+revision = "R7"
 state = "active"
 completeness_audit = "pending"
 premium_a = "not_due"
@@ -12,6 +12,7 @@ decisions = [
   { class = "authority", path = "decisions/OP_SKILL_V1_ADDITIONAL_REVIEW_RED_RESOLUTION.md" },
   { class = "authority", path = "decisions/OP_SKILL_V1_REPEATED_REVIEW_LENS_ROTATION.md" },
   { class = "authority", path = "decisions/OP_SKILL_V1_ADDITIONAL_DEFINITION_REVIEW_R3.md" },
+  { class = "authority", path = "decisions/OP_SKILL_V1_R3_RED_RESOLUTION.md" },
 ]
 
 [requirements]
