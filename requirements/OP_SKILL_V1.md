@@ -1,6 +1,6 @@
 # Orchestration Protocol Skill v1 — Definition R6
 
-Status: accepted Definition authority; completeness audit GREEN; Premium A due
+Status: accepted R6 product authority under owner-requested full Definition Review round 3; completeness audit pending
 Source scope: `orchestration-protocol-skill-v1@1`
 Product: Orchestration Protocol Skill v1
 
@@ -966,6 +966,11 @@ Definition R6 is complete only when fresh independent focused revalidation of th
 GREEN focused revalidation requires every accepted repair obligation closed, bounded neighbor/spill checks clear and the additional full-review evidence to remain applicable.
 
 If focused revalidation proves a material product/profile/security/runtime/coverage/qualification architecture change outside the accepted bounded repair cone, it must escalate to a new full Definition Review.
+
+Owner-selected repeat gate:
+- after the R6 focused revalidation returned GREEN, the owner required one additional full `definition_review` round 3 with exactly 15 independent lanes under `decisions/OP_SKILL_V1_ADDITIONAL_DEFINITION_REVIEW_R3.md`;
+- the Definition completeness audit remains pending until that exact round is durably integrated and consumed;
+- GREEN may restore completeness audit GREEN and Premium A due; RED must be consumed through bounded Definition repair/revalidation.
 
 ## 19. Evidence provenance
 
