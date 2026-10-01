@@ -1,6 +1,6 @@
-# Orchestration Protocol Skill v1 — Definition R4
+# Orchestration Protocol Skill v1 — Definition R5
 
-Status: bounded repaired Definition authority pending focused independent revalidation
+Status: bounded repaired Definition authority pending fresh focused independent revalidation of the additional full-review findings
 Source scope: `orchestration-protocol-skill-v1@1`
 Product: Orchestration Protocol Skill v1
 
@@ -74,20 +74,36 @@ Purely mechanical normalization may be performed by OP. Any missing choice that 
 
 ### 3.3 Continuation-gated admission
 
-`repair_units` requires:
+`return_id` is opaque routing/correlation only and never grants authority.
+
+Continuation-gated admission requires an immutable `continuation_authority_id` / authority record. That record binds at least:
+- authority issuer and caller relation;
+- authorized profile/action;
+- exact prior accepted integrated result/obligation identity where applicable;
+- exact subject/candidate/base;
+- accepted repair/revalidation obligations and change cone;
+- freshness/currentness and supersession constraints;
+- caller-requested/frozen mutation/effect envelope.
+
+`repair_units` additionally requires:
 - exact accepted integrated findings/result identity;
-- exact caller/consumer continuation authority;
 - exact frozen mutation envelope;
 - exact candidate/base to mutate;
 - applicable accepted repair obligations.
 
-`focused_revalidation` requires:
+`focused_revalidation` additionally requires:
 - exact prior accepted findings/obligations;
 - exact repaired candidate;
-- exact change cone;
-- exact caller/consumer continuation authority.
+- exact bounded change cone.
 
-Presence of arbitrary paths/artifacts is not continuation authority. Missing, stale, ambiguous or non-authority-bound prerequisites fail closed.
+Presence of arbitrary paths, artifacts, results or evidence is not continuation authority. Missing, stale, superseded, ambiguous or non-authority-bound prerequisites fail closed.
+
+The immutable Run Envelope identity/digest must include or immutably reference:
+- resolved caller contract/profile/release tuple;
+- `continuation_authority_id` and applicable prerequisite identities;
+- caller-requested effects;
+- effective effects after profile/release cap intersection;
+- exact repair mutation envelope when applicable.
 
 ### 3.4 Durable Result Contract
 
@@ -114,6 +130,41 @@ It binds at least:
 Execution completion, coverage completion and profile truth/disposition are distinct. For example, a review may be execution-complete and coverage-complete while RED.
 
 Internal topology/allocator mechanics do not become caller-visible compatibility requirements merely because provenance records them.
+
+### 3.5 Canonical result-state and identity model
+
+The caller-visible state domains are finite and separate:
+
+- `execution_state`: `COMPLETE | INCOMPLETE | BLOCKED`;
+- `applicability_state`: `APPLICABLE | NOT_APPLICABLE | UNKNOWN`;
+- `currentness_state`: `CURRENT | SUPERSEDED | STALE | UNKNOWN`;
+- `coverage_state`: `COMPLETE | INCOMPLETE | BLOCKED | NOT_APPLICABLE`;
+- `profile_disposition`: one of `COMPLETE | GREEN | RED | ESCALATE_FULL_WAVE | INCOMPLETE | BLOCKED | NOT_APPLICABLE`, restricted by profile semantics below.
+
+Required invariants:
+- `NOT_APPLICABLE` is terminal and neutral, never GREEN;
+- coverage `NOT_APPLICABLE` requires applicability `NOT_APPLICABLE` and disposition `NOT_APPLICABLE`;
+- an applicable profile whose mandatory coverage/work set resolves empty without an explicit profile NOT_APPLICABLE predicate is invalid and BLOCKED, never GREEN/clear;
+- GREEN/clear or formal-research COMPLETE requires execution COMPLETE, applicability APPLICABLE, currentness CURRENT and coverage COMPLETE;
+- SUPERSEDED, STALE, UNKNOWN, BLOCKED or INCOMPLETE state cannot authorize forward acceptance;
+- a RED review/bug-hunt/repair/revalidation may still have execution COMPLETE and coverage COMPLETE;
+- the Durable Result Contract persists all separate fields and never collapses them into one overloaded status.
+
+Total profile-disposition domains:
+- `formal_research`: `COMPLETE | INCOMPLETE | BLOCKED | NOT_APPLICABLE`;
+- `definition_review`, `plan_review`, `execution_package_review`, `targeted_bug_hunt`, `global_bug_hunt`, `repair_units`: `GREEN | RED | INCOMPLETE | BLOCKED | NOT_APPLICABLE`;
+- `focused_revalidation`: `GREEN | RED | ESCALATE_FULL_WAVE | INCOMPLETE | BLOCKED | NOT_APPLICABLE`.
+
+### 3.6 Canonical identity hierarchy
+
+The identity scopes are distinct:
+- `run_envelope_id`: immutable identity/digest of the normalized caller Run Envelope specification;
+- `wave_id`: one concrete OP execution of that Run Envelope/profile;
+- `batch_revision_id`: child of one wave for profiles using frozen homogeneous RUN_ID batches;
+- `RUN_ID`: one individual homogeneous worker/run member inside one batch revision;
+- finite heterogeneous work uses `unit_id + claim_generation + attempt_nonce`, not RUN_ID.
+
+One Run Envelope may have multiple explicitly authorized waves/continuations. Each wave binds exactly one `run_envelope_id`. Batch revisions and worker/run identities are children of their owning wave and are never reused across waves.
 
 ## 4. Semantic profile registry and compatibility
 
@@ -178,12 +229,19 @@ Only `COMPLETE` may support a GREEN/clear profile disposition. COMPLETE may stil
 
 Where independence is required, a worker's admissible independent result becomes sealed before any sibling-result access.
 
+The positive sealing transition is machine-verifiable. A result is sealed only when:
+- its complete semantic content is bound to an immutable content identity (for Git/GitHub, exact repository + commit + path + blob; otherwise an equivalently immutable content-addressed identity);
+- that identity is bound to the exact assignment/unit or RUN_ID, subject, coverage, release and current generation/batch identity;
+- publication succeeds;
+- positive exact readback proves the published immutable identity;
+- the worker records the sealed identity before any sibling semantic access.
+
+A draft, mutable pointer, placeholder, local file, unverified write or chat-only assertion is not sealed.
+
 After sealing:
 - semantic amendment of that result is forbidden;
 - any context that reads sibling results cannot later alter the sealed result;
 - if correction is necessary, the old result remains immutable and a new fresh independent attempt is required where independence remains mandatory.
-
-A placeholder/draft publication does not satisfy the sealed-result boundary.
 
 ## 6. Profile-specific behavior and completion
 
@@ -191,14 +249,32 @@ A placeholder/draft publication does not satisfy the sealed-result boundary.
 
 Objective: evidence/prior-art discovery, source-class coverage, conflict analysis and integrated synthesis.
 
-Completion requires:
-- declared evidence/source coverage complete or explicitly blocked;
-- source authority/weight recorded;
-- material conflicts reconciled or preserved as unresolved;
-- limitations/currentness stated;
-- one durable synthesis/result contract published.
+Every substantial ordinary `formal_research` wave has a topology-private minimum assurance floor:
+- exact frozen question/decision subject and coverage matrix;
+- one whole-subject coherence perspective;
+- one independent adversarial/falsification perspective;
+- targeted coverage sufficient to own every mandatory material question and required evidence/source class;
+- explicit required evidence/source classes derived from accepted profile semantics plus caller constraints;
+- explicit conflict/contradiction handling;
+- bounded convergence/saturation criteria that cannot be satisfied merely by budget exhaustion;
+- one integrated synthesis recording currentness, limitations and unresolved conflict.
 
-Disposition distinguishes complete finding from BLOCKED/INCOMPLETE; popularity never decides truth.
+The number, partitioning and roles of targeted workers remain adaptive private OP topology.
+
+Completion requires:
+- the minimum assurance floor above is satisfied;
+- declared evidence/source coverage is COMPLETE or objectively NOT_APPLICABLE;
+- source authority/weight is recorded;
+- material conflicts are reconciled or preserved as unresolved;
+- limitations/currentness are stated;
+- one durable synthesis/result contract is published.
+
+Disposition:
+- `COMPLETE`: execution COMPLETE, applicability APPLICABLE, currentness CURRENT, coverage COMPLETE and the required synthesis is durably published;
+- `NOT_APPLICABLE`: exact profile/caller semantics objectively establish non-applicability;
+- `INCOMPLETE` / `BLOCKED` as defined by the common state model.
+
+Popularity never decides truth.
 
 ### 6.2 `definition_review`
 
@@ -212,6 +288,20 @@ Disposition:
 - BLOCKED/INCOMPLETE as defined above.
 
 The profile does not redesign product policy or repair the Definition.
+
+#### Repeated full-review lens rotation
+
+When the owner explicitly requests another full `definition_review` of the same materially unchanged subject:
+- assign a monotonically increasing `review_round`;
+- retain complete acceptance-surface coverage, one whole-subject coherence perspective, adversarial/falsification coverage, targeted ownership of every material surface and deliberate high-risk overlap;
+- materially rotate the lens/attack portfolio from the immediately prior full-review package;
+- changing only lane IDs, order, wording, branch names or synonyms does not count as rotation;
+- the coordinator may inspect prior package metadata, coverage matrices and lane prompts to design rotation but MUST NOT read prior semantic lane-result contents merely for lens selection;
+- fresh-round workers MUST NOT read prior full-review lane results, integrated semantic findings or focused-revalidation findings before sealing their own results;
+- whole-surface/adversarial structural roles may recur, but their exact attack framing and emphasis must materially change;
+- each review round has its own immutable package/review-round identity, independent results, fresh integrator and durable integrated result.
+
+Useful rotated attack families include state-machine/crash/replay, contract fuzzing/equivalence classes, implementer-vs-caller competing interpretations, authority/security abuse, version/migration/stale-host drift, false-GREEN/incomplete-evidence attacks, concurrency/CAS/reclaim/ABA races, context contamination/sealing bypass, negative-space/empty-set/NOT_APPLICABLE cases, irreversible-effect abuse and provenance/supersession ambiguity.
 
 ### 6.3 `plan_review`
 
@@ -242,13 +332,23 @@ Before the first primary run:
 
 Every reserved RUN_ID reaches a terminal run state.
 
-Only valid completed results contribute evidence. A failed/blocked/non-result terminal member prevents GREEN coverage closure unless a separately authorized bounded continuation reserves an exact supplemental RUN_ID set before those additional runs begin.
+Only valid completed admissible results contribute evidence.
 
-A continuation creates a new durable batch revision; the integrated admitted set is the immutable union of closed accepted batch revisions.
+For the frozen primary batch define `sample_deficit` as the count of reserved primary RUN_ID members that terminate without a valid completed admissible result. Each failed, blocked or non-result primary member contributes exactly one deficit.
+
+A failed/blocked/non-result primary member prevents GREEN coverage closure unless a separately authorized bounded continuation reserves an exact supplemental RUN_ID set before additional runs begin.
+
+A continuation creates a new durable `batch_revision_id`. Valid completed admissible supplemental runs on the exact same frozen subject/coverage/release restore the primary deficit one-for-one. Invalid, blocked or non-result supplemental members restore nothing and never rewrite primary failure provenance.
+
+Coverage may return to COMPLETE only when:
+- every reserved member of every admitted batch revision is terminal; and
+- cumulative valid supplemental restorations are at least the frozen primary `sample_deficit`.
+
+The integrated admitted evidence set is the immutable union of valid completed admissible results from closed accepted batch revisions, while all invalid/failed/blocked provenance remains visible.
 
 A late result cannot enter or mutate an already closed batch revision. It may be considered only through a later explicitly authorized continuation.
 
-Repeated runs are evidence sampling, never votes or proof of defect absence.
+Repeated runs and deficit restoration are evidence sampling, never votes or proof of defect absence.
 
 ### 6.7 `repair_units`
 
@@ -282,7 +382,14 @@ The v1 outcome includes this bounded explicitly authorized mutation profile whil
 
 ### 6.8 `focused_revalidation`
 
-Requires exact repaired candidate, accepted prior obligations and bounded exact change cone.
+Requires exact repaired candidate, accepted prior obligations, bounded exact change cone and fresh subject-relative independent judgment.
+
+Admission additionally requires:
+- the revalidation context/worker did not perform the accepted repair being evaluated;
+- no repair-performing context is allowed to self-accept its repair;
+- the revalidator has not consumed disqualifying repair/sibling semantic conclusions before sealing its own result;
+- the qualified launch/context mode satisfies the §9 independence predicate for this exact subject;
+- durable provenance records the repair-disqualification and independence evidence.
 
 The change cone identifies at least:
 - changed semantic entities/sections/artifacts;
@@ -290,11 +397,18 @@ The change cone identifies at least:
 - affected shared mechanisms/contracts;
 - evidence whose applicability may have changed.
 
+Coverage/completion:
+- `COMPLETE`: every accepted repair obligation and mandatory bounded neighbor/spill/applicability check was evaluated;
+- `INCOMPLETE`: one or more mandatory focused checks was not completed;
+- `BLOCKED`: required evidence, authority or independent evaluation capability is unavailable/ambiguous;
+- `NOT_APPLICABLE`: exact accepted continuation authority establishes that no revalidation obligation applies.
+
 Disposition:
-- GREEN: every accepted repair obligation closed, bounded neighbor/spill checks clear, prior review remains applicable;
-- RED: focused scope remains valid but one or more repair/regression obligations remain;
-- ESCALATE_FULL_WAVE: material subject/scope/coverage/acceptance/profile meaning changed, impact cannot be bounded, a materially new defect class appeared, or prior evidence/root-cause assumptions are invalidated;
-- BLOCKED: required evidence cannot be evaluated.
+- `GREEN`: coverage COMPLETE, every accepted repair obligation closed, bounded neighbor/spill checks clear and prior review remains applicable;
+- `RED`: coverage COMPLETE but one or more repair/regression obligations remain;
+- `ESCALATE_FULL_WAVE`: coverage COMPLETE and material subject/scope/coverage/acceptance/profile meaning changed, impact cannot be bounded, a materially new defect class appeared, or prior evidence/root-cause assumptions are invalidated;
+- `NOT_APPLICABLE`: coverage NOT_APPLICABLE and no repair/revalidation work applies;
+- `BLOCKED` / `INCOMPLETE` as defined above.
 
 A full wave is not repeated merely because bytes changed.
 
@@ -310,7 +424,10 @@ Requirements:
 - exact common wave base;
 - durable unit identity;
 - current per-unit generation in the manifest;
-- strong claim ownership bound to exact claim commit + unit + generation + collision-resistant attempt nonce;
+- strong claim ownership bound to exact claim commit + unit + generation + fresh `attempt_nonce`;
+- every fresh `attempt_nonce` contains at least 128 bits of entropy from a release/host-qualified cryptographically secure RNG (CSPRNG);
+- timestamp, counter, model-generated text, ordinary PRNG or predictable source cannot substitute for the required entropy;
+- no weak/degraded fallback is permitted; unavailable/invalid qualified CSPRNG prohibits claim creation and fails closed;
 - non-force claim/publication;
 - result publication expected-head/ancestry bound to the winning claim;
 - exact readback after mutation;
@@ -363,7 +480,19 @@ Independent-worker admission requires:
 - qualified context/launch mode;
 - recorded evidence sufficient to audit the independence predicate.
 
-Host qualification must demonstrate, using current supported context surfaces, that the chosen launch mode does not expose sibling result/conclusion content through the permitted context sources used by the worker. If sibling exposure cannot be excluded or detected to the qualified standard, independence is UNKNOWN and the result is not admissible as independent.
+Host qualification must use a release-bound closed inventory/category model of every semantic context source that may automatically or implicitly reach the worker, including as applicable:
+- explicit assignment/prompt content;
+- Project files/knowledge and connected retrieval;
+- conversation/history continuation;
+- memory/personal-context surfaces;
+- system/developer/project instructions;
+- connector/app injected context;
+- host-managed retrieval/recommendation/context caches;
+- any other automatic semantic injection surface exposed by the qualified host.
+
+For every relevant source, qualification must prove sibling-result/conclusion exclusion or reliable exposure detection that forces independence UNKNOWN/not-admissible. A newly introduced, unobservable or unclassified relevant context source stales the affected qualification under §14.1.
+
+If sibling exposure cannot be excluded or detected to the qualified standard, independence is UNKNOWN and the result is not admissible as independent.
 
 Integration:
 - verifies every required current result;
@@ -411,38 +540,37 @@ Historical packages/results are never rewritten to appear compliant with newer s
 
 ## 11. Context architecture and normative precedence
 
-### 11.1 Ownership by domain
+### 11.1 Non-overlapping normative ownership
 
-`SKILL.md` owns only cross-profile invariants and routing:
-- product/authority boundary;
-- identity/freeze rules;
-- caller/run/result contracts;
-- profile registry and selection constraints;
-- normative ownership/precedence;
-- required-module load gate;
-- global sibling/effect/fail-closed/publication invariants.
+Normative ownership is exclusive by semantic domain.
 
-Each selected profile module owns its profile-specific:
+Root `SKILL.md` owns only:
+- product/consumer authority boundary;
+- profile registry plus routing/selection constraints;
+- immutable subject/coverage/release freeze and required-module load gates;
+- fail-closed dispatch invariants;
+- the normative ownership/precedence map itself.
+
+Each selected profile module solely owns that profile's:
 - objective/exclusions;
-- coverage model;
-- topology defaults/adaptation;
-- completion/convergence/disposition;
-- overflow;
-- repair/revalidation hooks.
+- profile-specific coverage model;
+- topology defaults/adaptation that remain private implementation semantics;
+- convergence/completion/profile disposition;
+- overflow and profile-specific repair/revalidation hooks.
 
-Each shared reference is the sole canonical normative owner for its declared common mechanism, including:
+Shared references are the sole canonical normative owners for their declared common mechanisms:
+- contracts-and-versioning;
 - evidence-and-sources;
+- security-and-effects;
 - finite-claim-substrate;
 - homogeneous-run-substrate;
 - independence-and-integration;
-- repair-and-revalidation;
-- durable-storage;
-- security-and-effects;
-- contracts-and-versioning.
+- repair-and-revalidation substrate;
+- durable-storage.
 
-A profile may parameterize a shared mechanism only through explicit extension points defined by the shared owner. It may not override a shared invariant.
+A root/profile document may reference or summarize a shared mechanism only as explicitly non-normative explanatory text. It cannot restate the mechanism as a second normative owner.
 
-Duplicated text outside the canonical owner is non-normative summary only. If two current canonical owners appear to contradict on the same semantic domain, execution fails closed; document placement or worker preference never chooses the winner.
+A profile may parameterize a shared mechanism only through typed extension points explicitly declared by the shared owner. If two current canonical owners appear to govern the same semantic rule or contradict, execution/qualification fails closed.
 
 ### 11.2 Leaf-worker context opacity
 
@@ -486,6 +614,16 @@ It may verify:
 - publication/readback succeeded;
 - only the declared mutation/output surface changed where the profile requires that proof.
 
+The canonical coordinator-visible pre-integration metadata surface is semantic-free and limited to mechanical fields such as:
+- assignment/unit/RUN_ID identity;
+- package/release/subject/coverage identifiers;
+- claim generation and attempt nonce identity;
+- branch/ref/commit/blob identities and declared output path;
+- publication/readback/ancestry/expected-head predicates;
+- assignment execution receipt state such as COMPLETE/BLOCKED/EXHAUSTED only when it describes ability to execute the assignment, never the semantic profile disposition.
+
+Before integration, findings, severity, profile disposition, conclusions, free-form semantic summaries or semantic blocker text MUST NOT be encoded in coordinator-visible branch names, commit messages, output names, claim metadata, receipts or provenance fields. A semantic finding is written only inside the sealed lane result artifact. Mechanical execution blockers may identify the missing capability/state without disclosing a substantive review conclusion.
+
 It MUST NOT open/read/summarize the semantic contents of individual lane/unit result artifacts, infer the wave conclusion from them, deduplicate/adjudicate their findings, or use them to continue the consumer lifecycle.
 
 Once all required outputs are mechanically admissible, the coordinator marks the wave READY_FOR_INTEGRATION and provides the exact fresh-integrator launcher/handoff. The fresh integrator is the first orchestration role that reads all admitted semantic worker outputs together, performs evidence-weighted synthesis/deduplication and publishes one durable integrated result.
@@ -510,7 +648,7 @@ Allowed deterministic duties:
 - canonical sorting/serialization;
 - deterministic bounded context packs.
 
-Fresh claim nonce generation is a narrowly non-deterministic mechanical operation using qualified collision-resistant randomness. It is explicitly excluded from "identical deterministic output" assertions. Deterministic commands may consume/validate a supplied fresh nonce.
+Fresh claim nonce generation is a narrowly non-deterministic mechanical operation using a release/host-qualified CSPRNG. The fresh random component of every `attempt_nonce` provides at least 128 bits of entropy. No weak/degraded fallback is allowed; lack of a qualified CSPRNG fails closed before claim creation. It is explicitly excluded from "identical deterministic output" assertions. Deterministic commands may consume/validate a supplied fresh nonce and its declared source/entropy class.
 
 Forbidden duties:
 - deciding when OP is due;
@@ -564,6 +702,15 @@ Even if named by the frozen mutation envelope, v1 `repair_units` can never autho
 
 The effective repair envelope is therefore the intersection of the accepted mutation envelope and this immutable profile/release hard ceiling. A requested effect outside that ceiling is rejected/returned to caller or consumer authority; it is never silently executed by OP.
 
+`focused_revalidation` hard cap is read/review-like:
+- read the exact repaired candidate, accepted prior findings/authority and bounded neighbors;
+- perform allocator CAS/claim mechanics required by OP;
+- publish only its own result/evidence plus the authorized integrated revalidation result;
+- no consumer mutation;
+- no merge/release/Close, comments/messages, settings changes, arbitrary HTTP/network writes, credential operations or unrelated external effects.
+
+Consumer mutation remains exclusive to an explicitly admitted `repair_units` continuation.
+
 Effects beyond the cap return to caller/consumer authority.
 
 Credentials remain provider-managed and are never emitted/stored in prompts/evidence/helper inputs.
@@ -588,6 +735,22 @@ Unknown, incompatible or stale required identity => fail closed.
 A dated host qualification becomes stale when a materially relevant host capability/surface changes or a required probe fails; affected waves/releases require proportional requalification before relying on that capability again.
 
 Major profile-semantic changes require caller acceptance of the new profile major semantics. Internal topology changes that preserve compatible profile semantics need not change caller compatibility.
+
+### 14.1 Qualification-impact manifest and freshness
+
+Every immutable release owns a `qualification-impact manifest` that:
+- inventories/fingerprints the qualified host, context-source categories, provider capabilities, helper artifact/API, normative references/templates, profile semantics and other Q0-Q10-relevant identities;
+- defines materially relevant change classes;
+- deterministically maps every classified change/identity to the Q0-Q10 layers whose PASS evidence depends on it.
+
+Before reusing prior PASS evidence after any observed change, evaluate this manifest.
+
+Rules:
+- every mapped PASS becomes STALE until the mapped layers are requalified successfully;
+- UNKNOWN or unclassified material relevance/dependency fails closed and invalidates every plausibly affected layer;
+- if impact cannot be safely bounded, all Q0-Q10 PASS evidence is stale for the candidate;
+- an unrelated PASS may be reused only when the immutable release-owned impact manifest proves no dependency;
+- helper fallback, host/context-source changes, profile/reference changes and permission/tool capability changes are included in this impact model.
 
 ## 15. Qualification and release state machine
 
@@ -636,7 +799,21 @@ PASS covers concurrent reservations, exact pre-run batch freeze, terminal member
 
 ### Q5 — profile contracts
 
-Property: every profile satisfies its defined coverage/completion/disposition semantics against seeded positive/negative fixtures.
+Property: every profile satisfies its defined applicability/execution/coverage/completion/disposition semantics against an exact frozen fixture manifest.
+
+The fixture manifest is bound before execution and MUST cover, for every stable profile:
+- each caller-visible legal terminal disposition branch;
+- COMPLETE/GREEN success where legal;
+- RED where legal;
+- INCOMPLETE;
+- BLOCKED;
+- NOT_APPLICABLE where legal;
+- ESCALATE_FULL_WAVE for focused_revalidation;
+- applicable empty mandatory-coverage/work-set rejection;
+- stale/superseded/UNKNOWN fail-closed behavior;
+- every profile-specific mandatory fail-closed boundary that can affect caller-visible disposition.
+
+Missing a mandatory fixture branch makes Q5 non-PASS.
 
 ### Q6 — integration/adjudication
 
@@ -648,7 +825,7 @@ Property: first finding does not stop declared coverage; leaf workers remain ass
 
 ### Q8 — helper
 
-Property: deterministic helper commands are repeatable; nonce generation satisfies qualified uniqueness/concurrency expectations; helper has no network/credential/semantic authority; mismatches fail closed.
+Property: deterministic helper commands are repeatable; claim nonce generation uses the exact qualified CSPRNG policy with at least 128 bits of entropy; weak/predictable sources and unavailable-RNG cases fail closed before claim; concurrency fixtures exercise collision/uniqueness behavior; helper has no network/credential/semantic authority; mismatches fail closed.
 
 ### Q9 — current host capabilities
 
@@ -664,7 +841,17 @@ Property on intended account/device:
 - qualified worker launch mode satisfies the procedural sibling-exposure predicate while retaining required provider/Git access;
 - end-to-end claim/result/integration publication/readback works.
 
-Technical predicates are objective. Permission/setup acceptability requires explicit durable owner disposition.
+Technical predicates are objective.
+
+Permission/setup acceptability has the terminal owner-disposition domain:
+- `ACCEPTABLE`: positive durable owner acceptance for the exact candidate/account/device/setup;
+- `UNACCEPTABLE`: explicit durable rejection;
+- `UNKNOWN`: missing, stale, withdrawn, ambiguous or not-yet-given disposition.
+
+For Q10:
+- PASS requires `ACCEPTABLE` plus all technical predicates PASS;
+- `UNACCEPTABLE` is FAIL under the generic terminal-negative rule;
+- `UNKNOWN` is BLOCKED.
 
 Release requires every applicable Q0-Q10 layer PASS for the exact candidate. For v1 all Q0-Q10 are applicable to the production release, though later requalification may rerun only affected layers.
 
@@ -725,24 +912,24 @@ Historical packages/results remain immutable and are interpreted according to th
 
 ## 18. Definition acceptance surface
 
-Definition R4 is complete only when fresh independent focused revalidation of the exact immutable R4 subject establishes:
-- all previously GREEN C01-C16 closures remain applicable and the final residual C04 NOT_APPLICABLE disposition mapping is closed;
-- owner decisions in `decisions/OP_SKILL_V1_R1_RED_RESOLUTION.md` are represented without contradiction;
-- caller/run/result and continuation admission are sufficiently explicit for Planning;
-- every profile has bounded objective, coverage/completion/disposition semantics;
-- Global Bug Hunt batch and finite reclaim state models are deterministic and safe;
-- sealed procedural independence and integration fencing are objectively verifiable;
-- compatibility/effect/normative precedence have one fail-closed interpretation;
-- Android skills-only/no-external-backend boundary remains intact;
-- helper uniqueness vs determinism semantics are coherent;
-- Q0-Q10 form an objective release state machine;
-- leaf workers remain consumer-lifecycle-opaque and use the fixed completion receipt;
-- the coordinator remains semantic-content-blind to raw lane/unit outputs before integration, while the fresh integrator is the first role that reads them together;
-- no unresolved owner/product choice remains.
+Definition R5 is complete only when fresh independent focused revalidation of the exact immutable R5 subject establishes:
+- every canonical C01-C16 obligation from the additional full R4 Definition Review is closed;
+- the eight owner resolutions in `decisions/OP_SKILL_V1_ADDITIONAL_REVIEW_RED_RESOLUTION.md` are represented without contradiction;
+- the repeated-full-review lens-rotation decision is incorporated without reducing complete review coverage or coordinator lane-content opacity;
+- the caller/result state domains and all eight profile mappings are total and deterministic;
+- ordinary `formal_research`, Global Bug Hunt, repair and focused revalidation have bounded convergence/completion semantics;
+- run/wave/batch/RUN_ID/unit identity and continuation authority are deterministic and lifecycle-opaque;
+- normative ownership is non-overlapping;
+- effect/security caps have one fail-closed interpretation;
+- sealing/context-source isolation/coordinator metadata opacity are objectively verifiable;
+- qualification-impact freshness and Q0-Q10 fixture/verdict semantics are objectively testable;
+- finite claims require the accepted >=128-bit qualified-CSPRNG nonce policy;
+- Android skills-only/no-external-backend product boundary remains unchanged;
+- no unresolved owner/product choice remains inside the accepted repair cone.
 
-GREEN revalidation requires every accepted repair obligation closed, bounded spill clear and the R1 full-wave review still applicable.
+GREEN focused revalidation requires every accepted repair obligation closed, bounded neighbor/spill checks clear and the additional full-review evidence to remain applicable.
 
-If focused revalidation proves a material product/profile/security/runtime/coverage change outside the accepted repair cone, it must escalate to a new full Definition Review rather than stretching focused revalidation.
+If focused revalidation proves a material product/profile/security/runtime/coverage/qualification architecture change outside the accepted bounded repair cone, it must escalate to a new full Definition Review.
 
 ## 19. Evidence provenance
 
@@ -786,5 +973,33 @@ Integrated R3 focused revalidation:
 
 Durable R3 revalidation RED consumption:
 - `implementation/workstreams/op-skill-v1/evidence/OP_SKILL_V1_DEFINITION_REVALIDATION_R3_RED_CONSUMPTION_2026-10-01.md`
+
+
+
+Integrated R4 focused revalidation:
+- repository: `elmakus/project-research`
+- commit: `03eeb83f49b6a48e2568e3894c43e7efb3f29443`
+- path: `projects/orchestration-protocol-skill/v1-definition-revalidation-r4/FINAL_REVALIDATION.md`
+- disposition: GREEN
+
+Durable R4 GREEN consumption:
+- `implementation/workstreams/op-skill-v1/evidence/OP_SKILL_V1_DEFINITION_REVALIDATION_R4_GREEN_CONSUMPTION_2026-10-01.md`
+
+Additional full R4 Definition Review:
+- repository: `elmakus/project-research`
+- commit: `d8a9e153f9d072a534d933627645f3e0ada54eed`
+- path: `projects/orchestration-protocol-skill/v1-definition-review-r2/FINAL_REVIEW.md`
+- disposition: RED
+- coverage: COMPLETE
+- canonical findings: C01-C16
+
+Durable additional-review RED consumption:
+- `implementation/workstreams/op-skill-v1/evidence/OP_SKILL_V1_ADDITIONAL_DEFINITION_REVIEW_RED_CONSUMPTION_2026-10-01.md`
+
+Additional-review owner resolutions:
+- `decisions/OP_SKILL_V1_ADDITIONAL_REVIEW_RED_RESOLUTION.md`
+
+Repeated-full-review lens rotation:
+- `decisions/OP_SKILL_V1_REPEATED_REVIEW_LENS_ROTATION.md`
 
 Research/review artifacts are evidence. Definition/decision files are product authority under PWv2.
