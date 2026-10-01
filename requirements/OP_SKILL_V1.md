@@ -1,4 +1,4 @@
-# Orchestration Protocol Skill v1 — Definition R3
+# Orchestration Protocol Skill v1 — Definition R4
 
 Status: bounded repaired Definition authority pending focused independent revalidation
 Source scope: `orchestration-protocol-skill-v1@1`
@@ -273,6 +273,7 @@ Coverage/completion for this public profile is explicit:
 Profile disposition is:
 - `GREEN`: coverage COMPLETE and every accepted repair obligation is closed with required evidence/readback;
 - `RED`: coverage COMPLETE but one or more accepted repair obligations remains open, a required repair failed, or bounded regression evidence remains;
+- `NOT_APPLICABLE`: coverage is NOT_APPLICABLE because exact accepted continuation authority establishes that no repair unit applies; no consumer mutation is executed and this neutral terminal disposition MUST NOT be represented as GREEN;
 - `BLOCKED` / `INCOMPLETE` as above.
 
 A repair wave may therefore be execution/coverage-complete while RED. Budget exhaustion, partial mutation, or a successful write without its required validation cannot produce GREEN.
@@ -724,8 +725,8 @@ Historical packages/results remain immutable and are interpreted according to th
 
 ## 18. Definition acceptance surface
 
-Definition R3 is complete only when fresh independent focused revalidation of the exact immutable R3 subject establishes:
-- all previously GREEN C01-C16 closures remain applicable and residual C04, C09 and C14 are closed;
+Definition R4 is complete only when fresh independent focused revalidation of the exact immutable R4 subject establishes:
+- all previously GREEN C01-C16 closures remain applicable and the final residual C04 NOT_APPLICABLE disposition mapping is closed;
 - owner decisions in `decisions/OP_SKILL_V1_R1_RED_RESOLUTION.md` are represented without contradiction;
 - caller/run/result and continuation admission are sufficiently explicit for Planning;
 - every profile has bounded objective, coverage/completion/disposition semantics;
@@ -775,5 +776,15 @@ Durable R2 revalidation RED consumption:
 
 Coordinator lane-content opacity decision:
 - `decisions/OP_SKILL_V1_COORDINATOR_LANE_CONTENT_OPACITY.md`
+
+Integrated R3 focused revalidation:
+- repository: `elmakus/project-research`
+- commit: `e298f856174915ca320ab24c6e98905ce080babd`
+- path: `projects/orchestration-protocol-skill/v1-definition-revalidation-r3/FINAL_REVALIDATION.md`
+- disposition: RED
+- sole residual obligation: C04-NOT-APPLICABLE-DISPOSITION
+
+Durable R3 revalidation RED consumption:
+- `implementation/workstreams/op-skill-v1/evidence/OP_SKILL_V1_DEFINITION_REVALIDATION_R3_RED_CONSUMPTION_2026-10-01.md`
 
 Research/review artifacts are evidence. Definition/decision files are product authority under PWv2.
