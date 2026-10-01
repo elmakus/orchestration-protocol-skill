@@ -8,6 +8,7 @@ decisions = [
   { class = "authority", path = "decisions/OP_SKILL_V1_DEFINITION_REVIEW.md" },
   { class = "authority", path = "decisions/OP_SKILL_V1_R1_RED_RESOLUTION.md" },
   { class = "authority", path = "decisions/OP_SKILL_V1_COORDINATOR_LANE_CONTENT_OPACITY.md" },
+  { class = "authority", path = "decisions/OP_SKILL_V1_ADDITIONAL_DEFINITION_REVIEW.md" },
 ]
 
 [requirements]
