@@ -1,6 +1,6 @@
 workstream_id = "op-skill-v1"
 source_scope_subject = "orchestration-protocol-skill-v1@1"
-revision = "R7"
+revision = "R8"
 state = "active"
 completeness_audit = "pending"
 premium_a = "not_due"
