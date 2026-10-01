@@ -4,7 +4,7 @@ Status: accepted owner decision
 Date: 2026-10-01
 Product: Orchestration Protocol Skill v1
 Scope: orchestration-protocol-skill-v1@1
-Incorporation state: pending next Definition revision after current frozen R2 revalidation integration
+Incorporation state: incorporated in Definition R3
 
 ## Decision
 

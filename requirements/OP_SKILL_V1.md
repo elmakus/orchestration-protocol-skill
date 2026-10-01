@@ -1,6 +1,6 @@
-# Orchestration Protocol Skill v1 — Definition R2
+# Orchestration Protocol Skill v1 — Definition R3
 
-Status: repaired Definition authority pending focused independent revalidation
+Status: bounded repaired Definition authority pending focused independent revalidation
 Source scope: `orchestration-protocol-skill-v1@1`
 Product: Orchestration Protocol Skill v1
 
@@ -264,6 +264,19 @@ Creates bounded repair units from accepted findings. Every unit binds:
 
 Repair cannot self-authorize or self-accept.
 
+Coverage/completion for this public profile is explicit:
+- `COMPLETE`: every mandatory authorized repair unit has reached a terminal state and every successful mutation has the required exact tests/readback/evidence;
+- `INCOMPLETE`: one or more mandatory authorized repair units has not reached a terminal state;
+- `BLOCKED`: a mandatory unit cannot be executed or evaluated because required authority, capability, access, exact state or evidence is unavailable/ambiguous;
+- `NOT_APPLICABLE`: only when the exact accepted continuation authority establishes that no repair unit is applicable.
+
+Profile disposition is:
+- `GREEN`: coverage COMPLETE and every accepted repair obligation is closed with required evidence/readback;
+- `RED`: coverage COMPLETE but one or more accepted repair obligations remains open, a required repair failed, or bounded regression evidence remains;
+- `BLOCKED` / `INCOMPLETE` as above.
+
+A repair wave may therefore be execution/coverage-complete while RED. Budget exhaustion, partial mutation, or a successful write without its required validation cannot produce GREEN.
+
 The v1 outcome includes this bounded explicitly authorized mutation profile while excluding generic implementation execution.
 
 ### 6.8 `focused_revalidation`
@@ -460,6 +473,26 @@ No lifecycle routing, Premium gate, Planning/implementation authorization, consu
 
 Integrators may summarize the integrated result required by their assignment, but likewise do not own/continue the consumer lifecycle.
 
+### 11.3 Coordinator pre-integration lane-content opacity
+
+Before an integration result exists, the normal OP coordinator/orchestrator is mechanical/provenance-only with respect to worker outputs.
+
+It may verify:
+- every required lane/unit claim and result exists;
+- exact claim/result ancestry and generation/RUN_ID identity;
+- exact subject/package/release bindings available from manifest/mechanical metadata;
+- the declared output artifact exists;
+- publication/readback succeeded;
+- only the declared mutation/output surface changed where the profile requires that proof.
+
+It MUST NOT open/read/summarize the semantic contents of individual lane/unit result artifacts, infer the wave conclusion from them, deduplicate/adjudicate their findings, or use them to continue the consumer lifecycle.
+
+Once all required outputs are mechanically admissible, the coordinator marks the wave READY_FOR_INTEGRATION and provides the exact fresh-integrator launcher/handoff. The fresh integrator is the first orchestration role that reads all admitted semantic worker outputs together, performs evidence-weighted synthesis/deduplication and publishes one durable integrated result.
+
+After integration, the coordinator consumes the integrated result for caller return/continuation without normally rereading raw lane contents.
+
+Raw lane contents remain durable evidence and may be opened later only under an explicit audit, evidence-recovery, debugging or re-adjudication obligation.
+
 ## 12. Deterministic/mechanical helper
 
 v1 includes one narrow qualified helper implementation.
@@ -519,6 +552,17 @@ No consumer mutation, issue/PR comments, merge/release/Close, email/messages, se
 - exact explicitly frozen consumer mutation envelope for the accepted repair continuation;
 - OP evidence/provenance mechanics required for that repair.
 
+Even if named by the frozen mutation envelope, v1 `repair_units` can never authorize:
+- merge, release or Close;
+- issue/PR comments or other tracker/social publication;
+- email, chat or other outbound messages;
+- repository/account/workspace/settings changes outside the exact bounded content mutation;
+- arbitrary HTTP/network writes;
+- credential/token/key/cookie operations;
+- unrelated consumer mutation outside the exact accepted repair obligations.
+
+The effective repair envelope is therefore the intersection of the accepted mutation envelope and this immutable profile/release hard ceiling. A requested effect outside that ceiling is rejected/returned to caller or consumer authority; it is never silently executed by OP.
+
 Effects beyond the cap return to caller/consumer authority.
 
 Credentials remain provider-managed and are never emitted/stored in prompts/evidence/helper inputs.
@@ -546,10 +590,14 @@ Major profile-semantic changes require caller acceptance of the new profile majo
 
 ## 15. Qualification and release state machine
 
-Every qualification layer returns:
-- PASS;
-- FAIL;
-- BLOCKED.
+Every qualification layer returns exactly one of:
+- `PASS`: every mandatory predicate assigned to the layer was evaluated and positive evidence proves it satisfied;
+- `FAIL`: the required predicate was evaluable and terminal evidence proves at least one mandatory predicate violated, including a negative terminal fixture/probe outcome;
+- `BLOCKED`: the layer cannot reach a trustworthy PASS/FAIL decision because required authority, capability, access, fixture, exact state, readback or evidence is unavailable, denied, ambiguous, stale, incompatible or non-terminal.
+
+UNKNOWN, pending, missing and ambiguous evidence are never PASS; while they prevent a terminal decision they map to BLOCKED.
+
+This generic derivation rule applies to Q0-Q10 unless a layer states a stricter compatible predicate. A layer-specific rule may refine which evidence constitutes PASS/FAIL/BLOCKED but may not redefine these meanings.
 
 Every result is durably bound to exact release candidate, applicable profile/mechanism identities, fixture/probe set and evidence locator.
 
@@ -676,8 +724,8 @@ Historical packages/results remain immutable and are interpreted according to th
 
 ## 18. Definition acceptance surface
 
-Definition R2 is complete only when fresh independent focused revalidation of the exact immutable R2 subject establishes:
-- C01-C16 repair obligations from R1 integrated review are closed;
+Definition R3 is complete only when fresh independent focused revalidation of the exact immutable R3 subject establishes:
+- all previously GREEN C01-C16 closures remain applicable and residual C04, C09 and C14 are closed;
 - owner decisions in `decisions/OP_SKILL_V1_R1_RED_RESOLUTION.md` are represented without contradiction;
 - caller/run/result and continuation admission are sufficiently explicit for Planning;
 - every profile has bounded objective, coverage/completion/disposition semantics;
@@ -688,6 +736,7 @@ Definition R2 is complete only when fresh independent focused revalidation of th
 - helper uniqueness vs determinism semantics are coherent;
 - Q0-Q10 form an objective release state machine;
 - leaf workers remain consumer-lifecycle-opaque and use the fixed completion receipt;
+- the coordinator remains semantic-content-blind to raw lane/unit outputs before integration, while the fresh integrator is the first role that reads them together;
 - no unresolved owner/product choice remains.
 
 GREEN revalidation requires every accepted repair obligation closed, bounded spill clear and the R1 full-wave review still applicable.
@@ -711,7 +760,20 @@ Integrated R1 Definition Review:
 - disposition: RED
 - canonical findings: C01-C16
 
-Durable RED consumption:
+Durable R1 RED consumption:
 - `implementation/workstreams/op-skill-v1/evidence/OP_SKILL_V1_DEFINITION_REVIEW_R1_RED_CONSUMPTION_2026-10-01.md`
+
+Integrated R2 focused revalidation:
+- repository: `elmakus/project-research`
+- commit: `070ab8c02883eea8d233f30295621a9a414cd2a8`
+- path: `projects/orchestration-protocol-skill/v1-definition-revalidation-r2/FINAL_REVALIDATION.md`
+- disposition: RED
+- residual obligations: C04, C09, C14
+
+Durable R2 revalidation RED consumption:
+- `implementation/workstreams/op-skill-v1/evidence/OP_SKILL_V1_DEFINITION_REVALIDATION_R2_RED_CONSUMPTION_2026-10-01.md`
+
+Coordinator lane-content opacity decision:
+- `decisions/OP_SKILL_V1_COORDINATOR_LANE_CONTENT_OPACITY.md`
 
 Research/review artifacts are evidence. Definition/decision files are product authority under PWv2.
