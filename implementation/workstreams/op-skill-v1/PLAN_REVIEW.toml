@@ -1,16 +1,16 @@
 workstream_id = "op-skill-v1"
-plan_revision = "P1"
-planning_cycle = 1
-attempt = "R01"
-verdict = "green"
-evidence_path = "implementation/workstreams/op-skill-v1/evidence/OP_SKILL_V1_PLAN_P1_REVIEW_R01_2026-10-04.md"
+plan_revision = "P2"
+planning_cycle = 2
+attempt = "R02"
+verdict = "pending"
+evidence_path = ""
 
 [subject]
 class = "git_blob"
 repository = "elmakus/orchestration-protocol-skill"
-commit = "a95fb6e3b940726fc75995cc552703b9e006402f"
-path = "planning/OP_SKILL_V1_PLAN_P1.md"
-blob = "7d7e5065cd0f2596ae896efb010909fc83266811"
+commit = "7cc48de130d5f03fdc4628a4ddf8dec3fcd3049c"
+path = "planning/OP_SKILL_V1_PLAN_P2.md"
+blob = "94e010e29149f6145fa10c1abd25b2d8dc149e4d"
 
 [acceptance]
 class = "authority"
@@ -18,4 +18,4 @@ path = "requirements/OP_SKILL_V1.md"
 
 [independence]
 materially_produced_or_repaired_subject = false
-basis = "Fresh independent review context entered through the Premium B plan_review handoff; it did not materially author or repair the exact frozen P1 subject. Review uses accepted Definition R8 and its selected decisions, not the planner audit as a verdict."
+basis = "This pending attempt is reserved for a fresh independent Main context that did not materially author or repair this exact P2 subject. The planning author is excluded and does not spawn a Stage-6 child reviewer. The review owner must verify subject-relative independence on entry and read accepted R8 decisions plus the build-first authority bound by P2; no review verdict or completed reviewer realization is claimed by this reservation."
