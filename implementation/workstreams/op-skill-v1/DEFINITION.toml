@@ -1,9 +1,9 @@
 workstream_id = "op-skill-v1"
 source_scope_subject = "orchestration-protocol-skill-v1@1"
 revision = "R8"
-state = "active"
-completeness_audit = "pending"
-premium_a = "not_due"
+state = "green"
+completeness_audit = "green"
+premium_a = "due"
 decisions = [
   { class = "authority", path = "decisions/OP_SKILL_V1_DEFINITION_REVIEW.md" },
   { class = "authority", path = "decisions/OP_SKILL_V1_R1_RED_RESOLUTION.md" },

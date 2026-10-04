@@ -1,6 +1,6 @@
 # Orchestration Protocol Skill v1 — Definition R8
 
-Status: bounded repaired Definition authority pending fresh focused independent revalidation of the final R7 residuals
+Status: accepted Definition authority; completeness audit GREEN; Premium A due
 Source scope: `orchestration-protocol-skill-v1@1`
 Product: Orchestration Protocol Skill v1
 
@@ -1112,7 +1112,7 @@ Owner-selected repeat gate:
 - R6 full `definition_review` round 3 completed with 15/15 admitted lanes, COMPLETE coverage, compliant lens rotation and RED disposition;
 - the durable integrated result is `elmakus/project-research@1b64a08474683b8ad8e0d343bda7772d863f1470:projects/orchestration-protocol-skill/v1-definition-review-r3/FINAL_REVIEW.md`;
 - the owner delegated and accepted the seven semantic resolutions in `decisions/OP_SKILL_V1_R3_RED_RESOLUTION.md`;
-- R7 bounded repair was independently revalidated RED only on R7-RV-F01 and R7-RV-F02; R8 closes those two residual seams and remains completeness-pending until fresh focused revalidation is GREEN;
+- R7 bounded repair was independently revalidated RED only on R7-RV-F01 and R7-RV-F02; R8 closes those two residual seams and passed fresh independent focused revalidation GREEN; completeness is GREEN and Premium A is due;
 - Planning remains unauthorized while completeness is pending.
 
 ## 19. Evidence provenance
@@ -1238,5 +1238,19 @@ Integrated R7 focused revalidation:
 
 Durable R7 revalidation RED consumption:
 - `implementation/workstreams/op-skill-v1/evidence/OP_SKILL_V1_DEFINITION_REVALIDATION_R7_RED_CONSUMPTION_2026-10-01.md`
+
+Integrated R8 final focused revalidation:
+- repository: `elmakus/project-research`
+- commit: `b4dbc1ecfeae9ae3c05d87c06e5b04aadeac99e2`
+- path: `projects/orchestration-protocol-skill/v1-definition-revalidation-r8/FINAL_REVALIDATION.md`
+- blob: `ca7b7e82563a035aa8b4b5de2209a6032073fccf`
+- reviewed consumer commit: `a901d7c855041dd3885552f7b58e39a44d998be7`
+- disposition: GREEN
+- residual obligations: none
+- unresolved owner/product choices: none
+- escalation: not triggered
+
+Durable R8 GREEN consumption:
+- `implementation/workstreams/op-skill-v1/evidence/OP_SKILL_V1_DEFINITION_REVALIDATION_R8_GREEN_CONSUMPTION_2026-10-04.md`
 
 Research/review artifacts are evidence. Definition/decision files are product authority under PWv2.
