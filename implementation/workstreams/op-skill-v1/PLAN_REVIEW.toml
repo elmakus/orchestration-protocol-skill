@@ -1,0 +1,21 @@
+workstream_id = "op-skill-v1"
+plan_revision = "P1"
+planning_cycle = 1
+attempt = "R01"
+verdict = "pending"
+evidence_path = ""
+
+[subject]
+class = "git_blob"
+repository = "elmakus/orchestration-protocol-skill"
+commit = "a95fb6e3b940726fc75995cc552703b9e006402f"
+path = "planning/OP_SKILL_V1_PLAN_P1.md"
+blob = "7d7e5065cd0f2596ae896efb010909fc83266811"
+
+[acceptance]
+class = "authority"
+path = "requirements/OP_SKILL_V1.md"
+
+[independence]
+materially_produced_or_repaired_subject = false
+basis = "Fresh independent review context entered through the Premium B plan_review handoff; it did not materially author or repair the exact frozen P1 subject. Review uses accepted Definition R8 and its selected decisions, not the planner audit as a verdict."

@@ -28,3 +28,7 @@ path = "implementation/workstreams/op-skill-v1/DEFINITION.toml"
 [planning]
 class = "planning"
 path = "implementation/workstreams/op-skill-v1/PLANNING.toml"
+
+[plan_review]
+class = "plan_review"
+path = "implementation/workstreams/op-skill-v1/PLAN_REVIEW.toml"
