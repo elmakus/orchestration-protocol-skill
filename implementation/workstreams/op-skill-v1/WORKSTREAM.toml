@@ -32,3 +32,7 @@ path = "implementation/workstreams/op-skill-v1/PLANNING.toml"
 [plan_review]
 class = "plan_review"
 path = "implementation/workstreams/op-skill-v1/PLAN_REVIEW.toml"
+
+[task_board]
+class = "task_board"
+path = "implementation/workstreams/op-skill-v1/TASK_BOARD.toml"
