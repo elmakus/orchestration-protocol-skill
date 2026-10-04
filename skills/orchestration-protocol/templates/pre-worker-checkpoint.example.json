@@ -1,13 +1,15 @@
 {
-  "_synthetic": "SYNTHETIC example data only. Grammar: schemas/finite.schema.json#/defs/pre_worker_checkpoint.",
-  "checkpoint_id": "ckpt:example:0001",
-  "wave_id": "wave:example:0001",
-  "run_envelope_id": "runenv:0000000000000000000000000000000000000000000000000000000000000000",
-  "envelope_digest": "digest:example:envelope:0001",
-  "release_id": "orchestration-protocol-skill@0.2.0-m02",
-  "policy_id": "op-release-policy:2026-10-04:v1",
-  "effective_effects": ["op-result-publication"],
-  "authority_ids": [],
-  "qualification_snapshot_id": "qualsnap:example:0001",
-  "readback": "VERIFIED"
+  "_synthetic": "SYNTHETIC container: label is data outside the record, never digested. Grammar: schemas/finite.schema.json#/defs/pre_worker_checkpoint.",
+  "pre_worker_checkpoint": {
+    "checkpoint_id": "ckpt:example:0001",
+    "wave_id": "wave:example:0001",
+    "run_envelope_id": "runenv:b7c06ff6d3015c56d0d5621f7f63981a1d6703e50b6db8ca6bf6ea450d44d728",
+    "envelope_digest": "digest:example:envelope:0001",
+    "release_id": "orchestration-protocol-skill@0.2.0-m02",
+    "policy_id": "op-release-policy:2026-10-04:m02-construction",
+    "effective_effects": ["op-result-publication"],
+    "authority_ids": [],
+    "qualification_snapshot_id": "qualsnap:example:0001",
+    "readback": "VERIFIED"
+  }
 }

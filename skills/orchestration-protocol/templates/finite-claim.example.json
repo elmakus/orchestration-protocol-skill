@@ -1,6 +1,6 @@
 {
-  "_synthetic": "SYNTHETIC example data only. Grammars: schemas/finite.schema.json finite_manifest/finite_claim/reclaim_action.",
-  "manifest": {
+  "_synthetic": "SYNTHETIC container: label is data outside records, never digested. The nonce below is fixed synthetic bytes for syntax only — never qualified entropy, freshness, or a production claim. Grammars: schemas/finite.schema.json finite_manifest/finite_claim/reclaim_action.",
+  "finite_manifest": {
     "manifest_id": "fmanifest:example:0001",
     "wave_id": "wave:example:0001",
     "wave_base": { "repository": "example/repo", "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" },
@@ -9,20 +9,32 @@
       { "unit_id": "unit-02", "claim_generation": 0 }
     ]
   },
-  "claim": {
+  "finite_claim": {
+    "manifest_id": "fmanifest:example:0001",
+    "wave_id": "wave:example:0001",
+    "subject": { "identity_class": "git", "repository": "example/repo", "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "path": "SPEC.md", "blob": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb" },
+    "coverage": { "acceptance_id": "coverage:example:acceptance:v1" },
+    "release_id": "orchestration-protocol-skill@0.2.0-m02",
     "unit_id": "unit-01",
     "claim_generation": 0,
-    "attempt_nonce": "NONCE-PLACEHOLDER — fresh >=128-bit qualified-CSPRNG value at claim time; never fixture-copied",
+    "attempt_nonce": "9f2c4a7e1b5d83f06a4c9e2b7d5f1836a4c9e2b7d5f1836a4c9e2b7d5f1836a4",
     "nonce_source": "qualified-csprng-128",
     "claim_commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
     "force": false
   },
-  "reclaim": {
+  "reclaim_action": {
     "action_id": "reclaim:example:0001",
+    "manifest_id": "fmanifest:example:0001",
+    "wave_id": "wave:example:0001",
     "unit_id": "unit-01",
     "expected_generation": 0,
     "expected_claim_state": "claim:unit-01:gen0:lost",
     "expected_head": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "terminal_result_check": {
+      "unit_id": "unit-01",
+      "found_valid_current_terminal": false,
+      "readback": "VERIFIED"
+    },
     "single_use": true
   }
 }

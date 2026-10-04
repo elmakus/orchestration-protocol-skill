@@ -4,7 +4,7 @@
   "title": "OP v1 pre-worker checkpoint and finite heterogeneous allocator records",
   "version": "1.0.0",
   "normative_owner": "security-and-effects",
-  "description": "Checkpoint gate record plus finite manifest/claim/reclaim action grammars. Allocation algorithms belong to the pending finite-claim-substrate owner (M03); these are the M02 record contracts.",
+  "description": "Checkpoint gate record plus finite manifest/claim/reclaim action grammars with full immutable ownership/fencing bindings. Allocation algorithms belong to the pending finite-claim-substrate owner (M03); these are the M02 record contracts.",
   "defs": {
     "pre_worker_checkpoint": {
       "type": "object",
@@ -48,8 +48,13 @@
     },
     "finite_claim": {
       "type": "object",
-      "required": ["unit_id", "claim_generation", "attempt_nonce", "nonce_source", "claim_commit", "force"],
+      "required": ["manifest_id", "wave_id", "subject", "coverage", "release_id", "unit_id", "claim_generation", "attempt_nonce", "nonce_source", "claim_commit", "force"],
       "properties": {
+        "manifest_id": { "type": "string", "minLength": 1 },
+        "wave_id": { "type": "string", "minLength": 1 },
+        "subject": { "$ref": "urn:op-skill:schema:v1:identities#/defs/subject_identity" },
+        "coverage": { "$ref": "urn:op-skill:schema:v1:identities#/defs/coverage_identity" },
+        "release_id": { "type": "string", "minLength": 1 },
         "unit_id": { "type": "string", "minLength": 1 },
         "claim_generation": { "type": "integer", "minimum": 0 },
         "attempt_nonce": { "type": "string", "minLength": 1 },
@@ -61,13 +66,25 @@
     },
     "reclaim_action": {
       "type": "object",
-      "required": ["action_id", "unit_id", "expected_generation", "expected_claim_state", "expected_head", "single_use"],
+      "required": ["action_id", "manifest_id", "wave_id", "unit_id", "expected_generation", "expected_claim_state", "expected_head", "terminal_result_check", "single_use"],
       "properties": {
         "action_id": { "type": "string", "minLength": 1 },
+        "manifest_id": { "type": "string", "minLength": 1 },
+        "wave_id": { "type": "string", "minLength": 1 },
         "unit_id": { "type": "string", "minLength": 1 },
         "expected_generation": { "type": "integer", "minimum": 0 },
         "expected_claim_state": { "type": "string", "minLength": 1 },
         "expected_head": { "type": "string", "minLength": 1 },
+        "terminal_result_check": {
+          "type": "object",
+          "required": ["unit_id", "found_valid_current_terminal", "readback"],
+          "properties": {
+            "unit_id": { "type": "string", "minLength": 1 },
+            "found_valid_current_terminal": { "type": "boolean", "const": false },
+            "readback": { "type": "string", "enum": ["VERIFIED"] }
+          },
+          "additionalProperties": false
+        },
         "single_use": { "type": "boolean", "const": true }
       },
       "additionalProperties": false

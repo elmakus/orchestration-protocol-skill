@@ -1,11 +1,13 @@
-<!-- normative-owner: durable-storage | version: 1.0.0 | domains: git-ledger, result-immutability, supersession-pointers, currentness-resolution, archive-structure, readback-proof, provenance-lineage -->
+<!-- normative-owner: durable-storage | version: 1.0.0 | domains: git-ledger, result-immutability, supersession-pointers, archive-structure, readback-proof, provenance-lineage -->
 # Shared owner — durable storage (`1.0.0`)
 
 Sole normative owner of the Git wave ledger, result immutability and
-supersession, consume-time currentness resolution, the evidence archive
-structure, readback proof, and provenance lineage. Sealing transitions and
-integration publication fences belong to their later owners (M05);
-this owner records their durable effects, never their algorithms.
+supersession pointers, the evidence archive structure, readback proof, and
+provenance lineage. Sealing transitions and integration publication fences
+belong to their later owners (M05); this owner records their durable
+effects, never their algorithms. Consume-time currentness resolution is
+owned by contracts-and-versioning (§5 there) and referenced here only as
+non-normative explanation.
 
 ## 1. Git wave ledger
 
@@ -39,15 +41,17 @@ Replacing the repository itself requires future owner/product authority.
   overwritten, and historical packages/results are never rewritten to appear
   compliant with newer semantics.
 
-## 3. Consume-time currentness resolution
+## 3. Consume-time currentness pointers (non-normative reference)
 
-Publication-time `CURRENT` is not consume-time proof. Before any forward
-use, continuation, acceptance reuse, or superseding action, the consumer
-MUST resolve effective currentness through the canonical
-current-result/supersession authority bound by the release/caller
-integration, positively read it back, and verify the exact result remains
-current. Missing, stale, superseded, or ambiguous effective currentness
-blocks forward acceptance (BLOCKED).
+The normative consume-time predicate lives in contracts-and-versioning
+§5: publication-time `CURRENT` is not consume-time proof, and only a
+positive readback of the canonical current-result/supersession authority
+permits forward use. This owner provides the pointer and provenance
+structure that carries that resolution: before any forward use the
+consumer resolves the current-result pointer for the subject, positively
+reads it back, and verifies the exact result remains current. Missing,
+stale, superseded, or ambiguous effective currentness blocks forward
+acceptance (BLOCKED).
 
 ## 4. Archive structure
 

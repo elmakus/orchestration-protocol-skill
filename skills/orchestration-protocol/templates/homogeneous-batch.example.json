@@ -1,23 +1,32 @@
 {
-  "_synthetic": "SYNTHETIC example data only. Grammars: schemas/homogeneous.schema.json homogeneous_batch/homogeneous_run/supplemental_action.",
-  "batch": {
+  "_synthetic": "SYNTHETIC container: label is data outside records, never digested. Grammars: schemas/homogeneous.schema.json homogeneous_batch/homogeneous_run/current_attempt/supplemental_action.",
+  "homogeneous_batch": {
     "batch_revision_id": "batch:example:0001:rev0",
     "wave_id": "wave:example:0002",
-    "run_envelope_id": "runenv:0000000000000000000000000000000000000000000000000000000000000000",
+    "run_envelope_id": "runenv:b7c06ff6d3015c56d0d5621f7f63981a1d6703e50b6db8ca6bf6ea450d44d728",
     "subject": { "identity_class": "captured-content", "sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff", "byte_length": 128, "capture_method": "example-capture" },
     "coverage": { "acceptance_id": "coverage:example:gbh:v1" },
     "release_id": "orchestration-protocol-skill@0.2.0-m02",
     "reserved_runs": ["RUN-001", "RUN-002", "RUN-003"],
     "state": "OPEN"
   },
-  "run": {
+  "homogeneous_run": {
     "run_id": "RUN-001",
     "batch_revision_id": "batch:example:0001:rev0",
     "recovery_state": "ACTIVE",
     "current_attempt_id": "attempt:RUN-001:0001",
     "attempt_history": ["attempt:RUN-001:0001"]
   },
-  "supplemental": {
+  "current_attempt": {
+    "attempt_id": "attempt:RUN-001:0001",
+    "run_id": "RUN-001",
+    "batch_revision_id": "batch:example:0001:rev0",
+    "subject": { "identity_class": "captured-content", "sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff", "byte_length": 128, "capture_method": "example-capture" },
+    "coverage": { "acceptance_id": "coverage:example:gbh:v1" },
+    "release_id": "orchestration-protocol-skill@0.2.0-m02",
+    "state": "ACTIVE"
+  },
+  "supplemental_action": {
     "action_id": "suppl:example:0001",
     "parent_wave_id": "wave:example:0002",
     "parent_batch_revision_id": "batch:example:0001:rev0",

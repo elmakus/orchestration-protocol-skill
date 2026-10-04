@@ -4,7 +4,7 @@
   "title": "OP v1 homogeneous RUN_ID batch/run/attempt and supplemental action records",
   "version": "1.0.0",
   "normative_owner": "contracts-and-versioning",
-  "description": "Record grammars for frozen primary batches, RUN_ID recovery state, current attempts, and one-shot supplemental continuations. State-machine algorithms belong to the pending homogeneous-run-substrate owner (M04).",
+  "description": "Record grammars for frozen primary batches, RUN_ID recovery state, the distinct durable current-attempt record, and one-shot supplemental continuations. State-machine algorithms belong to the pending homogeneous-run-substrate owner (M04).",
   "defs": {
     "homogeneous_batch": {
       "type": "object",
@@ -13,8 +13,8 @@
         "batch_revision_id": { "type": "string", "minLength": 1 },
         "wave_id": { "type": "string", "minLength": 1 },
         "run_envelope_id": { "type": "string", "pattern": "^runenv:[0-9a-f]{64}$" },
-        "subject": { "type": "object" },
-        "coverage": { "type": "object" },
+        "subject": { "$ref": "urn:op-skill:schema:v1:identities#/defs/subject_identity" },
+        "coverage": { "$ref": "urn:op-skill:schema:v1:identities#/defs/coverage_identity" },
         "release_id": { "type": "string", "minLength": 1 },
         "reserved_runs": { "type": "array", "minItems": 1, "items": { "type": "string" } },
         "state": { "type": "string", "enum": ["OPEN", "CLOSED"] }
@@ -33,6 +33,20 @@
       },
       "additionalProperties": false
     },
+    "current_attempt": {
+      "type": "object",
+      "required": ["attempt_id", "run_id", "batch_revision_id", "subject", "coverage", "release_id", "state"],
+      "properties": {
+        "attempt_id": { "type": "string", "minLength": 1 },
+        "run_id": { "type": "string", "minLength": 1 },
+        "batch_revision_id": { "type": "string", "minLength": 1 },
+        "subject": { "$ref": "urn:op-skill:schema:v1:identities#/defs/subject_identity" },
+        "coverage": { "$ref": "urn:op-skill:schema:v1:identities#/defs/coverage_identity" },
+        "release_id": { "type": "string", "minLength": 1 },
+        "state": { "type": "string", "enum": ["ACTIVE", "REPLACED", "TERMINAL"] }
+      },
+      "additionalProperties": false
+    },
     "supplemental_action": {
       "type": "object",
       "required": ["action_id", "parent_wave_id", "parent_batch_revision_id", "deficit_snapshot", "subject", "coverage", "release_id", "supplemental_runs", "expected_head", "single_use"],
@@ -41,8 +55,8 @@
         "parent_wave_id": { "type": "string", "minLength": 1 },
         "parent_batch_revision_id": { "type": "string", "minLength": 1 },
         "deficit_snapshot": { "type": "integer", "minimum": 1 },
-        "subject": { "type": "object" },
-        "coverage": { "type": "object" },
+        "subject": { "$ref": "urn:op-skill:schema:v1:identities#/defs/subject_identity" },
+        "coverage": { "$ref": "urn:op-skill:schema:v1:identities#/defs/coverage_identity" },
         "release_id": { "type": "string", "minLength": 1 },
         "supplemental_runs": { "type": "array", "minItems": 1, "items": { "type": "string" } },
         "expected_head": { "type": "string", "minLength": 1 },

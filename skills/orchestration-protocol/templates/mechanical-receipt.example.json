@@ -1,5 +1,5 @@
 {
-  "_synthetic": "SYNTHETIC example data only. Grammars: schemas/metadata.schema.json mechanical_metadata/execution_receipt/provider_receipt.",
+  "_synthetic": "SYNTHETIC container: label is data outside records, never digested. Grammars: schemas/metadata.schema.json mechanical_metadata/execution_receipt/provider_receipt.",
   "mechanical_metadata": {
     "assignment_id": "assign:example:0001",
     "unit_id": "unit-01",

@@ -5,7 +5,7 @@
   "version": "1.0.0",
   "normative_owner": "durable-storage",
   "normative_co_owner": "evidence-and-sources",
-  "description": "Durable result-contract records. Sealing/integration transitions belong to the pending independence-and-integration owner (M05); these grammars record their durable effects.",
+  "description": "Durable result-contract records carrying canonical findings, dissent, uncertainty, run-envelope identity and qualification bindings. Sealing/integration transitions belong to the pending independence-and-integration owner (M05); these grammars record their durable effects.",
   "defs": {
     "sealed_result": {
       "type": "object",
@@ -14,10 +14,32 @@
         "result_id": { "type": "string", "minLength": 1 },
         "assignment_id": { "type": "string", "minLength": 1 },
         "wave_id": { "type": "string", "minLength": 1 },
-        "subject": { "type": "object" },
-        "coverage": { "type": "object" },
+        "subject": { "$ref": "urn:op-skill:schema:v1:identities#/defs/subject_identity" },
+        "coverage": { "$ref": "urn:op-skill:schema:v1:identities#/defs/coverage_identity" },
         "release_id": { "type": "string", "minLength": 1 },
-        "generation_binding": { "type": "object" },
+        "generation_binding": {
+          "anyOf": [
+            {
+              "type": "object",
+              "required": ["unit_id", "claim_generation"],
+              "properties": {
+                "unit_id": { "type": "string", "minLength": 1 },
+                "claim_generation": { "type": "integer", "minimum": 0 },
+                "attempt_nonce_id": { "type": ["string", "null"] }
+              },
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "required": ["run_id", "attempt_id"],
+              "properties": {
+                "run_id": { "type": "string", "minLength": 1 },
+                "attempt_id": { "type": "string", "minLength": 1 }
+              },
+              "additionalProperties": false
+            }
+          ]
+        },
         "attempt_binding": { "type": ["object", "null"] },
         "content_identity": { "type": "object" },
         "publication": { "type": "string", "minLength": 1 },
@@ -47,27 +69,59 @@
       },
       "additionalProperties": false
     },
+    "finding": {
+      "type": "object",
+      "required": ["finding_id", "statement", "blocking"],
+      "properties": {
+        "finding_id": { "type": "string", "minLength": 1 },
+        "statement": { "type": "string", "minLength": 1 },
+        "blocking": { "type": "boolean" }
+      },
+      "additionalProperties": false
+    },
     "integrated_result": {
       "type": "object",
-      "required": ["result_schema", "caller_id", "wave_id", "profile_id", "profile_semantics", "subject", "coverage", "release_id", "execution_state", "applicability_state", "currentness_state", "coverage_state", "profile_disposition", "admission_snapshot_id", "durable_locator", "qualification_snapshot_id", "supersession"],
+      "required": ["integrated_result_id", "result_schema", "caller_id", "wave_id", "run_envelope_id", "profile_id", "profile_semantics", "subject", "coverage", "release_id", "execution_state", "applicability_state", "currentness_state", "coverage_state", "profile_disposition", "findings", "dissent", "uncertainty", "admission_snapshot_id", "durable_locator", "publication_readback", "qualification_snapshot_id", "qualification_impact_id"],
       "properties": {
+        "integrated_result_id": { "type": "string", "minLength": 1 },
         "result_schema": { "type": "string", "pattern": "^1\\." },
         "caller_id": { "type": "string", "minLength": 1 },
         "wave_id": { "type": "string", "minLength": 1 },
+        "run_envelope_id": { "type": "string", "pattern": "^runenv:[0-9a-f]{64}$" },
         "profile_id": { "type": "string", "minLength": 1 },
         "profile_semantics": { "type": "string", "minLength": 1 },
-        "subject": { "type": "object" },
-        "coverage": { "type": "object" },
+        "subject": { "$ref": "urn:op-skill:schema:v1:identities#/defs/subject_identity" },
+        "coverage": { "$ref": "urn:op-skill:schema:v1:identities#/defs/coverage_identity" },
         "release_id": { "type": "string", "minLength": 1 },
         "execution_state": { "type": "string", "enum": ["COMPLETE", "INCOMPLETE", "BLOCKED"] },
         "applicability_state": { "type": "string", "enum": ["APPLICABLE", "NOT_APPLICABLE", "UNKNOWN"] },
         "currentness_state": { "type": "string", "enum": ["CURRENT", "SUPERSEDED", "STALE", "UNKNOWN"] },
         "coverage_state": { "type": "string", "enum": ["COMPLETE", "INCOMPLETE", "BLOCKED", "NOT_APPLICABLE"] },
         "profile_disposition": { "type": "string", "enum": ["COMPLETE", "GREEN", "RED", "ESCALATE_FULL_WAVE", "INCOMPLETE", "BLOCKED", "NOT_APPLICABLE"] },
+        "findings": { "type": "array", "items": { "$ref": "#/defs/finding" } },
+        "dissent": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["statement"],
+            "properties": { "statement": { "type": "string", "minLength": 1 } },
+            "additionalProperties": false
+          }
+        },
+        "uncertainty": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["statement"],
+            "properties": { "statement": { "type": "string", "minLength": 1 } },
+            "additionalProperties": false
+          }
+        },
         "admission_snapshot_id": { "type": "string", "minLength": 1 },
         "durable_locator": { "type": "string", "minLength": 1 },
         "publication_readback": { "type": "string", "enum": ["VERIFIED"] },
         "qualification_snapshot_id": { "type": "string", "minLength": 1 },
+        "qualification_impact_id": { "type": "string", "minLength": 1 },
         "supersession": { "type": ["object", "null"] }
       },
       "additionalProperties": false

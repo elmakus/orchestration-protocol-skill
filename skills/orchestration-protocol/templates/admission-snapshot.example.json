@@ -1,15 +1,56 @@
 {
-  "_synthetic": "SYNTHETIC example data only. Grammars: schemas/results.schema.json admission_snapshot/integrated_result/current_result_pointer.",
-  "admission_snapshot": {
-    "snapshot_id": "admit:example:0001",
+  "_synthetic": "SYNTHETIC container: label is data outside records, never digested. Two coherent lineages: a partial snapshot whose missing mandatory unit forces INCOMPLETE through shared precedence (recorded negative evidence cannot override it), and a complete lineage whose full admission supports RED. Grammars: schemas/results.schema.json admission_snapshot/integrated_result/current_result_pointer.",
+  "partial_admission_snapshot": {
+    "snapshot_id": "admit:example:partial:0001",
     "wave_id": "wave:example:0001",
-    "admitted_results": ["sealed:example:0001", "sealed:example:0002"],
-    "missing_set": [{ "member": "unit-03", "reason": "blocked: missing required evidence source" }]
+    "admitted_results": ["sealed:example:0001"],
+    "missing_set": [{ "member": "unit-02", "reason": "blocked: required evidence source unavailable" }]
   },
-  "integrated_result": {
+  "partial_integrated_result": {
+    "integrated_result_id": "integrated:example:partial:0001",
     "result_schema": "1.0",
     "caller_id": "caller:example:0001",
     "wave_id": "wave:example:0001",
+    "run_envelope_id": "runenv:b7c06ff6d3015c56d0d5621f7f63981a1d6703e50b6db8ca6bf6ea450d44d728",
+    "profile_id": "definition_review",
+    "profile_semantics": "1.0.0",
+    "subject": { "identity_class": "git", "repository": "example/repo", "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "path": "SPEC.md", "blob": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb" },
+    "coverage": { "acceptance_id": "coverage:example:acceptance:v1" },
+    "release_id": "orchestration-protocol-skill@0.2.0-m02",
+    "execution_state": "COMPLETE",
+    "applicability_state": "APPLICABLE",
+    "currentness_state": "CURRENT",
+    "coverage_state": "INCOMPLETE",
+    "profile_disposition": "INCOMPLETE",
+    "findings": [{ "finding_id": "F-00", "statement": "synthetic negative evidence recorded without overriding partial precedence", "blocking": true }],
+    "dissent": [{ "statement": "synthetic preserved dissent on scope completeness" }],
+    "uncertainty": [{ "statement": "synthetic unresolved uncertainty on missing unit coverage" }],
+    "admission_snapshot_id": "admit:example:partial:0001",
+    "durable_locator": "example/repo@aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:results/integrated-partial.md",
+    "publication_readback": "VERIFIED",
+    "qualification_snapshot_id": "qualsnap:example:0001",
+    "qualification_impact_id": "impact:0.2.0-m02",
+    "supersession": null
+  },
+  "partial_pointer": {
+    "pointer_id": "current:example:partial:0001",
+    "subject_digest": "digest:example:subject:0001",
+    "current_result_id": "integrated:example:partial:0001",
+    "supersession_chain": ["integrated:example:partial:0001"],
+    "readback": "VERIFIED"
+  },
+  "complete_admission_snapshot": {
+    "snapshot_id": "admit:example:complete:0001",
+    "wave_id": "wave:example:0001",
+    "admitted_results": ["sealed:example:0001", "sealed:example:0002"],
+    "missing_set": []
+  },
+  "complete_integrated_result": {
+    "integrated_result_id": "integrated:example:complete:0001",
+    "result_schema": "1.0",
+    "caller_id": "caller:example:0001",
+    "wave_id": "wave:example:0001",
+    "run_envelope_id": "runenv:b7c06ff6d3015c56d0d5621f7f63981a1d6703e50b6db8ca6bf6ea450d44d728",
     "profile_id": "definition_review",
     "profile_semantics": "1.0.0",
     "subject": { "identity_class": "git", "repository": "example/repo", "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "path": "SPEC.md", "blob": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb" },
@@ -20,17 +61,21 @@
     "currentness_state": "CURRENT",
     "coverage_state": "COMPLETE",
     "profile_disposition": "RED",
-    "admission_snapshot_id": "admit:example:0001",
+    "findings": [{ "finding_id": "F-01", "statement": "synthetic accepted blocking finding", "blocking": true }],
+    "dissent": [],
+    "uncertainty": [],
+    "admission_snapshot_id": "admit:example:complete:0001",
     "durable_locator": "example/repo@aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:results/integrated.md",
     "publication_readback": "VERIFIED",
     "qualification_snapshot_id": "qualsnap:example:0001",
+    "qualification_impact_id": "impact:0.2.0-m02",
     "supersession": null
   },
-  "current_result_pointer": {
-    "pointer_id": "current:example:0001",
+  "complete_pointer": {
+    "pointer_id": "current:example:complete:0001",
     "subject_digest": "digest:example:subject:0001",
-    "current_result_id": "result:example:accepted:0007",
-    "supersession_chain": ["result:example:accepted:0006", "result:example:accepted:0007"],
+    "current_result_id": "integrated:example:complete:0001",
+    "supersession_chain": ["integrated:example:complete:0001"],
     "readback": "VERIFIED"
   }
 }

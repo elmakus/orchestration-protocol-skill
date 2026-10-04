@@ -1,9 +1,19 @@
 {
   "policy_id": "op-release-policy",
   "policy_version": "2026-10-04:m02-construction",
+  "policy_kind": "proposed-construction",
   "minimum_supported_release": "orchestration-protocol-skill@0.2.0-m02",
   "revoked_releases": [],
   "supersession": null,
-  "freshness_rule": "Policy older than 30 days, or any superseding policy pointer, makes this policy STALE; stale/ambiguous/unresolvable policy fails closed.",
-  "note": "Construction-snapshot policy. Production admission additionally requires all Q0-Q10 PASS plus owner ACCEPTABLE, which this snapshot does not claim."
+  "freshness_rule": "A policy is CURRENT only while now <= issued_at + max_age_days and no successor pointer is published; otherwise STALE. Stale/ambiguous/unresolvable policy fails closed.",
+  "required_readback": {
+    "distribution_authority": "canonical skills-only distribution authority already used by the product (unverified for this snapshot; see U-01)",
+    "freshness_inputs": {
+      "issued_at": "2026-10-04T00:00:00Z",
+      "max_age_days": 30,
+      "successor_pointer": null
+    }
+  },
+  "production_admission_eligible": false,
+  "note": "Proposed construction data with no qualified distribution proof: a structural example of the policy grammar, not an authorized current readback. This snapshot is INELIGIBLE for production without exact positive authority and all Q0-Q10 PASS plus owner ACCEPTABLE."
 }

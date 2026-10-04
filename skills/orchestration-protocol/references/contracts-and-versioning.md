@@ -1,4 +1,4 @@
-<!-- normative-owner: contracts-and-versioning | version: 1.0.0 | domains: run-envelope, identity-scopes, envelope-equivalence, canonical-serialization, state-domains, state-precedence, version-compatibility, release-admission, content-identity-graph, compatibility-manifest, current-policy-manifest, extension-points -->
+<!-- normative-owner: contracts-and-versioning | version: 1.0.0 | domains: run-envelope, identity-scopes, envelope-equivalence, canonical-serialization, state-domains, state-precedence, currentness-resolution, version-compatibility, release-admission, content-identity-graph, compatibility-manifest, current-policy-manifest, extension-points -->
 # Shared owner — contracts and versioning (`1.0.0`)
 
 Sole normative owner of the caller/run envelope, identity scopes and
@@ -62,13 +62,25 @@ their owning wave and are never reused across waves.
 
 ## 3. Envelope equivalence and canonical serialization
 
-Canonical serialization (applies to every digested record):
+One concrete semantic specification projection is digested. For a Run
+Envelope it is the record minus:
+
+- routing-only container content (`return_id`);
+- derived self-identity (`run_envelope_id` — digesting it would be
+  self-referential);
+- container/annotation labels (e.g. synthetic-data markers), which are
+  transport metadata outside the record and never enter any digest.
+
+A supplied derived identity MUST be verified against recomputation from
+this projection; a mismatch fails closed and the supplied value never
+silently overrides content. Canonical serialization:
 
 - UTF-8 JSON, object keys sorted lexicographically by UTF-16 code unit,
   no insignificant whitespace, arrays order-significant, numbers without
   NaN/Infinity, strings as written.
 - `digest(x) = lowercase-hex(SHA-256(canonical-bytes(x)))`.
-- `run_envelope_id = "runenv:" + digest(envelope-minus-return_id)`.
+- `run_envelope_id = "runenv:" + digest(semantic-projection(envelope))`,
+  where the projection is defined above.
 - Redundant exact identity fields for one subject/coverage component MUST be
   mutually consistent under canonical equivalence; conflicting redundant
   components make the envelope invalid/BLOCKED — no field silently wins.
@@ -111,7 +123,13 @@ Deterministic terminal precedence (owned here; profiles MUST NOT redefine):
 6. Else the only acceptance-evaluation tuple is execution `COMPLETE` +
    applicability `APPLICABLE` + currentness `CURRENT` + coverage `COMPLETE`;
    apply the profile truth rule (profile-owned predicate through §7).
-7. Any unlisted or contradictory tuple is invalid → `BLOCKED`.
+7. Any unlisted or contradictory tuple is invalid → `BLOCKED`. In
+   particular: an applicable profile whose mandatory coverage/work set
+   resolves empty without a proven profile NOT_APPLICABLE predicate is
+   BLOCKED (never GREEN, never INCOMPLETE-as-success, never profile
+   truth); and a tuple such as APPLICABLE + CURRENT + COMPLETE +
+   coverage NOT_APPLICABLE, or any value outside the finite domains, is
+   contradictory → `BLOCKED` rather than truth evaluation.
 
 `BLOCKED` takes precedence over `INCOMPLETE`. `NOT_APPLICABLE` is terminal
 and neutral, never GREEN. Coverage `NOT_APPLICABLE` requires applicability
@@ -122,7 +140,19 @@ For the legal acceptance tuple, profile truth is total per profile family
 as declared through §7 extension points (e.g. review GREEN iff no accepted
 blocking finding remains; research COMPLETE iff synthesis obligations hold).
 
-## 5. Version compatibility
+## 5. Consume-time currentness resolution
+
+Publication-time `CURRENT` is not consume-time proof. Before any forward
+use, continuation, acceptance reuse, or superseding action, the consumer
+MUST resolve effective currentness through the canonical
+current-result/supersession authority bound by the release/caller
+integration, positively read it back, and verify the exact result remains
+current. Missing, stale, superseded, or ambiguous effective currentness
+blocks forward acceptance (BLOCKED). Durable-storage owns the pointer and
+provenance structure that carries this resolution; the predicate itself is
+owned here.
+
+## 6. Version compatibility
 
 Persisted independently: `op_contract` version, profile ID + profile
 semantics version, result schema version, release/content digest, producer
@@ -138,7 +168,7 @@ generation/RUN_ID batch identities.
 - Internal topology changes preserving compatible profile semantics need no
   compatibility change.
 
-## 6. Release admission and current policy
+## 7. Release admission and current policy
 
 A moving channel may locate a release, but the exact release/content
 identity MUST be resolved, integrity-verified, and pinned before any
@@ -158,7 +188,7 @@ are admissible only while integrity/compatibility/qualification checks pass,
 unrevoked, and at/above floor. Manifest grammar:
 `schemas/policy.schema.json`; live manifest: `manifests/current-policy.json`.
 
-## 7. Content-identity graph (acyclic)
+## 8. Content-identity graph (acyclic)
 
 Implemented package files → content manifest → construction content
 identity. Rules:
@@ -175,7 +205,7 @@ identity. Rules:
 
 Live manifest: `manifests/content-manifest.json`.
 
-## 8. Typed profile extension points
+## 9. Typed profile extension points
 
 Profiles may parameterize shared mechanisms ONLY through these typed
 extension points declared here (implemented by M06/M07 profile modules):
@@ -187,6 +217,6 @@ extension points declared here (implemented by M06/M07 profile modules):
 - `convergence_rule(formal_research, evidence) -> saturated | open`.
 
 No extension point may redefine state precedence (§4), identity equivalence
-(§3), or currentness resolution (durable-storage owner). If two canonical
+(§3), or currentness resolution (§5). If two canonical
 owners appear to govern one rule or contradict, execution/qualification
 fails closed.

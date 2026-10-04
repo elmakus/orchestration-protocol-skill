@@ -1,15 +1,21 @@
 {
-  "_synthetic": "SYNTHETIC example data only. Grammar: schemas/envelope.schema.json#/defs/verification_proof.",
-  "authority_id": "cont-auth:example:0001",
-  "issuer": "example-caller-authority",
-  "caller_relation": "owning-caller",
-  "authority_locator": "example/repo@aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:auth/record-0001.json",
-  "authority_content_digest": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
-  "currentness": "CURRENT",
-  "authorized_profile": "repair_units",
-  "authorized_action": "claim-repair-unit",
-  "subject_digest": "digest:example:subject:0001",
-  "effect_envelope_digest": "digest:example:effects:0001",
-  "channel_binding": "same-channel",
-  "verdict": "GENUINE"
+  "_synthetic": "SYNTHETIC container: label is data outside the record, never digested. Grammar: schemas/envelope.schema.json#/defs/verification_proof.",
+  "verification_proof": {
+    "authority_id": "cont-auth:example:0001",
+    "issuer": "example-caller-authority",
+    "caller_relation": "owning-caller",
+    "authority_locator": "example/repo@aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:auth/record-0001.json",
+    "authority_content_digest": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+    "currentness": "CURRENT",
+    "authorized_profile": "repair_units",
+    "authorized_action": "claim-repair-unit",
+    "prior_result_id": "result:example:accepted:0007",
+    "prior_obligation_ids": ["F-01", "F-02"],
+    "subject_digest": "digest:example:subject:0001",
+    "candidate_digest": "digest:example:candidate:0001",
+    "effect_envelope_digest": "digest:example:effects:0001",
+    "supersession_state": "CURRENT",
+    "channel_binding": "same-channel",
+    "verdict": "GENUINE"
+  }
 }

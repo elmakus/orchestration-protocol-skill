@@ -4,7 +4,7 @@
   "title": "OP v1 immutable subject/coverage identities",
   "version": "1.0.0",
   "normative_owner": "contracts-and-versioning",
-  "description": "Versioned grammars for Git, captured-content, and composite manifest identities. Canonical serialization/digest rules are owned by references/contracts-and-versioning.md section 3.",
+  "description": "Versioned grammars for Git, captured-content, composite-manifest and coverage identities. Canonical serialization/digest rules are owned by references/contracts-and-versioning.md section 3. No escape hatch: every subject is exactly one supported immutable class.",
   "defs": {
     "git_identity": {
       "type": "object",
@@ -54,6 +54,20 @@
         { "$ref": "#/defs/captured_content_identity" },
         { "$ref": "#/defs/composite_manifest" }
       ]
+    },
+    "coverage_identity": {
+      "type": "object",
+      "required": ["acceptance_id"],
+      "properties": {
+        "acceptance_id": { "type": "string", "minLength": 1 },
+        "coverage_manifest": {
+          "anyOf": [
+            { "$ref": "#/defs/composite_manifest" },
+            { "type": "null" }
+          ]
+        }
+      },
+      "additionalProperties": false
     }
   }
 }

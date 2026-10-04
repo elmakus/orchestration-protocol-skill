@@ -2,29 +2,154 @@
   "manifest_id": "impact:0.2.0-m02",
   "release_id": "orchestration-protocol-skill@0.2.0-m02",
   "inventory": [
-    { "component": "plugin-metadata", "identity": "plugin.json@see-content-manifest" },
-    { "component": "skill-root", "identity": "skills/orchestration-protocol/SKILL.md@see-content-manifest" },
-    { "component": "reference:contracts-and-versioning:1.0.0", "identity": "see-content-manifest" },
-    { "component": "reference:evidence-and-sources:1.0.0", "identity": "see-content-manifest" },
-    { "component": "reference:security-and-effects:1.0.0", "identity": "see-content-manifest" },
-    { "component": "reference:durable-storage:1.0.0", "identity": "see-content-manifest" },
-    { "component": "schemas:v1", "identity": "see-content-manifest" },
-    { "component": "templates:synthetic-examples", "identity": "see-content-manifest" },
-    { "component": "host:android-chatgpt", "identity": "UNVERIFIED — no qualified host identity exists for this snapshot" },
-    { "component": "helper:esm", "identity": "ABSENT — bundled helper ships in M03; no helper claim is made here" },
-    { "component": "provider-tools", "identity": "UNVERIFIED — capability-required interfaces only" }
+    {
+      "component": "plugin-metadata",
+      "identity": "cea42ced5efd25e2c0feb0a26c6642aa4299529a16a29d8594398e016222ca55"
+    },
+    {
+      "component": "skill-root",
+      "identity": "05a554f10fa4dd1a6a1fdb37ef9737187d4144b73ad2b7b86dd1377e6c80c690"
+    },
+    {
+      "component": "reference:contracts-and-versioning:1.0.0",
+      "identity": "c26b4d1b9b4e33915a1715a64939d2e2d4a8c812800d599930c7d4eab7e559e4"
+    },
+    {
+      "component": "reference:evidence-and-sources:1.0.0",
+      "identity": "d0269b39a872ef2f09e2a13eee1c801a36bf426a009de5dc540cbfc7d37a7c48"
+    },
+    {
+      "component": "reference:security-and-effects:1.0.0",
+      "identity": "b8e564e895ac2fb4e9fc43704b918914c8c80a87fcb22412c99f1d934d311450"
+    },
+    {
+      "component": "reference:durable-storage:1.0.0",
+      "identity": "4f4f298203c68001ca8ffe418d0e39d524ab724b0dc5277ae6fbe2c0cd139322"
+    },
+    {
+      "component": "schemas:v1",
+      "identity": "df09bff0e3837468cec493d1cbd0745a60bd25e01bc196056a560ad70cbb8bf6"
+    },
+    {
+      "component": "templates:synthetic-examples",
+      "identity": "5cd84850ac5b91394c0f3f27ccd9abcafa6fbc8b82b28eee9b6c08ff30e948d3"
+    },
+    {
+      "component": "host:android-chatgpt",
+      "identity": {
+        "unavailable": true,
+        "observation": "no qualified host identity exists for this snapshot; installed-surface proof deferred to Q9/Q10"
+      }
+    },
+    {
+      "component": "helper:esm",
+      "identity": {
+        "unavailable": true,
+        "observation": "bundled helper ships in M03; no helper artifact or API claim is made here"
+      }
+    },
+    {
+      "component": "provider-tools",
+      "identity": {
+        "unavailable": true,
+        "observation": "capability-required interfaces only; provider primitives unverified"
+      }
+    }
   ],
   "change_classes": [
-    { "change_class": "common-contract-text-change", "invalidates": ["Q0", "Q1"] },
-    { "change_class": "schema-template-record-change", "invalidates": ["Q0", "Q1"] },
-    { "change_class": "registry-owner-profile-change", "invalidates": ["Q0", "Q1", "Q5"] },
-    { "change_class": "effect-cap-or-authority-rule-change", "invalidates": ["Q1", "Q7"] },
-    { "change_class": "metadata-allowlist-change", "invalidates": ["Q7", "Q10"] },
-    { "change_class": "policy-floor-revocation-change", "invalidates": ["Q0", "Q1", "Q9"] },
-    { "change_class": "helper-artifact-change", "invalidates": ["Q8", "Q10"] },
-    { "change_class": "host-context-source-change", "invalidates": ["Q7", "Q9", "Q10"] },
-    { "change_class": "provider-capability-change", "invalidates": ["Q2", "Q3", "Q4", "Q7", "Q9"] },
-    { "change_class": "unclassified-material-change", "invalidates": ["Q0", "Q1", "Q2", "Q3", "Q4", "Q5", "Q6", "Q7", "Q8", "Q9", "Q10"] }
+    {
+      "change_class": "common-contract-text-change",
+      "invalidates": [
+        "Q0",
+        "Q1",
+        "Q5",
+        "Q6",
+        "Q7"
+      ]
+    },
+    {
+      "change_class": "schema-template-record-change",
+      "invalidates": [
+        "Q0",
+        "Q1",
+        "Q5",
+        "Q6"
+      ]
+    },
+    {
+      "change_class": "registry-owner-profile-change",
+      "invalidates": [
+        "Q0",
+        "Q1",
+        "Q5",
+        "Q6",
+        "Q7"
+      ]
+    },
+    {
+      "change_class": "effect-cap-or-authority-rule-change",
+      "invalidates": [
+        "Q1",
+        "Q5",
+        "Q7"
+      ]
+    },
+    {
+      "change_class": "metadata-allowlist-change",
+      "invalidates": [
+        "Q7",
+        "Q10"
+      ]
+    },
+    {
+      "change_class": "policy-floor-revocation-change",
+      "invalidates": [
+        "Q0",
+        "Q1",
+        "Q9"
+      ]
+    },
+    {
+      "change_class": "helper-artifact-change",
+      "invalidates": [
+        "Q8",
+        "Q10"
+      ]
+    },
+    {
+      "change_class": "host-context-source-change",
+      "invalidates": [
+        "Q7",
+        "Q9",
+        "Q10"
+      ]
+    },
+    {
+      "change_class": "provider-capability-change",
+      "invalidates": [
+        "Q2",
+        "Q3",
+        "Q4",
+        "Q7",
+        "Q9"
+      ]
+    },
+    {
+      "change_class": "unclassified-material-change",
+      "invalidates": [
+        "Q0",
+        "Q1",
+        "Q2",
+        "Q3",
+        "Q4",
+        "Q5",
+        "Q6",
+        "Q7",
+        "Q8",
+        "Q9",
+        "Q10"
+      ]
+    }
   ],
-  "rule": "UNKNOWN or unclassified material relevance fails closed and invalidates every plausibly affected layer; unbounded impact invalidates all Q0-Q10."
+  "rule": "UNKNOWN or unclassified material relevance fails closed and invalidates every plausibly affected layer; unbounded impact invalidates all Q0-Q10. Common-contract/schema/registry changes conservatively invalidate all plausibly dependent state/profile/integration/effect layers."
 }

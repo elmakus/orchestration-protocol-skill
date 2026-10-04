@@ -1,7 +1,7 @@
 {
   "manifest_id": "content:0.2.0-m02",
   "release_id": "orchestration-protocol-skill@0.2.0-m02",
-  "construction_identity": "content:ee463d1f3e971d5dfd0a5720ee574fdc4721337baa7a2a9ff103ea6485361033",
+  "construction_identity": "content:9f3b3c66a6c44bd5eee3a5302b5782b04b5bf9767f2664b9ec6fab81b9fb07d3",
   "excludes": [
     "skills/orchestration-protocol/manifests/content-manifest.json",
     "detached policy/qualification/readback attestations",
@@ -23,27 +23,27 @@
     },
     {
       "path": "skills/orchestration-protocol/manifests/compatibility-manifest.json",
-      "sha256": "47c8b7f074d02ebb5ee284911520b742b8fc87df349e2fac24a450df4927766f"
+      "sha256": "b74b020059391855eef50265807d30310d4f28ecce36b907026273d1ad9e0796"
     },
     {
       "path": "skills/orchestration-protocol/manifests/current-policy.json",
-      "sha256": "52ab5300313548e3bcd8e7bc2581693b5dbd64e9fc58184829c41c41704dbcbe"
+      "sha256": "44946fa394e9a6c04c226288f962a85c224b19eedcf0c53caba5fe9f09e2fdc5"
     },
     {
       "path": "skills/orchestration-protocol/manifests/qualification-impact.json",
-      "sha256": "e8574ba770a365e073798b540024fe1642dae3398ade8e4c5395094222232cc0"
+      "sha256": "471554e851d5b0b19e91f743ebd65fcfd433f3646a9b048bece9bfd7166e3a21"
     },
     {
       "path": "skills/orchestration-protocol/manifests/registry.json",
-      "sha256": "79aae370e72c797304b4fdc1ce38da642366147b0dae4e96ee966e3a9d6cd9fc"
+      "sha256": "3875c6ecc3beb4e263adef389d576ea7741a4a1e991d92ed023c4ffee6092d06"
     },
     {
       "path": "skills/orchestration-protocol/references/contracts-and-versioning.md",
-      "sha256": "5239d9845df106ecfe46776e9465dce4f2ac72003ef33d1f3dfdcfe559588005"
+      "sha256": "c26b4d1b9b4e33915a1715a64939d2e2d4a8c812800d599930c7d4eab7e559e4"
     },
     {
       "path": "skills/orchestration-protocol/references/durable-storage.md",
-      "sha256": "8368bd7180c79aff8f657caee69b40cdc9a1936d71816acb7207ece483fb454b"
+      "sha256": "4f4f298203c68001ca8ffe418d0e39d524ab724b0dc5277ae6fbe2c0cd139322"
     },
     {
       "path": "skills/orchestration-protocol/references/evidence-and-sources.md",
@@ -55,71 +55,75 @@
     },
     {
       "path": "skills/orchestration-protocol/schemas/envelope.schema.json",
-      "sha256": "80d537c4537a48c55852fd8f63a30449a269abebccff93f7ced5142cbe1c9f8f"
+      "sha256": "b497f4b70b8751862c0f2d96071fbdd3967a4cb3dc3443aa30a4c6e645c06697"
     },
     {
       "path": "skills/orchestration-protocol/schemas/finite.schema.json",
-      "sha256": "5aedbb3e3e1c73a427485872442b461a1ba352928e6497fa7aa9eabb26e26d5e"
+      "sha256": "1d78825945d9402406a621757b6af2d60f6ad3922ab9ee65d752f29bd6729a33"
     },
     {
       "path": "skills/orchestration-protocol/schemas/homogeneous.schema.json",
-      "sha256": "abb64c6c76c0f3ff9ffdd1403742da73ea899753f29f0f6fc558c547fc951f6d"
+      "sha256": "dd8bd2459d112ed145dfa6afe373df51a4431eb1f00fdb12209335080fe18363"
     },
     {
       "path": "skills/orchestration-protocol/schemas/identities.schema.json",
-      "sha256": "cc4d29ee8a3caa8140264726fc2c559a996f1a4bdee3a66d4ef26f82eff3b2d0"
+      "sha256": "c12b7f495761f324c1241e72bfa1edf9d9cfb43cef82d471034419dfe1a5d626"
     },
     {
       "path": "skills/orchestration-protocol/schemas/metadata.schema.json",
-      "sha256": "3410edf04072ac3ed315476258748a692304dc0cba6dd02971140691ca4bce6d"
+      "sha256": "309c7559e58b785a6702ed049215cb46cd43e8281526c60e83e98dc5c7182d61"
     },
     {
       "path": "skills/orchestration-protocol/schemas/policy.schema.json",
-      "sha256": "50b5280c9d6b3ad65cd3e45a9680e37006c06439fc6b36224a4d9585e1d4314e"
+      "sha256": "f3bd2f752e974bce68d6db83a784d55748a3b48068b8ed0772fd6076cd804302"
     },
     {
       "path": "skills/orchestration-protocol/schemas/results.schema.json",
-      "sha256": "eafed95f9321723cdd26e8c40e53ae7fcc89e506d3ae07a16b3e400b182e6aa6"
+      "sha256": "ecf9686f10bcd1928deed7319ff8da392fdda843e3c5d4e6e604afbfefab0dbf"
     },
     {
       "path": "skills/orchestration-protocol/templates/admission-snapshot.example.json",
-      "sha256": "543157bf066cccb454f7e94dc7e4a06f8a32f931109207a4ac367039f118bec7"
+      "sha256": "92ed7491215f6db390fd196231a95a3977474a36bba69cd99607ddddad22661e"
     },
     {
       "path": "skills/orchestration-protocol/templates/continuation-authority.example.json",
-      "sha256": "bd6bef06f08363b0b2ce2252c6a54b41325622dacf01b0a83d54b22152b7dae2"
+      "sha256": "431f38328b83485776f22a79fe24a748e0599f1dabc5c17be7ea40b344174944"
     },
     {
       "path": "skills/orchestration-protocol/templates/finite-claim.example.json",
-      "sha256": "72ef74caab6f0862446ffb9f7dbf77da3b0b39f96b4e8c721665dc97e53e30fb"
+      "sha256": "2ef9118b94a0d9723196e1e77b74d23d72f81241cc73642b9045ce4a59e43a59"
     },
     {
       "path": "skills/orchestration-protocol/templates/homogeneous-batch.example.json",
-      "sha256": "b14cb52744c59ede0419f70ed5910853f575a1a09cc5cc5942aa239e817313f7"
+      "sha256": "c7bb281cf8ff9ea89e9963185a3de4a7ff80f7fefb0ec9b60f1601ddb4b22552"
     },
     {
       "path": "skills/orchestration-protocol/templates/mechanical-receipt.example.json",
-      "sha256": "fcd06954dfc1ccd498abab7b58fcf8837306e7e2abeb236a83be9b1a776bffff"
+      "sha256": "513bbbe8ac16abee14986f6dae29bc92bec8fc9e57a4acc01c8136621bfa0d7f"
     },
     {
       "path": "skills/orchestration-protocol/templates/pre-worker-checkpoint.example.json",
-      "sha256": "d587324f46f5c645c4b2f64e6d4ab43e566dbb3b4b5a55a951d9d44a394ffa30"
+      "sha256": "9721eccf106530e91a74960eb078db5dfbb0a8bebb84ba1f7d73a7ea5a0c12d5"
     },
     {
       "path": "skills/orchestration-protocol/templates/qualification-record.example.json",
-      "sha256": "5085bff78ab6693d87d169bb2b4bd38b8e86e6529ad0a10c1ef56c7616d08f3f"
+      "sha256": "8dd0032c3097d357ac61573f519f59b92e2f8867cd4fd4f69d3e004e0218b7a0"
     },
     {
       "path": "skills/orchestration-protocol/templates/run-envelope.example.json",
-      "sha256": "1261e5e05d2a54fc579481a944740a53aa5ef173becfe2f5d6dbbdbff2521f72"
+      "sha256": "a901b6d8d6f54f2f67013bee7f5358657699642da062fedea043e737831f3b49"
+    },
+    {
+      "path": "skills/orchestration-protocol/templates/sealed-result-02.example.json",
+      "sha256": "a8e6a323ea87a563079cd6cfd62be33a3bf95fc316c71225642a1816f78f7c95"
     },
     {
       "path": "skills/orchestration-protocol/templates/sealed-result.example.json",
-      "sha256": "7dd1c865d39d244d8561893506dafa34e064b666b0a7f792707045f077f98cde"
+      "sha256": "19b34a80c5b475396b57378c6a3faa2fa3ada5cf2af83744fca12fe9b0379199"
     },
     {
       "path": "skills/orchestration-protocol/templates/verification-proof.example.json",
-      "sha256": "6fe2dec7aef47d4e52aef1da0df65586ebd64a0db44ede9af60f3431ba0af3c2"
+      "sha256": "b4ec4507be314d449e6867e644e6219e57b6afc5c7beb5de39fb54bb5a5dc5ab"
     }
   ]
 }

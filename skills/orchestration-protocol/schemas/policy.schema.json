@@ -4,7 +4,7 @@
   "title": "OP v1 compatibility, current-policy, qualification-impact, detached qualification records",
   "version": "1.0.0",
   "normative_owner": "contracts-and-versioning",
-  "description": "Distribution-policy authority, compatibility manifest, qualification-impact manifest, and detached qualification records (PASS/FAIL/BLOCKED only).",
+  "description": "Distribution-policy authority (proposed construction data distinguished from authorized current readback), compatibility manifest, qualification-impact manifest with conservative dependency mapping, and detached qualification records (PASS/FAIL/BLOCKED only).",
   "defs": {
     "compatibility_manifest": {
       "type": "object",
@@ -41,20 +41,40 @@
           }
         },
         "helper_api": { "type": ["string", "null"] },
-        "templates_digest": { "type": "string", "minLength": 1 }
+        "templates_digest": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
       },
       "additionalProperties": false
     },
     "current_policy": {
       "type": "object",
-      "required": ["policy_id", "policy_version", "minimum_supported_release", "revoked_releases", "freshness_rule"],
+      "required": ["policy_id", "policy_version", "policy_kind", "minimum_supported_release", "revoked_releases", "freshness_rule", "required_readback", "production_admission_eligible"],
       "properties": {
         "policy_id": { "type": "string", "minLength": 1 },
         "policy_version": { "type": "string", "minLength": 1 },
+        "policy_kind": { "type": "string", "enum": ["proposed-construction", "authorized-current-readback"] },
         "minimum_supported_release": { "type": "string", "minLength": 1 },
         "revoked_releases": { "type": "array", "items": { "type": "string" } },
         "supersession": { "type": ["object", "null"] },
-        "freshness_rule": { "type": "string", "minLength": 1 }
+        "freshness_rule": { "type": "string", "minLength": 1 },
+        "required_readback": {
+          "type": "object",
+          "required": ["distribution_authority", "freshness_inputs"],
+          "properties": {
+            "distribution_authority": { "type": "string", "minLength": 1 },
+            "freshness_inputs": {
+              "type": "object",
+              "required": ["issued_at", "max_age_days"],
+              "properties": {
+                "issued_at": { "type": "string", "minLength": 1 },
+                "max_age_days": { "type": "integer", "minimum": 1 },
+                "successor_pointer": { "type": ["string", "null"] }
+              },
+              "additionalProperties": false
+            }
+          },
+          "additionalProperties": false
+        },
+        "production_admission_eligible": { "type": "boolean" }
       },
       "additionalProperties": false
     },
@@ -71,7 +91,20 @@
             "required": ["component", "identity"],
             "properties": {
               "component": { "type": "string", "minLength": 1 },
-              "identity": { "type": "string", "minLength": 1 }
+              "identity": {
+                "anyOf": [
+                  { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+                  {
+                    "type": "object",
+                    "required": ["unavailable", "observation"],
+                    "properties": {
+                      "unavailable": { "type": "boolean", "const": true },
+                      "observation": { "type": "string", "minLength": 1 }
+                    },
+                    "additionalProperties": false
+                  }
+                ]
+              }
             },
             "additionalProperties": false
           }
@@ -97,7 +130,7 @@
     },
     "qualification_record": {
       "type": "object",
-      "required": ["record_id", "candidate_id", "layer", "verdict", "fixture_set", "probe_set", "evidence_locator"],
+      "required": ["record_id", "candidate_id", "layer", "verdict", "fixture_set", "evidence_locator"],
       "properties": {
         "record_id": { "type": "string", "minLength": 1 },
         "candidate_id": { "type": "string", "minLength": 1 },
