@@ -1,5 +1,5 @@
 workstream_id = "op-skill-v1"
-revision = 11
+revision = 12
 
 [execution_ref]
 branch = "feat/op-skill-v1"
@@ -42,7 +42,7 @@ path = "implementation/workstreams/op-skill-v1/reviews/M02-T01-R01.toml"
 
 [[cards]]
 id = "M03-T01"
-status = "ready"
+status = "in_progress"
 
 [cards.contract]
 class = "task_card"
