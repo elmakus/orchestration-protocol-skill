@@ -3,7 +3,10 @@ workstream_id = "op-skill-v1"
 branch = "feat/op-skill-v1"
 created_from = "796a51e667297cebeeb4a00f6ad78d8cecafc3b8"
 integration_target = "main"
-authority = [{ class = "authority", path = "requirements/WORKSTREAM_SEED.md" }]
+authority = [
+  { class = "authority", path = "requirements/WORKSTREAM_SEED.md" },
+  { class = "authority", path = "decisions/OP_SKILL_V1_BEST_EFFORT_BUILD_FIRST.md" },
+]
 
 [intake]
 class = "intake"
@@ -28,10 +31,6 @@ path = "implementation/workstreams/op-skill-v1/DEFINITION.toml"
 [planning]
 class = "planning"
 path = "implementation/workstreams/op-skill-v1/PLANNING.toml"
-
-[plan_review]
-class = "plan_review"
-path = "implementation/workstreams/op-skill-v1/PLAN_REVIEW.toml"
 
 [task_board]
 class = "task_board"
