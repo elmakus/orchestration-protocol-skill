@@ -1,5 +1,5 @@
 workstream_id = "op-skill-v1"
-revision = 9
+revision = 10
 
 [execution_ref]
 branch = "feat/op-skill-v1"
@@ -24,7 +24,7 @@ path = "implementation/workstreams/op-skill-v1/reviews/M01-T01-R01.toml"
 
 [[cards]]
 id = "M02-T01"
-status = "in_progress"
+status = "done"
 
 [cards.contract]
 class = "task_card"
@@ -49,5 +49,5 @@ condition = "After the exact reviewed feasibility-kit result is DONE, bind the i
 [[jit_triggers]]
 id = "M03-helper-finite-after-common-contracts"
 after_card = "M02-T01"
-state = "waiting"
+state = "satisfied"
 condition = "After the exact independently reviewed M02 common-contract result is DONE, derive the bounded M03 bundled ESM helper and finite claim/reclaim Card from the actual package-owned records, identities, receipt interfaces and source contracts. Do not invent downstream API/schema Cards before those results; no live M01/native or exhaustive qualification PASS is a construction prerequisite under approved P2. Subsequent M04-M08 outcomes remain in P2 until their predecessor results make stable Cards knowable."
