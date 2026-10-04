@@ -1,5 +1,17 @@
 # M01-T01 implementation evidence (worker role, 2026-10-04)
 
+## Main return reconciliation — initial return requires bounded correction
+
+Initial implementation subject: `5331849938d9d86b17d72726359017a91052addd`.
+Classification: incomplete/incorrect return inside the still-valid M01-T01 contract; keep the Card `in_progress`. No accepted semantic result, independent Review verdict or blocker stop is established by this section.
+
+Main reproduced `sh qualification/feasibility/checks/run-all.sh` on that subject. Exit 0 did not establish the claimed acceptance:
+- `GIT-STALE-ABA-01` actually moved the ref backwards, then attempted restoration with `|| true`, yet the suite concluded ALL PASSED. Expected-old-head CAS alone does not enforce non-force ancestry or reject ABA/ref-reuse under stale ownership.
+- The lost-response classifier maps every observed identity different from intended to `NOT_APPLIED`; a third/divergent/successor state can leave operation occurrence uncertain and must not authorize retry merely by mismatch.
+- In a disposable copy, appending a newline to `fixtures/negative-metadata-corpus.json` left `check-identities.mjs` exit 0. The frozen fixture/harness identity and detached helper observation are not checked by the current package-only manifest; the test envelope also conflates fixture identity with package identity.
+
+The corrected return must provide objective negative witnesses for these cases, preserve accurate package-versus-fixture identities, and align source/procedure claims with the evidence actually evaluated. Supplied source labels or keyword denylists cannot become cryptographic-origin or universal semantic-isolation proof. Native capability predicates remain BLOCKED; this is bounded local correction, not permission for broader implementation or native tests. The initial committed subject remains historical evidence.
+
 - Card: `implementation/workstreams/op-skill-v1/cards/M01-T01.md` (M01-T01, bounded non-production feasibility kit)
 - Workstream: `op-skill-v1`, branch `feat/op-skill-v1`
 - Launch state commit: `6adb1e5e8598678fc3d83870c8c54ea6e1b27cd2` (verified `git rev-parse HEAD` at implementation time; still the base, no tracked-file mutation)
