@@ -1,8 +1,8 @@
 workstream_id = "op-skill-v1"
 card_id = "M01-T01"
 attempt = "R01"
-verdict = "pending"
-evidence_path = ""
+verdict = "green"
+evidence_path = "implementation/workstreams/op-skill-v1/evidence/M01-T01-R01_REVIEW.md"
 
 [subject]
 class = "git_blob"
