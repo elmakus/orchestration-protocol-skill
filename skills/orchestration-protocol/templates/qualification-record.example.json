@@ -1,0 +1,11 @@
+{
+  "_synthetic": "SYNTHETIC example data only. Grammar: schemas/policy.schema.json#/defs/qualification_record.",
+  "record_id": "qualrec:example:0001",
+  "candidate_id": "orchestration-protocol-skill@0.2.0-m02",
+  "fixture_set": "fixture-set:example:q1:v1",
+  "probe_set": null,
+  "layer": "Q1",
+  "verdict": "BLOCKED",
+  "evidence_locator": "example/repo@aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:evidence/q1-run-0001.md",
+  "owner_disposition": null
+}

@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:op-skill:schema:v1:homogeneous",
+  "title": "OP v1 homogeneous RUN_ID batch/run/attempt and supplemental action records",
+  "version": "1.0.0",
+  "normative_owner": "contracts-and-versioning",
+  "description": "Record grammars for frozen primary batches, RUN_ID recovery state, current attempts, and one-shot supplemental continuations. State-machine algorithms belong to the pending homogeneous-run-substrate owner (M04).",
+  "defs": {
+    "homogeneous_batch": {
+      "type": "object",
+      "required": ["batch_revision_id", "wave_id", "run_envelope_id", "subject", "coverage", "release_id", "reserved_runs", "state"],
+      "properties": {
+        "batch_revision_id": { "type": "string", "minLength": 1 },
+        "wave_id": { "type": "string", "minLength": 1 },
+        "run_envelope_id": { "type": "string", "pattern": "^runenv:[0-9a-f]{64}$" },
+        "subject": { "type": "object" },
+        "coverage": { "type": "object" },
+        "release_id": { "type": "string", "minLength": 1 },
+        "reserved_runs": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+        "state": { "type": "string", "enum": ["OPEN", "CLOSED"] }
+      },
+      "additionalProperties": false
+    },
+    "homogeneous_run": {
+      "type": "object",
+      "required": ["run_id", "batch_revision_id", "recovery_state", "current_attempt_id"],
+      "properties": {
+        "run_id": { "type": "string", "minLength": 1 },
+        "batch_revision_id": { "type": "string", "minLength": 1 },
+        "recovery_state": { "type": "string", "enum": ["RESERVED", "ACTIVE", "COMPLETE", "FAILED", "BLOCKED", "ABANDONED"] },
+        "current_attempt_id": { "type": "string", "minLength": 1 },
+        "attempt_history": { "type": "array", "items": { "type": "string" } }
+      },
+      "additionalProperties": false
+    },
+    "supplemental_action": {
+      "type": "object",
+      "required": ["action_id", "parent_wave_id", "parent_batch_revision_id", "deficit_snapshot", "subject", "coverage", "release_id", "supplemental_runs", "expected_head", "single_use"],
+      "properties": {
+        "action_id": { "type": "string", "minLength": 1 },
+        "parent_wave_id": { "type": "string", "minLength": 1 },
+        "parent_batch_revision_id": { "type": "string", "minLength": 1 },
+        "deficit_snapshot": { "type": "integer", "minimum": 1 },
+        "subject": { "type": "object" },
+        "coverage": { "type": "object" },
+        "release_id": { "type": "string", "minLength": 1 },
+        "supplemental_runs": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+        "expected_head": { "type": "string", "minLength": 1 },
+        "single_use": { "type": "boolean", "const": true }
+      },
+      "additionalProperties": false
+    }
+  }
+}

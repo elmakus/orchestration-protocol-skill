@@ -1,0 +1,20 @@
+{
+  "_synthetic": "SYNTHETIC example data only — not authority. Grammar: schemas/envelope.schema.json#/defs/continuation_authority.",
+  "continuation_authority_id": "cont-auth:example:0001",
+  "issuer": "example-caller-authority",
+  "caller_relation": "owning-caller",
+  "authorized_profile": "repair_units",
+  "authorized_action": "claim-repair-unit",
+  "prior_result_id": "result:example:accepted:0007",
+  "prior_obligation_ids": ["F-01", "F-02"],
+  "subject": { "identity_class": "git", "repository": "example/repo", "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "path": "src/a.mjs", "blob": "cccccccccccccccccccccccccccccccccccccccc" },
+  "candidate": { "identity_class": "git", "repository": "example/repo", "commit": "dddddddddddddddddddddddddddddddddddddddd", "path": "src/a.mjs", "blob": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee" },
+  "base": { "identity_class": "git", "repository": "example/repo", "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "path": "src/a.mjs", "blob": "cccccccccccccccccccccccccccccccccccccccc" },
+  "obligations": ["F-01", "F-02"],
+  "change_cone": { "files": ["src/a.mjs"], "neighbors": ["src/b.mjs"] },
+  "freshness": { "not_before": "2026-10-04T00:00:00Z", "not_after": "2026-10-11T00:00:00Z" },
+  "supersession_constraints": { "current_result_must_be": "result:example:accepted:0007" },
+  "effect_envelope": { "allowed": ["bounded-file-mutation:src/a.mjs"], "forbidden_classes": ["merge", "release", "comments", "messages", "settings", "network-writes", "credentials"] },
+  "authority_channel": "example-qualified-channel",
+  "authority_source_class": "caller-signed-record"
+}

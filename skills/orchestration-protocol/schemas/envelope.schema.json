@@ -1,0 +1,82 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:op-skill:schema:v1:envelope",
+  "title": "OP v1 caller/run envelope, continuation authority, verification proof",
+  "version": "1.0.0",
+  "normative_owner": "contracts-and-versioning",
+  "normative_co_owner": "security-and-effects",
+  "description": "Envelope freezes normalized caller values; continuation authority and verification proof are owned by security-and-effects. return_id is routing-only and excluded from run_envelope_id.",
+  "defs": {
+    "run_envelope": {
+      "type": "object",
+      "required": ["op_contract", "profile_id", "profile_semantics", "subject", "coverage", "requested_effects", "op_release"],
+      "properties": {
+        "op_contract": { "type": "string", "pattern": "^1\\." },
+        "profile_id": {
+          "type": "string",
+          "enum": ["formal_research", "definition_review", "plan_review", "execution_package_review", "targeted_bug_hunt", "global_bug_hunt", "repair_units", "focused_revalidation"]
+        },
+        "profile_semantics": { "type": "string", "minLength": 1 },
+        "subject": {
+          "anyOf": [
+            { "$ref": "urn:op-skill:schema:v1:identities#/defs/subject_identity" },
+            { "type": "object" }
+          ]
+        },
+        "coverage": { "type": "object" },
+        "continuation_authority_id": { "type": ["string", "null"] },
+        "prerequisite_ids": { "type": "array", "items": { "type": "string" } },
+        "return_id": { "type": ["string", "null"] },
+        "requested_effects": { "type": "array", "items": { "type": "string" } },
+        "effective_effects": { "type": "array", "items": { "type": "string" } },
+        "repair_mutation_envelope": { "type": ["object", "null"] },
+        "op_release": { "type": "string", "minLength": 1 },
+        "run_envelope_id": { "type": "string", "pattern": "^runenv:[0-9a-f]{64}$" }
+      },
+      "additionalProperties": false
+    },
+    "continuation_authority": {
+      "type": "object",
+      "required": ["continuation_authority_id", "issuer", "caller_relation", "authorized_profile", "authorized_action", "subject", "freshness", "effect_envelope"],
+      "properties": {
+        "continuation_authority_id": { "type": "string", "minLength": 1 },
+        "issuer": { "type": "string", "minLength": 1 },
+        "caller_relation": { "type": "string", "minLength": 1 },
+        "authorized_profile": { "type": "string", "minLength": 1 },
+        "authorized_action": { "type": "string", "minLength": 1 },
+        "prior_result_id": { "type": ["string", "null"] },
+        "prior_obligation_ids": { "type": "array", "items": { "type": "string" } },
+        "subject": { "type": "object" },
+        "candidate": { "type": ["object", "null"] },
+        "base": { "type": ["object", "null"] },
+        "obligations": { "type": "array", "items": { "type": "string" } },
+        "change_cone": { "type": ["object", "null"] },
+        "freshness": { "type": "object" },
+        "supersession_constraints": { "type": "object" },
+        "effect_envelope": { "type": "object" },
+        "authority_channel": { "type": "string", "minLength": 1 },
+        "authority_source_class": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
+    "verification_proof": {
+      "type": "object",
+      "required": ["authority_id", "issuer", "caller_relation", "authority_locator", "authority_content_digest", "currentness", "authorized_profile", "authorized_action", "subject_digest", "effect_envelope_digest", "channel_binding", "verdict"],
+      "properties": {
+        "authority_id": { "type": "string", "minLength": 1 },
+        "issuer": { "type": "string", "minLength": 1 },
+        "caller_relation": { "type": "string", "minLength": 1 },
+        "authority_locator": { "type": "string", "minLength": 1 },
+        "authority_content_digest": { "type": "string", "minLength": 1 },
+        "currentness": { "type": "string", "enum": ["CURRENT", "SUPERSEDED", "STALE", "UNKNOWN"] },
+        "authorized_profile": { "type": "string", "minLength": 1 },
+        "authorized_action": { "type": "string", "minLength": 1 },
+        "subject_digest": { "type": "string", "minLength": 1 },
+        "effect_envelope_digest": { "type": "string", "minLength": 1 },
+        "channel_binding": { "type": "string", "enum": ["same-channel", "authorized-successor"] },
+        "verdict": { "type": "string", "enum": ["GENUINE", "NOT_GENUINE"] }
+      },
+      "additionalProperties": false
+    }
+  }
+}

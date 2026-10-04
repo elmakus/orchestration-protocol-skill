@@ -1,0 +1,29 @@
+{
+  "manifest_id": "compat:0.2.0-m02",
+  "release_id": "orchestration-protocol-skill@0.2.0-m02",
+  "op_contract": "1.0.0",
+  "profiles": [
+    { "profile_id": "formal_research", "semantics_version": "1.0.0", "status": "pending" },
+    { "profile_id": "definition_review", "semantics_version": "1.0.0", "status": "pending" },
+    { "profile_id": "plan_review", "semantics_version": "1.0.0", "status": "pending" },
+    { "profile_id": "execution_package_review", "semantics_version": "1.0.0", "status": "pending" },
+    { "profile_id": "targeted_bug_hunt", "semantics_version": "1.0.0", "status": "pending" },
+    { "profile_id": "global_bug_hunt", "semantics_version": "1.0.0", "status": "pending" },
+    { "profile_id": "repair_units", "semantics_version": "1.0.0", "status": "pending" },
+    { "profile_id": "focused_revalidation", "semantics_version": "1.0.0", "status": "pending" }
+  ],
+  "result_schema": "1.0.0",
+  "references": [
+    { "owner_id": "contracts-and-versioning", "version": "1.0.0", "status": "implemented" },
+    { "owner_id": "evidence-and-sources", "version": "1.0.0", "status": "implemented" },
+    { "owner_id": "security-and-effects", "version": "1.0.0", "status": "implemented" },
+    { "owner_id": "durable-storage", "version": "1.0.0", "status": "implemented" },
+    { "owner_id": "finite-claim-substrate", "version": "1.0.0", "status": "pending" },
+    { "owner_id": "homogeneous-run-substrate", "version": "1.0.0", "status": "pending" },
+    { "owner_id": "independence-and-integration", "version": "1.0.0", "status": "pending" },
+    { "owner_id": "repair-and-revalidation", "version": "1.0.0", "status": "pending" }
+  ],
+  "helper_api": null,
+  "templates_digest": "templates:digest:see-content-manifest",
+  "note": "M02 construction snapshot: profile/substrate/helper identities are pending. No pending identity admits content."
+}

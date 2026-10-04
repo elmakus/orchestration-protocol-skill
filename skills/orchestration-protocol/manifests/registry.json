@@ -1,0 +1,27 @@
+{
+  "registry_id": "op-skill-registry:0.2.0-m02",
+  "op_contract": "1.0.0",
+  "result_schema": "1.0.0",
+  "profiles": [
+    { "profile_id": "formal_research", "family": "research", "semantics_version": "1.0.0", "module": "skills/orchestration-protocol/profiles/formal-research.md", "entry": "initial", "status": "pending", "owner_card": "M06" },
+    { "profile_id": "definition_review", "family": "review", "semantics_version": "1.0.0", "module": "skills/orchestration-protocol/profiles/definition-review.md", "entry": "initial", "status": "pending", "owner_card": "M06" },
+    { "profile_id": "plan_review", "family": "review", "semantics_version": "1.0.0", "module": "skills/orchestration-protocol/profiles/plan-review.md", "entry": "initial", "status": "pending", "owner_card": "M06" },
+    { "profile_id": "execution_package_review", "family": "review", "semantics_version": "1.0.0", "module": "skills/orchestration-protocol/profiles/execution-package-review.md", "entry": "initial", "status": "pending", "owner_card": "M06" },
+    { "profile_id": "targeted_bug_hunt", "family": "bug_hunt", "semantics_version": "1.0.0", "module": "skills/orchestration-protocol/profiles/targeted-bug-hunt.md", "entry": "initial", "status": "pending", "owner_card": "M06" },
+    { "profile_id": "global_bug_hunt", "family": "bug_hunt", "semantics_version": "1.0.0", "module": "skills/orchestration-protocol/profiles/global-bug-hunt.md", "entry": "initial", "status": "pending", "owner_card": "M06" },
+    { "profile_id": "repair_units", "family": "repair", "semantics_version": "1.0.0", "module": "skills/orchestration-protocol/profiles/repair-units.md", "entry": "continuation-gated", "status": "pending", "owner_card": "M07" },
+    { "profile_id": "focused_revalidation", "family": "revalidation", "semantics_version": "1.0.0", "module": "skills/orchestration-protocol/profiles/focused-revalidation.md", "entry": "continuation-gated", "status": "pending", "owner_card": "M07" }
+  ],
+  "owners": [
+    { "owner_id": "op-skill-root", "version": "0.2.0-m02", "module": "skills/orchestration-protocol/SKILL.md", "status": "implemented" },
+    { "owner_id": "contracts-and-versioning", "version": "1.0.0", "module": "skills/orchestration-protocol/references/contracts-and-versioning.md", "status": "implemented" },
+    { "owner_id": "evidence-and-sources", "version": "1.0.0", "module": "skills/orchestration-protocol/references/evidence-and-sources.md", "status": "implemented" },
+    { "owner_id": "security-and-effects", "version": "1.0.0", "module": "skills/orchestration-protocol/references/security-and-effects.md", "status": "implemented" },
+    { "owner_id": "durable-storage", "version": "1.0.0", "module": "skills/orchestration-protocol/references/durable-storage.md", "status": "implemented" },
+    { "owner_id": "finite-claim-substrate", "version": "1.0.0", "module": "skills/orchestration-protocol/references/finite-claim-substrate.md", "status": "pending", "owner_card": "M03" },
+    { "owner_id": "homogeneous-run-substrate", "version": "1.0.0", "module": "skills/orchestration-protocol/references/homogeneous-run-substrate.md", "status": "pending", "owner_card": "M04" },
+    { "owner_id": "independence-and-integration", "version": "1.0.0", "module": "skills/orchestration-protocol/references/independence-and-integration.md", "status": "pending", "owner_card": "M05" },
+    { "owner_id": "repair-and-revalidation", "version": "1.0.0", "module": "skills/orchestration-protocol/references/repair-and-revalidation.md", "status": "pending", "owner_card": "M07" }
+  ],
+  "note": "Pending entries are inventory only and MUST NOT satisfy load gates or be admitted as loaded modules."
+}

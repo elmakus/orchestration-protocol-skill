@@ -1,0 +1,22 @@
+{
+  "_synthetic": "SYNTHETIC example data only — not authority, not host proof. Grammar: schemas/envelope.schema.json#/defs/run_envelope.",
+  "op_contract": "1.0",
+  "profile_id": "definition_review",
+  "profile_semantics": "1.0.0",
+  "subject": {
+    "identity_class": "git",
+    "repository": "example/repo",
+    "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "path": "SPEC.md",
+    "blob": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+  },
+  "coverage": { "acceptance_id": "coverage:example:acceptance:v1", "surfaces": ["completeness", "ambiguity", "contradiction"] },
+  "continuation_authority_id": null,
+  "prerequisite_ids": [],
+  "return_id": "routing-only-example-001",
+  "requested_effects": ["op-result-publication"],
+  "effective_effects": ["op-result-publication"],
+  "repair_mutation_envelope": null,
+  "op_release": "orchestration-protocol-skill@0.2.0-m02",
+  "run_envelope_id": "runenv:COMPUTED — digest of this envelope minus return_id per canonical serialization"
+}

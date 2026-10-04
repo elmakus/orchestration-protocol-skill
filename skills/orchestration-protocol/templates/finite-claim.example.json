@@ -1,0 +1,28 @@
+{
+  "_synthetic": "SYNTHETIC example data only. Grammars: schemas/finite.schema.json finite_manifest/finite_claim/reclaim_action.",
+  "manifest": {
+    "manifest_id": "fmanifest:example:0001",
+    "wave_id": "wave:example:0001",
+    "wave_base": { "repository": "example/repo", "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" },
+    "units": [
+      { "unit_id": "unit-01", "claim_generation": 0 },
+      { "unit_id": "unit-02", "claim_generation": 0 }
+    ]
+  },
+  "claim": {
+    "unit_id": "unit-01",
+    "claim_generation": 0,
+    "attempt_nonce": "NONCE-PLACEHOLDER — fresh >=128-bit qualified-CSPRNG value at claim time; never fixture-copied",
+    "nonce_source": "qualified-csprng-128",
+    "claim_commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "force": false
+  },
+  "reclaim": {
+    "action_id": "reclaim:example:0001",
+    "unit_id": "unit-01",
+    "expected_generation": 0,
+    "expected_claim_state": "claim:unit-01:gen0:lost",
+    "expected_head": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "single_use": true
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "_synthetic": "SYNTHETIC example data only. Grammar: schemas/envelope.schema.json#/defs/verification_proof.",
+  "authority_id": "cont-auth:example:0001",
+  "issuer": "example-caller-authority",
+  "caller_relation": "owning-caller",
+  "authority_locator": "example/repo@aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:auth/record-0001.json",
+  "authority_content_digest": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+  "currentness": "CURRENT",
+  "authorized_profile": "repair_units",
+  "authorized_action": "claim-repair-unit",
+  "subject_digest": "digest:example:subject:0001",
+  "effect_envelope_digest": "digest:example:effects:0001",
+  "channel_binding": "same-channel",
+  "verdict": "GENUINE"
+}

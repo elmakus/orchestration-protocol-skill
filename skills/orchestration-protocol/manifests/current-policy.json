@@ -1,0 +1,9 @@
+{
+  "policy_id": "op-release-policy",
+  "policy_version": "2026-10-04:m02-construction",
+  "minimum_supported_release": "orchestration-protocol-skill@0.2.0-m02",
+  "revoked_releases": [],
+  "supersession": null,
+  "freshness_rule": "Policy older than 30 days, or any superseding policy pointer, makes this policy STALE; stale/ambiguous/unresolvable policy fails closed.",
+  "note": "Construction-snapshot policy. Production admission additionally requires all Q0-Q10 PASS plus owner ACCEPTABLE, which this snapshot does not claim."
+}

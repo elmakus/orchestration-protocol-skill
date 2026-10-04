@@ -1,0 +1,33 @@
+{
+  "name": "orchestration-protocol-skill",
+  "version": "0.2.0-m02",
+  "description": "Orchestration Protocol Skill v1 — M02 common-contract construction snapshot. Draft only: explicitly unqualified, not install-verified, not a production release.",
+  "op_contract_version": "1.0.0",
+  "result_schema_version": "1.0.0",
+  "release_status": "draft-unqualified",
+  "entry": "skills/orchestration-protocol/SKILL.md",
+  "skills": [
+    "skills/orchestration-protocol/SKILL.md"
+  ],
+  "profiles": [
+    "formal_research",
+    "definition_review",
+    "plan_review",
+    "execution_package_review",
+    "targeted_bug_hunt",
+    "global_bug_hunt",
+    "repair_units",
+    "focused_revalidation"
+  ],
+  "implemented_owners": [
+    "contracts-and-versioning",
+    "evidence-and-sources",
+    "security-and-effects",
+    "durable-storage"
+  ],
+  "portable_format": {
+    "kind": "proposed-chatgpt-skills-layout",
+    "layout": ["plugin.json", "skills/<skill-name>/SKILL.md", "skills/<skill-name>/references/", "skills/<skill-name>/schemas/", "skills/<skill-name>/templates/", "skills/<skill-name>/manifests/"],
+    "android_compatibility": "UNVERIFIED — concrete proposed format only; no installed schema, install menu, or host API is asserted"
+  }
+}

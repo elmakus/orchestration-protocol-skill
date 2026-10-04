@@ -1,0 +1,32 @@
+{
+  "_synthetic": "SYNTHETIC example data only. Grammars: schemas/homogeneous.schema.json homogeneous_batch/homogeneous_run/supplemental_action.",
+  "batch": {
+    "batch_revision_id": "batch:example:0001:rev0",
+    "wave_id": "wave:example:0002",
+    "run_envelope_id": "runenv:0000000000000000000000000000000000000000000000000000000000000000",
+    "subject": { "identity_class": "captured-content", "sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff", "byte_length": 128, "capture_method": "example-capture" },
+    "coverage": { "acceptance_id": "coverage:example:gbh:v1" },
+    "release_id": "orchestration-protocol-skill@0.2.0-m02",
+    "reserved_runs": ["RUN-001", "RUN-002", "RUN-003"],
+    "state": "OPEN"
+  },
+  "run": {
+    "run_id": "RUN-001",
+    "batch_revision_id": "batch:example:0001:rev0",
+    "recovery_state": "ACTIVE",
+    "current_attempt_id": "attempt:RUN-001:0001",
+    "attempt_history": ["attempt:RUN-001:0001"]
+  },
+  "supplemental": {
+    "action_id": "suppl:example:0001",
+    "parent_wave_id": "wave:example:0002",
+    "parent_batch_revision_id": "batch:example:0001:rev0",
+    "deficit_snapshot": 1,
+    "subject": { "identity_class": "captured-content", "sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff", "byte_length": 128, "capture_method": "example-capture" },
+    "coverage": { "acceptance_id": "coverage:example:gbh:v1" },
+    "release_id": "orchestration-protocol-skill@0.2.0-m02",
+    "supplemental_runs": ["RUN-101"],
+    "expected_head": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "single_use": true
+  }
+}

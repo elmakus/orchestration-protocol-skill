@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:op-skill:schema:v1:finite",
+  "title": "OP v1 pre-worker checkpoint and finite heterogeneous allocator records",
+  "version": "1.0.0",
+  "normative_owner": "security-and-effects",
+  "description": "Checkpoint gate record plus finite manifest/claim/reclaim action grammars. Allocation algorithms belong to the pending finite-claim-substrate owner (M03); these are the M02 record contracts.",
+  "defs": {
+    "pre_worker_checkpoint": {
+      "type": "object",
+      "required": ["checkpoint_id", "wave_id", "run_envelope_id", "envelope_digest", "release_id", "policy_id", "effective_effects", "authority_ids", "qualification_snapshot_id", "readback"],
+      "properties": {
+        "checkpoint_id": { "type": "string", "minLength": 1 },
+        "wave_id": { "type": "string", "minLength": 1 },
+        "run_envelope_id": { "type": "string", "pattern": "^runenv:[0-9a-f]{64}$" },
+        "envelope_digest": { "type": "string", "minLength": 1 },
+        "release_id": { "type": "string", "minLength": 1 },
+        "policy_id": { "type": "string", "minLength": 1 },
+        "effective_effects": { "type": "array", "items": { "type": "string" } },
+        "authority_ids": { "type": "array", "items": { "type": "string" } },
+        "qualification_snapshot_id": { "type": "string", "minLength": 1 },
+        "readback": { "type": "string", "enum": ["VERIFIED"] }
+      },
+      "additionalProperties": false
+    },
+    "finite_manifest": {
+      "type": "object",
+      "required": ["manifest_id", "wave_id", "wave_base", "units"],
+      "properties": {
+        "manifest_id": { "type": "string", "minLength": 1 },
+        "wave_id": { "type": "string", "minLength": 1 },
+        "wave_base": { "type": "object" },
+        "units": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["unit_id", "claim_generation"],
+            "properties": {
+              "unit_id": { "type": "string", "minLength": 1 },
+              "claim_generation": { "type": "integer", "minimum": 0 }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "finite_claim": {
+      "type": "object",
+      "required": ["unit_id", "claim_generation", "attempt_nonce", "nonce_source", "claim_commit", "force"],
+      "properties": {
+        "unit_id": { "type": "string", "minLength": 1 },
+        "claim_generation": { "type": "integer", "minimum": 0 },
+        "attempt_nonce": { "type": "string", "minLength": 1 },
+        "nonce_source": { "type": "string", "const": "qualified-csprng-128" },
+        "claim_commit": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+        "force": { "type": "boolean", "const": false }
+      },
+      "additionalProperties": false
+    },
+    "reclaim_action": {
+      "type": "object",
+      "required": ["action_id", "unit_id", "expected_generation", "expected_claim_state", "expected_head", "single_use"],
+      "properties": {
+        "action_id": { "type": "string", "minLength": 1 },
+        "unit_id": { "type": "string", "minLength": 1 },
+        "expected_generation": { "type": "integer", "minimum": 0 },
+        "expected_claim_state": { "type": "string", "minLength": 1 },
+        "expected_head": { "type": "string", "minLength": 1 },
+        "single_use": { "type": "boolean", "const": true }
+      },
+      "additionalProperties": false
+    }
+  }
+}

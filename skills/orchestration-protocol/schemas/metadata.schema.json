@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:op-skill:schema:v1:metadata",
+  "title": "OP v1 closed mechanical metadata, execution receipts, provider receipts",
+  "version": "1.0.0",
+  "normative_owner": "evidence-and-sources",
+  "normative_co_owner": "security-and-effects",
+  "description": "Closed coordinator-visible mechanical surface plus provider/tool receipt interfaces. Any field outside this grammar is non-admissible pre-integration.",
+  "defs": {
+    "mechanical_metadata": {
+      "type": "object",
+      "required": ["assignment_id", "package_id", "release_id", "subject_digest", "coverage_digest"],
+      "properties": {
+        "assignment_id": { "type": "string", "minLength": 1 },
+        "unit_id": { "type": ["string", "null"] },
+        "run_id": { "type": ["string", "null"] },
+        "package_id": { "type": "string", "minLength": 1 },
+        "release_id": { "type": "string", "minLength": 1 },
+        "subject_digest": { "type": "string", "minLength": 1 },
+        "coverage_digest": { "type": "string", "minLength": 1 },
+        "claim_generation": { "type": ["integer", "null"], "minimum": 0 },
+        "attempt_nonce_id": { "type": ["string", "null"] },
+        "branch": { "type": ["string", "null"] },
+        "ref": { "type": ["string", "null"] },
+        "commit": { "type": ["string", "null"], "pattern": "^([0-9a-f]{40})?$" },
+        "blob": { "type": ["string", "null"], "pattern": "^([0-9a-f]{40})?$" },
+        "output_path": { "type": ["string", "null"] },
+        "publication": { "type": ["string", "null"] },
+        "readback": { "type": ["string", "null"], "enum": ["VERIFIED", "NOT_APPLICABLE", null] },
+        "ancestry": { "type": ["string", "null"] },
+        "expected_head": { "type": ["string", "null"] }
+      },
+      "additionalProperties": false
+    },
+    "execution_receipt": {
+      "type": "object",
+      "required": ["assignment_id", "status", "durable_result", "readback"],
+      "properties": {
+        "assignment_id": { "type": "string", "minLength": 1 },
+        "status": { "type": "string", "enum": ["COMPLETE", "BLOCKED", "EXHAUSTED"] },
+        "durable_result": { "type": "string", "minLength": 1 },
+        "readback": { "type": "string", "enum": ["VERIFIED", "NOT_APPLICABLE"] },
+        "blocker": { "type": ["string", "null"] }
+      },
+      "additionalProperties": false
+    },
+    "provider_receipt": {
+      "type": "object",
+      "required": ["operation_id", "target", "expected_head", "occurrence", "postcondition", "readback"],
+      "properties": {
+        "operation_id": { "type": "string", "minLength": 1 },
+        "target": { "type": "string", "minLength": 1 },
+        "expected_head": { "type": ["string", "null"] },
+        "occurrence": { "type": "string", "enum": ["VERIFIED", "NOT_APPLIED", "UNKNOWN"] },
+        "postcondition": { "type": "string", "minLength": 1 },
+        "readback": { "type": "string", "enum": ["VERIFIED", "NOT_APPLICABLE"] }
+      },
+      "additionalProperties": false
+    }
+  }
+}

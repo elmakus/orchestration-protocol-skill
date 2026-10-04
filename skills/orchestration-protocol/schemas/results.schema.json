@@ -1,0 +1,88 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:op-skill:schema:v1:results",
+  "title": "OP v1 sealed, admission, integrated, and currentness records",
+  "version": "1.0.0",
+  "normative_owner": "durable-storage",
+  "normative_co_owner": "evidence-and-sources",
+  "description": "Durable result-contract records. Sealing/integration transitions belong to the pending independence-and-integration owner (M05); these grammars record their durable effects.",
+  "defs": {
+    "sealed_result": {
+      "type": "object",
+      "required": ["result_id", "assignment_id", "wave_id", "subject", "coverage", "release_id", "generation_binding", "content_identity", "publication", "readback"],
+      "properties": {
+        "result_id": { "type": "string", "minLength": 1 },
+        "assignment_id": { "type": "string", "minLength": 1 },
+        "wave_id": { "type": "string", "minLength": 1 },
+        "subject": { "type": "object" },
+        "coverage": { "type": "object" },
+        "release_id": { "type": "string", "minLength": 1 },
+        "generation_binding": { "type": "object" },
+        "attempt_binding": { "type": ["object", "null"] },
+        "content_identity": { "type": "object" },
+        "publication": { "type": "string", "minLength": 1 },
+        "readback": { "type": "string", "enum": ["VERIFIED"] }
+      },
+      "additionalProperties": false
+    },
+    "admission_snapshot": {
+      "type": "object",
+      "required": ["snapshot_id", "wave_id", "admitted_results", "missing_set"],
+      "properties": {
+        "snapshot_id": { "type": "string", "minLength": 1 },
+        "wave_id": { "type": "string", "minLength": 1 },
+        "admitted_results": { "type": "array", "items": { "type": "string" } },
+        "missing_set": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["member", "reason"],
+            "properties": {
+              "member": { "type": "string", "minLength": 1 },
+              "reason": { "type": "string", "minLength": 1 }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "integrated_result": {
+      "type": "object",
+      "required": ["result_schema", "caller_id", "wave_id", "profile_id", "profile_semantics", "subject", "coverage", "release_id", "execution_state", "applicability_state", "currentness_state", "coverage_state", "profile_disposition", "admission_snapshot_id", "durable_locator", "qualification_snapshot_id", "supersession"],
+      "properties": {
+        "result_schema": { "type": "string", "pattern": "^1\\." },
+        "caller_id": { "type": "string", "minLength": 1 },
+        "wave_id": { "type": "string", "minLength": 1 },
+        "profile_id": { "type": "string", "minLength": 1 },
+        "profile_semantics": { "type": "string", "minLength": 1 },
+        "subject": { "type": "object" },
+        "coverage": { "type": "object" },
+        "release_id": { "type": "string", "minLength": 1 },
+        "execution_state": { "type": "string", "enum": ["COMPLETE", "INCOMPLETE", "BLOCKED"] },
+        "applicability_state": { "type": "string", "enum": ["APPLICABLE", "NOT_APPLICABLE", "UNKNOWN"] },
+        "currentness_state": { "type": "string", "enum": ["CURRENT", "SUPERSEDED", "STALE", "UNKNOWN"] },
+        "coverage_state": { "type": "string", "enum": ["COMPLETE", "INCOMPLETE", "BLOCKED", "NOT_APPLICABLE"] },
+        "profile_disposition": { "type": "string", "enum": ["COMPLETE", "GREEN", "RED", "ESCALATE_FULL_WAVE", "INCOMPLETE", "BLOCKED", "NOT_APPLICABLE"] },
+        "admission_snapshot_id": { "type": "string", "minLength": 1 },
+        "durable_locator": { "type": "string", "minLength": 1 },
+        "publication_readback": { "type": "string", "enum": ["VERIFIED"] },
+        "qualification_snapshot_id": { "type": "string", "minLength": 1 },
+        "supersession": { "type": ["object", "null"] }
+      },
+      "additionalProperties": false
+    },
+    "current_result_pointer": {
+      "type": "object",
+      "required": ["pointer_id", "subject_digest", "current_result_id", "supersession_chain", "readback"],
+      "properties": {
+        "pointer_id": { "type": "string", "minLength": 1 },
+        "subject_digest": { "type": "string", "minLength": 1 },
+        "current_result_id": { "type": "string", "minLength": 1 },
+        "supersession_chain": { "type": "array", "items": { "type": "string" } },
+        "readback": { "type": "string", "enum": ["VERIFIED"] }
+      },
+      "additionalProperties": false
+    }
+  }
+}

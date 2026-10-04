@@ -1,0 +1,30 @@
+{
+  "manifest_id": "impact:0.2.0-m02",
+  "release_id": "orchestration-protocol-skill@0.2.0-m02",
+  "inventory": [
+    { "component": "plugin-metadata", "identity": "plugin.json@see-content-manifest" },
+    { "component": "skill-root", "identity": "skills/orchestration-protocol/SKILL.md@see-content-manifest" },
+    { "component": "reference:contracts-and-versioning:1.0.0", "identity": "see-content-manifest" },
+    { "component": "reference:evidence-and-sources:1.0.0", "identity": "see-content-manifest" },
+    { "component": "reference:security-and-effects:1.0.0", "identity": "see-content-manifest" },
+    { "component": "reference:durable-storage:1.0.0", "identity": "see-content-manifest" },
+    { "component": "schemas:v1", "identity": "see-content-manifest" },
+    { "component": "templates:synthetic-examples", "identity": "see-content-manifest" },
+    { "component": "host:android-chatgpt", "identity": "UNVERIFIED — no qualified host identity exists for this snapshot" },
+    { "component": "helper:esm", "identity": "ABSENT — bundled helper ships in M03; no helper claim is made here" },
+    { "component": "provider-tools", "identity": "UNVERIFIED — capability-required interfaces only" }
+  ],
+  "change_classes": [
+    { "change_class": "common-contract-text-change", "invalidates": ["Q0", "Q1"] },
+    { "change_class": "schema-template-record-change", "invalidates": ["Q0", "Q1"] },
+    { "change_class": "registry-owner-profile-change", "invalidates": ["Q0", "Q1", "Q5"] },
+    { "change_class": "effect-cap-or-authority-rule-change", "invalidates": ["Q1", "Q7"] },
+    { "change_class": "metadata-allowlist-change", "invalidates": ["Q7", "Q10"] },
+    { "change_class": "policy-floor-revocation-change", "invalidates": ["Q0", "Q1", "Q9"] },
+    { "change_class": "helper-artifact-change", "invalidates": ["Q8", "Q10"] },
+    { "change_class": "host-context-source-change", "invalidates": ["Q7", "Q9", "Q10"] },
+    { "change_class": "provider-capability-change", "invalidates": ["Q2", "Q3", "Q4", "Q7", "Q9"] },
+    { "change_class": "unclassified-material-change", "invalidates": ["Q0", "Q1", "Q2", "Q3", "Q4", "Q5", "Q6", "Q7", "Q8", "Q9", "Q10"] }
+  ],
+  "rule": "UNKNOWN or unclassified material relevance fails closed and invalidates every plausibly affected layer; unbounded impact invalidates all Q0-Q10."
+}
