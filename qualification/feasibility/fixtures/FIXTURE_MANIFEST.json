@@ -1,0 +1,24 @@
+{
+  "role": "detached frozen fixture/content identity record (test-only)",
+  "algorithm": "sha256(file bytes); package = sha256(sorted path:digest lines)",
+  "inputs": [
+    "probe-package/plugin.json",
+    "probe-package/skills/orchestration-protocol-probe/SKILL.md",
+    "probe-package/scripts/op-helper.mjs"
+  ],
+  "exclusions": [
+    "HELPER_IDENTITY.json (detached observation of helper digest)",
+    "fixtures/*.json harness inputs",
+    "checks/* harness code",
+    "PACKAGE_OBSERVATIONS.md / CAPABILITY_MATRIX.md / NATIVE_PROCEDURE.md / TEST_ENVELOPE.md / README.md",
+    "evidence file implementation/workstreams/op-skill-v1/evidence/M01-T01_IMPLEMENTATION.md",
+    ".git state"
+  ],
+  "per_file_sha256": {
+    "probe-package/plugin.json": "4852ee9d6bb25592eff4e1ee19e580b1488bfaf4dd7fee682c6e5d19db2bc0fd",
+    "probe-package/skills/orchestration-protocol-probe/SKILL.md": "67cffefd692773bc490e80602d26e8ccb526b6490cbefa89725a316ef1295293",
+    "probe-package/scripts/op-helper.mjs": "ef4265c771ab17a079fdf6db1856c3257fa81f3c2b6172dc6e321f2ad3bc1803"
+  },
+  "package_identity_sha256": "8517c414e260bf335272a78dd787a84da3581e41cc4e78c65ee537aaf15dd30f",
+  "note": "Reproducible: identical explicit inputs yield byte-identical output. Manifest itself is excluded from digested inputs (acyclic)."
+}

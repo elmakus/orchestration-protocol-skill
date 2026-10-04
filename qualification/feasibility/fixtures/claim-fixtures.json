@@ -1,0 +1,26 @@
+{
+  "role": "local disposable-Git fixture descriptors (test-only, temp repos only)",
+  "note": "Realized by checks/check-git-fencing.sh in newly created temporary repositories. Never alters project refs.",
+  "fixtures": [
+    {
+      "id": "GIT-READBACK-01",
+      "goal": "object/ref readback: blob hash, cat-file, ref resolve, exact readback VERIFIED"
+    },
+    {
+      "id": "GIT-CLAIM-01",
+      "goal": "expected-old-head non-force claim: two competing claimers, one current winner, loser rejected on stale expected head"
+    },
+    {
+      "id": "GIT-STALE-ABA-01",
+      "goal": "stale writer and ABA writer rejected: old generation cannot publish; replayed head cannot advance"
+    },
+    {
+      "id": "GIT-PUBLISH-01",
+      "goal": "publication equivalent with expected-head fence + exact readback"
+    },
+    {
+      "id": "GIT-LOST-01",
+      "goal": "lost-response classification: VERIFIED / NOT_APPLIED / UNKNOWN from exact target reads"
+    }
+  ]
+}

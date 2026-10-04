@@ -1,0 +1,65 @@
+{
+  "corpus_role": "synthetic pre-integration metadata-leak negative corpus (test-only, no real findings)",
+  "note": "All payloads are synthetic. The validator MUST reject semantic placements without echoing payload contents.",
+  "cases": [
+    {
+      "id": "NEG-BRANCH-01",
+      "channel": "branch_name",
+      "record": { "assignment_id": "unit-001", "output_path": "results/unit-001.json" },
+      "attempted_branch": "claims/unit-001-GREEN-finding",
+      "expect": "REJECTED",
+      "reason": "branch name carries semantic disposition GREEN"
+    },
+    {
+      "id": "NEG-COMMIT-01",
+      "channel": "commit_message",
+      "record": { "assignment_id": "unit-002", "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" },
+      "attempted_message": "integrate: critical blocking finding fixed",
+      "expect": "REJECTED",
+      "reason": "commit message carries semantic finding text"
+    },
+    {
+      "id": "NEG-PATH-01",
+      "channel": "output_path",
+      "record": { "assignment_id": "unit-003", "output_path": "results/RED-critical-unit-003.json" },
+      "expect": "REJECTED",
+      "reason": "output name carries semantic disposition RED"
+    },
+    {
+      "id": "NEG-PROVENANCE-01",
+      "channel": "provenance_field",
+      "record": { "assignment_id": "unit-004", "claim_generation": 0, "finding": "synthetic blocker syn-001" },
+      "expect": "REJECTED",
+      "reason": "provenance field carries semantic key 'finding'"
+    },
+    {
+      "id": "NEG-RECEIPT-01",
+      "channel": "receipt_value",
+      "record": { "assignment_id": "unit-005", "receipt_state": "COMPLETE", "verdict_text": "GREEN all clear" },
+      "expect": "REJECTED",
+      "reason": "receipt carries free-form semantic verdict"
+    },
+    {
+      "id": "NEG-UNKNOWN-CHANNEL-01",
+      "channel": "unknown_field",
+      "record": { "assignment_id": "unit-006", "exotic_channel": "synthetic" },
+      "expect": "REJECTED",
+      "reason": "unclassified channel is non-admissible, not extensible"
+    },
+    {
+      "id": "POS-MECHANICAL-01",
+      "channel": "mechanical_only",
+      "record": {
+        "assignment_id": "unit-007",
+        "claim_generation": 0,
+        "attempt_nonce_id": "0123456789abcdef0123456789abcdef",
+        "commit": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "output_path": "results/unit-007.json",
+        "receipt_state": "COMPLETE",
+        "readback": "VERIFIED"
+      },
+      "expect": "ADMISSIBLE",
+      "reason": "purely mechanical allowlisted fields"
+    }
+  ]
+}

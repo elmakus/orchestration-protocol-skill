@@ -1,0 +1,13 @@
+{
+  "name": "op-feasibility-probe",
+  "version": "0.1.0-testonly",
+  "test_only": true,
+  "not_for_production": true,
+  "description": "M01-T01 bounded non-production feasibility probe package (skills-only, test-only). Not a production OP profile or fallback runtime.",
+  "probe_skill": "skills/orchestration-protocol-probe/SKILL.md",
+  "bundled_helper": "scripts/op-helper.mjs",
+  "engines": {
+    "node": ">=20"
+  },
+  "package_format_note": "Proposed portable root metadata for local feasibility checks only; installed-surface schema unverified (see PACKAGE_OBSERVATIONS.md)."
+}
