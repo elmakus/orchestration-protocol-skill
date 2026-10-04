@@ -12,7 +12,7 @@
     },
     {
       "component": "reference:contracts-and-versioning:1.0.0",
-      "identity": "fb3efc1addc770aaadfa9550825796fdc008074e1efa6fe1f44ae429d3252a3f"
+      "identity": "6d4482a69f68211777384d91fd481570fff3c24df9c3536245b24054487589b2"
     },
     {
       "component": "reference:evidence-and-sources:1.0.0",
@@ -28,11 +28,11 @@
     },
     {
       "component": "schemas:v1",
-      "identity": "b73b07a73d36f237239586d7ce0bc0912c4cace60c41a52153522beb8c7da5ad"
+      "identity": "a44e1cdda19e48cc0e58908bbcc06bdcf402a679d17b5184c8861add35d88ee6"
     },
     {
       "component": "templates:synthetic-examples",
-      "identity": "75d6042c226fcfc4ed3f9cc232de9c7bd2890efae2117858a49f4050fc777fa4"
+      "identity": "221d8504b929a6c76fc0518c0bc21918daffa587f7ee2b59c77012b5ead1bfd2"
     },
     {
       "component": "host:android-chatgpt",
@@ -62,9 +62,13 @@
       "invalidates": [
         "Q0",
         "Q1",
+        "Q2",
+        "Q3",
+        "Q4",
         "Q5",
         "Q6",
-        "Q7"
+        "Q7",
+        "Q8"
       ]
     },
     {
@@ -72,6 +76,9 @@
       "invalidates": [
         "Q0",
         "Q1",
+        "Q2",
+        "Q3",
+        "Q4",
         "Q5",
         "Q6"
       ]
@@ -151,5 +158,5 @@
       ]
     }
   ],
-  "rule": "UNKNOWN or unclassified material relevance fails closed and invalidates every plausibly affected layer; unbounded impact invalidates all Q0-Q10. Common-contract/schema/registry changes conservatively invalidate all plausibly dependent state/profile/integration/effect layers."
+  "rule": "UNKNOWN or unclassified material relevance fails closed and invalidates every plausibly affected layer; unbounded impact invalidates all Q0-Q10. Common-contract/schema/registry changes conservatively invalidate all plausibly dependent state/profile/integration/effect/allocator/helper layers."
 }

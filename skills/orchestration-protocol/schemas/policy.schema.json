@@ -4,7 +4,7 @@
   "title": "OP v1 compatibility, current-policy, qualification-impact, detached qualification records",
   "version": "1.0.0",
   "normative_owner": "contracts-and-versioning",
-  "description": "Distribution-policy authority (proposed construction data distinguished from authorized current readback), compatibility manifest, qualification-impact manifest with conservative dependency mapping, and detached qualification records (PASS/FAIL/BLOCKED only).",
+  "description": "Distribution-policy authority (proposed construction data distinguished from authorized current readback), compatibility manifest, qualification-impact manifest with conservative dependency mapping, and detached qualification records (PASS/FAIL/BLOCKED only). Manifest note/rule fields are non-normative annotations excluded from normative admission/impact decisions.",
   "defs": {
     "compatibility_manifest": {
       "type": "object",
@@ -41,7 +41,8 @@
           }
         },
         "helper_api": { "type": ["string", "null"] },
-        "templates_digest": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+        "templates_digest": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "note": { "type": ["string", "null"], "description": "Non-normative construction annotation; excluded from normative admission decisions." }
       },
       "additionalProperties": false
     },
@@ -74,7 +75,8 @@
           },
           "additionalProperties": false
         },
-        "production_admission_eligible": { "type": "boolean" }
+        "production_admission_eligible": { "type": "boolean" },
+        "note": { "type": ["string", "null"], "description": "Non-normative construction annotation; excluded from normative admission decisions." }
       },
       "additionalProperties": false
     },
@@ -124,7 +126,8 @@
             },
             "additionalProperties": false
           }
-        }
+        },
+        "rule": { "type": ["string", "null"], "description": "Non-normative construction annotation; excluded from normative impact decisions." }
       },
       "additionalProperties": false
     },

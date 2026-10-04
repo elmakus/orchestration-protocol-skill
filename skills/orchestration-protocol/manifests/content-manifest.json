@@ -1,7 +1,7 @@
 {
   "manifest_id": "content:0.2.0-m02",
   "release_id": "orchestration-protocol-skill@0.2.0-m02",
-  "construction_identity": "content:a9b5a1451f26ce79652152abf58e5770c69087f1eb42169c0d8493c587980649",
+  "construction_identity": "content:4ef29c89f5555efef8bc4a57501e97f1d74b405b9bc722b58fc48b314d52d7fd",
   "excludes": [
     "skills/orchestration-protocol/manifests/content-manifest.json",
     "detached policy/qualification/readback attestations",
@@ -23,7 +23,7 @@
     },
     {
       "path": "skills/orchestration-protocol/manifests/compatibility-manifest.json",
-      "sha256": "95789d62c2b2315646538d165222287f5378071ce701b2985ec603e4f9d76f51"
+      "sha256": "c0d429d73bbd1e69ab5f4558a18fe56bc970f7964455632b1af049b5cf252f23"
     },
     {
       "path": "skills/orchestration-protocol/manifests/current-policy.json",
@@ -31,7 +31,7 @@
     },
     {
       "path": "skills/orchestration-protocol/manifests/qualification-impact.json",
-      "sha256": "f1037b9211cc3edb51b7fbb056354ef431940ea7e8cff48d725566f2902eda11"
+      "sha256": "cd4447e4657cbb8c8fc48743e0add9baa5b9637cbfce16f334db1be835b46117"
     },
     {
       "path": "skills/orchestration-protocol/manifests/registry.json",
@@ -39,7 +39,7 @@
     },
     {
       "path": "skills/orchestration-protocol/references/contracts-and-versioning.md",
-      "sha256": "fb3efc1addc770aaadfa9550825796fdc008074e1efa6fe1f44ae429d3252a3f"
+      "sha256": "6d4482a69f68211777384d91fd481570fff3c24df9c3536245b24054487589b2"
     },
     {
       "path": "skills/orchestration-protocol/references/durable-storage.md",
@@ -75,7 +75,7 @@
     },
     {
       "path": "skills/orchestration-protocol/schemas/policy.schema.json",
-      "sha256": "f3bd2f752e974bce68d6db83a784d55748a3b48068b8ed0772fd6076cd804302"
+      "sha256": "549867e4a729ebae2b08ba62fca7cb4ad82bc9eac6d3001d791ef8ce6351e0f9"
     },
     {
       "path": "skills/orchestration-protocol/schemas/results.schema.json",
@@ -95,7 +95,7 @@
     },
     {
       "path": "skills/orchestration-protocol/templates/homogeneous-batch.example.json",
-      "sha256": "4116f6191eb92e6178430793217307bd08af9fc33e942821b839db902446a22e"
+      "sha256": "c345b6b4e15a3c1dbab8f5d367153dc6673ff78bf37fd4491fa8b9881e6a41fe"
     },
     {
       "path": "skills/orchestration-protocol/templates/mechanical-receipt.example.json",

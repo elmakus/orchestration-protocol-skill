@@ -63,7 +63,10 @@ Supported immutable subject classes (M02):
 A moving branch, path, URL, title, or natural-language label alone is never
 an immutable identity. One envelope may authorize multiple waves; each wave
 binds exactly one `run_envelope_id`. Batch/run identities are children of
-their owning wave and are never reused across waves.
+their owning wave and are never reused across waves. Homogeneous batch, run,
+current-attempt and supplemental records bind the exact owning envelope
+subject, coverage and release; the frozen immutable subject cannot change
+under the same `run_envelope_id`.
 
 ## 3. Envelope equivalence and canonical serialization
 
@@ -193,6 +196,8 @@ stale, ambiguous, or unresolvable policy fails closed. Historical releases
 are admissible only while integrity/compatibility/qualification checks pass,
 unrevoked, and at/above floor. Manifest grammar:
 `schemas/policy.schema.json`; live manifest: `manifests/current-policy.json`.
+Manifest `note` and `rule` fields are non-normative construction annotations
+excluded from normative admission and impact decisions.
 
 ## 8. Content-identity graph (acyclic)
 

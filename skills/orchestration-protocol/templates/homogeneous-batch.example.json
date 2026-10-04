@@ -5,10 +5,11 @@
     "wave_id": "wave:example:0002",
     "run_envelope_id": "runenv:740d6c7267b059f9dab8198b9840d17870b0972a955606246061fd20b0e35745",
     "subject": {
-      "identity_class": "captured-content",
-      "sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
-      "byte_length": 128,
-      "capture_method": "example-capture"
+      "identity_class": "git",
+      "repository": "example/repo",
+      "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "path": "SPEC.md",
+      "blob": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
     },
     "coverage": {
       "acceptance_id": "coverage:example:acceptance:v1",
@@ -42,10 +43,11 @@
     "run_id": "RUN-001",
     "batch_revision_id": "batch:example:0001:rev0",
     "subject": {
-      "identity_class": "captured-content",
-      "sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
-      "byte_length": 128,
-      "capture_method": "example-capture"
+      "identity_class": "git",
+      "repository": "example/repo",
+      "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "path": "SPEC.md",
+      "blob": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
     },
     "coverage": {
       "acceptance_id": "coverage:example:acceptance:v1",
@@ -66,10 +68,11 @@
     "parent_batch_revision_id": "batch:example:0001:rev0",
     "deficit_snapshot": 1,
     "subject": {
-      "identity_class": "captured-content",
-      "sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
-      "byte_length": 128,
-      "capture_method": "example-capture"
+      "identity_class": "git",
+      "repository": "example/repo",
+      "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "path": "SPEC.md",
+      "blob": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
     },
     "coverage": {
       "acceptance_id": "coverage:example:acceptance:v1",

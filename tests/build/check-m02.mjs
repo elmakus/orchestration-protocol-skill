@@ -88,12 +88,10 @@ function validate(node, value, baseId, where) {
       errs.push(`${where}: expected type ${JSON.stringify(node.type)}, got ${JSON.stringify(value)}`);
       return errs;
     }
-    if (value === null) {
-      if (node.enum !== undefined && !node.enum.some(e => Object.is(e, value))) errs.push(`${where}: null not in enum`);
-      return errs;
-    }
   }
-  if (value === null) return errs;
+  // Null must still satisfy supported enum/const/anyOf constraints; only
+  // explicitly nullable alternatives (type includes null or an anyOf null
+  // branch) remain valid. Absence/null never bypasses a non-null identity.
   if (node.enum !== undefined && !node.enum.some(e => Object.is(e, value))) errs.push(`${where}: value not in enum`);
   if (node.const !== undefined && !Object.is(node.const, value)) errs.push(`${where}: const mismatch`);
   if (node.pattern !== undefined && typeof value === "string" && !(new RegExp(node.pattern).test(value))) errs.push(`${where}: pattern mismatch`);
@@ -265,6 +263,14 @@ ok("negative: label-only coverage without immutable identity rejected",
   validate(covDef.node, { acceptance_id: "coverage:example:acceptance:v1" }, covDef.id, "coverage-probe").length > 0);
 ok("negative: moving branch/path label as coverage rejected",
   validate(covDef.node, { acceptance_id: "refs/heads/main:ACCEPTANCE.md" }, covDef.id, "coverage-probe").length > 0);
+ok("negative: null subject bypasses no supported identity (C05-F01)",
+  validate(allDefs["run_envelope"].node, { ...env, subject: null }, allDefs["run_envelope"].id, "envelope-probe").length > 0);
+ok("negative: null identity_class bypasses no const tag (C05-F01)",
+  validate(allDefs["run_envelope"].node, { ...env, subject: { ...env.subject, identity_class: null } }, allDefs["run_envelope"].id, "envelope-probe").length > 0);
+ok("negative: null coverage_manifest bypasses no immutable coverage (C05-F01)",
+  validate(allDefs["run_envelope"].node, { ...env, coverage: { ...env.coverage, coverage_manifest: null } }, allDefs["run_envelope"].id, "envelope-probe").length > 0);
+ok("positive: explicitly nullable continuation authority id remains valid (C05-F01)",
+  validate(allDefs["run_envelope"].node, { ...env, continuation_authority_id: null }, allDefs["run_envelope"].id, "envelope-probe").length === 0);
 const envReordered = Object.fromEntries(Object.entries(env).reverse());
 ok("canonical digest deterministic across key order", runEnvelopeId(envReordered) === frozenId);
 ok("return_id excluded from envelope equivalence", runEnvelopeId({ ...env, return_id: "different-routing-999" }) === frozenId);
@@ -288,6 +294,9 @@ const compat = readJSON("skills/orchestration-protocol/manifests/compatibility-m
 const tplEntries = templates.slice().sort().map(f => ({ path: `skills/orchestration-protocol/templates/${f}`, sha256: crypto.createHash("sha256").update(fs.readFileSync(path.join(SK, "templates", f))).digest("hex") }));
 const tplDigest = digest(tplEntries);
 ok("compatibility templates_digest is concrete and verifies", /^[0-9a-f]{64}$/.test(compat.templates_digest) && tplDigest === compat.templates_digest);
+ok("compatibility manifest record validates against its closed def (C05-F02)",
+  validate(allDefs["compatibility_manifest"].node, compat, allDefs["compatibility_manifest"].id, "compatibility-manifest").length === 0,
+  validate(allDefs["compatibility_manifest"].node, compat, allDefs["compatibility_manifest"].id, "compatibility-manifest").join("; ").slice(0, 300));
 
 // ---------- 9. corrected state precedence (BLOCKED for empty/contradictory) ----------
 function evaluateDisposition(s) {
@@ -385,9 +394,20 @@ ok("reclaim binds manifest/wave and proves no current terminal result",
 const hbatch = records["homogeneous-batch.example.json#homogeneous_batch"];
 const hrun = records["homogeneous-batch.example.json#homogeneous_run"];
 const hattempt = records["homogeneous-batch.example.json#current_attempt"];
+const hsuppl = records["homogeneous-batch.example.json#supplemental_action"];
 ok("current attempt binds run/batch/subject/coverage/release and matches run pointer",
   hattempt.attempt_id === hrun.current_attempt_id && hattempt.run_id === hrun.run_id && hattempt.batch_revision_id === hrun.batch_revision_id
   && hattempt.batch_revision_id === hbatch.batch_revision_id && JSON.stringify(hattempt.subject) === JSON.stringify(hbatch.subject) && hattempt.state === "ACTIVE");
+ok("homogeneous batch binds owning envelope subject/coverage/release under its digest (C05-F03)",
+  hbatch.run_envelope_id === frozenId && JSON.stringify(hbatch.subject) === JSON.stringify(env.subject)
+  && JSON.stringify(hbatch.coverage) === JSON.stringify(env.coverage) && hbatch.release_id === env.op_release);
+ok("homogeneous attempt/supplemental bind batch and owning envelope lineage (C05-F03)",
+  JSON.stringify(hattempt.subject) === JSON.stringify(env.subject) && JSON.stringify(hattempt.coverage) === JSON.stringify(env.coverage)
+  && hattempt.release_id === env.op_release && JSON.stringify(hsuppl.subject) === JSON.stringify(env.subject)
+  && JSON.stringify(hsuppl.coverage) === JSON.stringify(env.coverage) && hsuppl.release_id === env.op_release
+  && hsuppl.parent_wave_id === hbatch.wave_id && hsuppl.parent_batch_revision_id === hbatch.batch_revision_id);
+ok("negative: mixed-subject batch under the same envelope digest rejected (C05-F03)",
+  JSON.stringify({ ...hbatch, subject: { identity_class: "captured-content", sha256: "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff", byte_length: 128, capture_method: "example-capture" } }.subject) !== JSON.stringify(env.subject));
 
 // ---------- 12. release admission with defined version semantics ----------
 function parseRelease(r) {
@@ -417,6 +437,9 @@ ok("policy is explicitly proposed-construction, ineligible for production",
 ok("policy models freshness inputs for its rule",
   !!policy.required_readback && !!policy.required_readback.distribution_authority
   && policy.required_readback.freshness_inputs.max_age_days >= 1 && !!policy.required_readback.freshness_inputs.issued_at);
+ok("current-policy manifest record validates against its closed def (C05-F02)",
+  validate(allDefs["current_policy"].node, policy, allDefs["current_policy"].id, "current-policy").length === 0,
+  validate(allDefs["current_policy"].node, policy, allDefs["current_policy"].id, "current-policy").join("; ").slice(0, 300));
 ok("negative: revoked release fails closed", admitRelease("orchestration-protocol-skill@0.1.0", { ...policy, revoked_releases: ["orchestration-protocol-skill@0.1.0"] }, true) === "BLOCKED");
 ok("negative: below-floor release fails closed", admitRelease("orchestration-protocol-skill@0.1.0", policy, true) === "BLOCKED");
 ok("negative: stale policy fails closed", admitRelease("orchestration-protocol-skill@0.2.0-m02", { ...policy, stale: true }, true) === "BLOCKED");
@@ -526,8 +549,15 @@ function bindProvider(r, ctx) {
   if (r.occurrence === "VERIFIED" && r.readback !== "VERIFIED") errs.push("verified occurrence requires verified readback");
   return errs;
 }
-function productionAdmissible(r) {
+function structuralOccurrenceCondition(r) {
+  // Necessary mechanical occurrence/readback shape only; never sufficient for
+  // production admission in M02 (no qualified source, current authority, or Q PASS).
   return r.occurrence === "VERIFIED" && r.readback === "VERIFIED";
+}
+function productionAdmissibleInM02() {
+  // M02 construction snapshot has no qualified source, current authority, or
+  // qualification PASS; production admission is always closed here.
+  return false;
 }
 const MECH_CTX = {
   work_kind: "finite-unit",
@@ -630,8 +660,11 @@ const readReceipt = {
 ok("positive: bound read-observation verifies with null fence", bindProvider(readReceipt, READ_CTX).length === 0, bindProvider(readReceipt, READ_CTX).join("; "));
 ok("negative: read-observation declaring a fence fails", bindProvider({ ...readReceipt, expected_head: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" }, READ_CTX).length > 0);
 ok("negative: missing operation-kind context fails", bindProvider(provReceipt, { operation_id: "op:0001", repository: "example/repo", branch: "op/wave-example-0001/unit-01" }).length > 0);
-ok("negative: UNKNOWN occurrence is not production-admissible", productionAdmissible({ ...provReceipt, occurrence: "UNKNOWN" }) === false);
-ok("positive: bound VERIFIED receipt is production-admissible", productionAdmissible(provReceipt) === true);
+ok("negative: UNKNOWN occurrence fails structural occurrence condition", structuralOccurrenceCondition({ ...provReceipt, occurrence: "UNKNOWN" }) === false);
+ok("positive: bound VERIFIED receipt satisfies structural occurrence condition only", structuralOccurrenceCondition(provReceipt) === true);
+ok("negative: bare self-labelled occurrence/readback never authorizes production (C05-F05)",
+  structuralOccurrenceCondition({ occurrence: "VERIFIED", readback: "VERIFIED" }) === true && productionAdmissibleInM02() === false);
+ok("negative: unqualified synthetic fixture cannot authorize production (C05-F05)", productionAdmissibleInM02() === false);
 ok("negative: semantic blocker payload outside closed inventory", (() => {
   const def = allDefs["execution_receipt"];
   return validate(def.node, { ...records["mechanical-receipt.example.json#execution_receipt"], blocker: "red:critical-blocker" }, def.id, "receipt-probe").length > 0;
@@ -652,13 +685,24 @@ ok("positive: mechanical capability blocker code admitted", (() => {
 const impact = readJSON("skills/orchestration-protocol/manifests/qualification-impact.json");
 const ALL_Q = ["Q0","Q1","Q2","Q3","Q4","Q5","Q6","Q7","Q8","Q9","Q10"];
 function invalidates(cls) { return (impact.change_classes.find(c => c.change_class === cls) || { invalidates: [] }).invalidates; }
-ok("common-contract change invalidates dependent state/profile/integration layers, not only Q0/Q1",
-  ["Q0","Q1","Q5","Q6"].every(q => invalidates("common-contract-text-change").includes(q)));
-ok("schema/record change invalidates dependent result/integration layers",
-  ["Q0","Q1","Q5","Q6"].every(q => invalidates("schema-template-record-change").includes(q)));
+ok("common-contract change invalidates dependent state/profile/integration/allocator/helper layers (C05-F04)",
+  ["Q0","Q1","Q5","Q6"].every(q => invalidates("common-contract-text-change").includes(q))
+  && ["Q2","Q3","Q4","Q8"].every(q => invalidates("common-contract-text-change").includes(q)));
+ok("schema/record change invalidates finite/homogeneous/result/integration layers (C05-F04)",
+  ["Q0","Q1","Q5","Q6"].every(q => invalidates("schema-template-record-change").includes(q))
+  && ["Q2","Q3","Q4"].every(q => invalidates("schema-template-record-change").includes(q)));
+ok("representative finite-schema change invalidates Q2/Q3 allocator evidence (C05-F04)",
+  invalidates("schema-template-record-change").includes("Q2") && invalidates("schema-template-record-change").includes("Q3"));
+ok("representative homogeneous-schema change invalidates Q4 batch evidence (C05-F04)",
+  invalidates("schema-template-record-change").includes("Q4"));
+ok("representative common-identity change invalidates Q8 helper evidence (C05-F04)",
+  invalidates("common-contract-text-change").includes("Q8"));
 ok("registry change invalidates profile/integration layers", invalidates("registry-owner-profile-change").includes("Q5"));
 ok("unknown/unbounded change invalidates all Q layers",
   ALL_Q.every(q => invalidates("unclassified-material-change").includes(q)));
+ok("qualification-impact manifest record validates against its closed def (C05-F02)",
+  validate(allDefs["qualification_impact"].node, impact, allDefs["qualification_impact"].id, "qualification-impact").length === 0,
+  validate(allDefs["qualification_impact"].node, impact, allDefs["qualification_impact"].id, "qualification-impact").join("; ").slice(0, 300));
 let invBad = "";
 for (const item of impact.inventory) {
   const id = item.identity;
