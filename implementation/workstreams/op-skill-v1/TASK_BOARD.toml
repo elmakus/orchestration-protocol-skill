@@ -1,5 +1,5 @@
 workstream_id = "op-skill-v1"
-revision = 10
+revision = 11
 
 [execution_ref]
 branch = "feat/op-skill-v1"
@@ -40,6 +40,14 @@ blob = "c1dc96813d435ceb14f6f69bc211d329536045dc"
 class = "review_attempt"
 path = "implementation/workstreams/op-skill-v1/reviews/M02-T01-R01.toml"
 
+[[cards]]
+id = "M03-T01"
+status = "ready"
+
+[cards.contract]
+class = "task_card"
+path = "implementation/workstreams/op-skill-v1/cards/M03-T01.md"
+
 [[jit_triggers]]
 id = "M01-live-feasibility-after-kit"
 after_card = "M01-T01"
@@ -49,5 +57,11 @@ condition = "After the exact reviewed feasibility-kit result is DONE, bind the i
 [[jit_triggers]]
 id = "M03-helper-finite-after-common-contracts"
 after_card = "M02-T01"
-state = "satisfied"
+state = "consumed"
 condition = "After the exact independently reviewed M02 common-contract result is DONE, derive the bounded M03 bundled ESM helper and finite claim/reclaim Card from the actual package-owned records, identities, receipt interfaces and source contracts. Do not invent downstream API/schema Cards before those results; no live M01/native or exhaustive qualification PASS is a construction prerequisite under approved P2. Subsequent M04-M08 outcomes remain in P2 until their predecessor results make stable Cards knowable."
+
+[[jit_triggers]]
+id = "M04-homogeneous-after-helper-finite"
+after_card = "M03-T01"
+state = "waiting"
+condition = "After the exact independently reviewed M03 helper/finite result is DONE, derive only the bounded M04 homogeneous RUN_ID/batch/current-attempt contract from actual M02 records and M03 common validation/publication/helper APIs. Do not copy finite-generation reclaim into the homogeneous state machine or precreate downstream Cards. Native/exhaustive qualification remains deferred under approved P2."
