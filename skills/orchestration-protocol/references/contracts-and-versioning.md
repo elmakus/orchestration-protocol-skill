@@ -167,9 +167,11 @@ owned here.
 
 Persisted independently: `op_contract` version, profile ID + profile
 semantics version, result schema version, release/content digest, producer
-manifest digest, template/reference identities, helper API/artifact digest,
-dated host qualification identity, per-wave subject/coverage/package/
-generation/RUN_ID batch identities.
+manifest digest, template/reference identities, helper API/artifact digest
+(concretely `op-helper-api/1.0.0` for this construction; see the compatibility
+and helper manifests), dated host qualification identity, per-wave
+subject/coverage/package/generation/RUN_ID batch identities. Structural helper
+checks remain distinct from qualification and never prove it.
 
 - Unknown or incompatible contract/profile/result/release/reference/helper/
   host identities fail closed.
@@ -211,8 +213,14 @@ identity. Rules:
   the manifest attests.
 - Package projections and source identities are deterministic: digest over
   canonical bytes with sorted path ordering.
-- This interim M02 construction identity MUST NOT be confused with the M08
-  complete-candidate identity.
+- This interim construction identity (currently `0.3.0-m03`) MUST NOT be
+  confused with the M08 complete-candidate identity.
+- The bundled helper source (`skills/orchestration-protocol/scripts/op-helper.mjs`)
+  is attested by the detached helper manifest
+  (`skills/orchestration-protocol/manifests/helper-manifest.json`); the helper
+  never embeds its own digest, preserving acyclicity. Finite allocation
+  semantics are owned by `references/finite-claim-substrate.md` and projected
+  here only as content identities, never restated.
 - A dossier/report MUST NOT change the bytes it attests; verification reads
   back recorded digests without regenerating expected values as evidence.
 

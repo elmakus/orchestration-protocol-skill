@@ -4,8 +4,9 @@
 Sole normative owner of the Git wave ledger, result immutability and
 supersession pointers, the evidence archive structure, readback proof, and
 provenance lineage. Sealing transitions and integration publication fences
-belong to their later owners (M05); this owner records their durable
-effects, never their algorithms. Consume-time currentness resolution is
+belong to their later owners (M05); finite claim/generation/publication/reclaim
+transitions belong to `references/finite-claim-substrate.md`; this owner records
+their durable effects, never their algorithms. Consume-time currentness resolution is
 owned by contracts-and-versioning (§5 there) and referenced here only as
 non-normative explanation.
 

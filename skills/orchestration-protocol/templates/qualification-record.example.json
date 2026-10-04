@@ -2,7 +2,7 @@
   "_synthetic": "SYNTHETIC container: label is data outside the record, never digested. Grammar: schemas/policy.schema.json#/defs/qualification_record.",
   "qualification_record": {
     "record_id": "qualrec:example:0001",
-    "candidate_id": "orchestration-protocol-skill@0.2.0-m02",
+    "candidate_id": "orchestration-protocol-skill@0.3.0-m03",
     "fixture_set": "fixture-set:example:q1:v1",
     "probe_set": null,
     "layer": "Q1",

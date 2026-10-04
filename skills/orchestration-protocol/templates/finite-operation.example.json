@@ -1,0 +1,57 @@
+{
+  "_synthetic": "SYNTHETIC container: label is data outside records, never digested. Three closed recovery shapes for one operation family: VERIFIED consumes without replay, proven NOT_APPLIED permits retry, UNKNOWN fails closed. Grammars: schemas/finite.schema.json finite_operation/conditional_fence.",
+  "finite_operation": {
+    "operation_id": "op:0001",
+    "manifest_id": "fmanifest:example:0001",
+    "wave_id": "wave:example:0001",
+    "unit_id": "unit-01",
+    "claim_generation": 0,
+    "target": "example/repo:refs/heads/op/wave-example-0001/unit-01",
+    "fence": {
+      "fence_kind": "expect-head",
+      "expected_head": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "absence_proof": null,
+      "readback": "VERIFIED"
+    },
+    "intended_postcondition": "ref-points-at:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "occurrence": "VERIFIED",
+    "readback": "VERIFIED",
+    "proof_locator": "example/repo@aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:ops/op-0001.md"
+  },
+  "finite_operation_not_applied": {
+    "operation_id": "op:0002",
+    "manifest_id": "fmanifest:example:0001",
+    "wave_id": "wave:example:0001",
+    "unit_id": "unit-01",
+    "claim_generation": 0,
+    "target": "example/repo:refs/heads/op/wave-example-0001/unit-01",
+    "fence": {
+      "fence_kind": "expect-head",
+      "expected_head": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "absence_proof": null,
+      "readback": "VERIFIED"
+    },
+    "intended_postcondition": "no-write-performed",
+    "occurrence": "NOT_APPLIED",
+    "readback": "VERIFIED",
+    "proof_locator": "example/repo@aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:ops/op-0002.md"
+  },
+  "finite_operation_unknown": {
+    "operation_id": "op:0003",
+    "manifest_id": "fmanifest:example:0001",
+    "wave_id": "wave:example:0001",
+    "unit_id": "unit-02",
+    "claim_generation": 0,
+    "target": "example/repo:refs/heads/op/wave-example-0001/unit-02",
+    "fence": {
+      "fence_kind": "expect-head",
+      "expected_head": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "absence_proof": null,
+      "readback": "VERIFIED"
+    },
+    "intended_postcondition": "ref-points-at:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "occurrence": "UNKNOWN",
+    "readback": "NOT_APPLICABLE",
+    "proof_locator": null
+  }
+}

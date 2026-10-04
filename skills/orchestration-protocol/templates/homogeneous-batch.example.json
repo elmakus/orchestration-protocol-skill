@@ -3,7 +3,7 @@
   "homogeneous_batch": {
     "batch_revision_id": "batch:example:0001:rev0",
     "wave_id": "wave:example:0002",
-    "run_envelope_id": "runenv:740d6c7267b059f9dab8198b9840d17870b0972a955606246061fd20b0e35745",
+    "run_envelope_id": "runenv:4bd8760f9ff68211dd7a4714373b7ba948995c98a37ad977c75d94fc9281048f",
     "subject": {
       "identity_class": "git",
       "repository": "example/repo",
@@ -21,7 +21,7 @@
         "blob": "ffffffffffffffffffffffffffffffffffffffff"
       }
     },
-    "release_id": "orchestration-protocol-skill@0.2.0-m02",
+    "release_id": "orchestration-protocol-skill@0.3.0-m03",
     "reserved_runs": [
       "RUN-001",
       "RUN-002",
@@ -59,7 +59,7 @@
         "blob": "ffffffffffffffffffffffffffffffffffffffff"
       }
     },
-    "release_id": "orchestration-protocol-skill@0.2.0-m02",
+    "release_id": "orchestration-protocol-skill@0.3.0-m03",
     "state": "ACTIVE"
   },
   "supplemental_action": {
@@ -84,7 +84,7 @@
         "blob": "ffffffffffffffffffffffffffffffffffffffff"
       }
     },
-    "release_id": "orchestration-protocol-skill@0.2.0-m02",
+    "release_id": "orchestration-protocol-skill@0.3.0-m03",
     "supplemental_runs": [
       "RUN-101"
     ],

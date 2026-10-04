@@ -1,7 +1,7 @@
-<!-- normative-owner: op-skill-root | version: 0.2.0-m02 | domains: product-boundary, profile-routing, freeze-load-gates, fail-closed-dispatch, ownership-map -->
+<!-- normative-owner: op-skill-root | version: 0.3.0-m03 | domains: product-boundary, profile-routing, freeze-load-gates, fail-closed-dispatch, ownership-map -->
 # Orchestration Protocol Skill — concise root
 
-> M02 construction snapshot (`0.2.0-m02`, `op_contract 1.0.0`). Draft and
+> M03 construction snapshot (`0.3.0-m03`, `op_contract 1.0.0`). Draft and
 > unqualified. Android compatibility of this layout is **unverified**.
 > Normative detail lives only in the declared owner; this root never restates
 > another owner's rules as normative text.
@@ -19,7 +19,10 @@
 - Normative v1 behavior is self-contained in the qualified package plus
   authorized provider tools. No MCP server, hosted backend, Pi/Paseo/Codex
   runtime, Android-local daemon, or external scheduler participates in
-  normative behavior. None is introduced by M02.
+  normative behavior. None is introduced by M03. The bundled helper
+  (`skills/orchestration-protocol/scripts/op-helper.mjs`,
+  `op-helper-api/1.0.0`) is a mechanical projection of its owners, never a
+  second normative owner, backend, or scheduler.
 
 ## 2. Profile registry and routing/selection
 
@@ -58,7 +61,8 @@ the consumer MUST, in order:
    verify it against the compatibility manifest and the current release
    policy (see contracts owner).
 3. Load the required normative owners for the bound profile: always the four
-   M02 common owners; profile/substrate/helper owners only when their
+   M02 common owners plus the M03 finite-claim-substrate owner when finite
+   heterogeneous work is bound; profile/substrate/helper owners only when their
    implemented modules exist. A pending registry path MUST NOT satisfy a
    load gate — an unavailable or not-yet-implemented owner or profile fails
    closed, as does any unqualified production tuple.
@@ -85,15 +89,16 @@ Exclusive ownership by semantic domain. Machine-readable registry:
 
 | owner id | version | module | status |
 |---|---|---|---|
-| `op-skill-root` | `0.2.0-m02` | `SKILL.md` | implemented (this file) |
+| `op-skill-root` | `0.3.0-m03` | `SKILL.md` | implemented (this file) |
 | `contracts-and-versioning` | `1.0.0` | `references/contracts-and-versioning.md` | implemented |
 | `evidence-and-sources` | `1.0.0` | `references/evidence-and-sources.md` | implemented |
 | `security-and-effects` | `1.0.0` | `references/security-and-effects.md` | implemented |
 | `durable-storage` | `1.0.0` | `references/durable-storage.md` | implemented |
-| `finite-claim-substrate` | `1.0.0` | `references/finite-claim-substrate.md` | **pending (M03)** |
+| `finite-claim-substrate` | `1.0.0` | `references/finite-claim-substrate.md` | implemented |
 | `homogeneous-run-substrate` | `1.0.0` | `references/homogeneous-run-substrate.md` | **pending (M04)** |
 | `independence-and-integration` | `1.0.0` | `references/independence-and-integration.md` | **pending (M05)** |
 | `repair-and-revalidation` | `1.0.0` | `references/repair-and-revalidation.md` | **pending (M07)** |
 
 Implemented links resolve; planned inventory entries are distinguished and
-never admitted as loaded. No downstream stub file exists in this snapshot.
+never admitted as loaded. Three later owners and all eight profiles remain
+pending with no stubs.

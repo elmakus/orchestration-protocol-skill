@@ -1,0 +1,51 @@
+{
+  "_synthetic": "SYNTHETIC container: label is data outside records, never digested. Publication commits may be descendants of the claim commit with lineage preserved via ancestry; initial creation uses a positively verified expected-absence fence distinct from missing/null. Grammars: schemas/finite.schema.json finite_publication/conditional_fence.",
+  "finite_publication": {
+    "publication_id": "fpub:example:0001",
+    "manifest_id": "fmanifest:example:0001",
+    "wave_id": "wave:example:0001",
+    "unit_id": "unit-01",
+    "claim_generation": 0,
+    "attempt_nonce_id": "nonce:0001",
+    "claim_commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "publication_commit": "cccccccccccccccccccccccccccccccccccccccc",
+    "publication_blob": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+    "output_path": "results/assign-0001.md",
+    "release_id": "orchestration-protocol-skill@0.3.0-m03",
+    "fence": {
+      "fence_kind": "expect-head",
+      "expected_head": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "absence_proof": null,
+      "readback": "VERIFIED"
+    },
+    "ancestry": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "readback": "VERIFIED",
+    "force": false
+  },
+  "finite_publication_initial": {
+    "publication_id": "fpub:example:0002",
+    "manifest_id": "fmanifest:example:0001",
+    "wave_id": "wave:example:0001",
+    "unit_id": "unit-02",
+    "claim_generation": 0,
+    "attempt_nonce_id": "nonce:0002",
+    "claim_commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "publication_commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "publication_blob": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "output_path": "results/assign-0002.md",
+    "release_id": "orchestration-protocol-skill@0.3.0-m03",
+    "fence": {
+      "fence_kind": "expect-absent",
+      "expected_head": null,
+      "absence_proof": {
+        "state": "ABSENT",
+        "readback": "VERIFIED",
+        "proof_locator": "example/repo:refs/heads/op/wave-example-0001/unit-02:absent-proof"
+      },
+      "readback": "VERIFIED"
+    },
+    "ancestry": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "readback": "VERIFIED",
+    "force": false
+  }
+}

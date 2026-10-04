@@ -1,6 +1,7 @@
 #!/usr/bin/env node
-// M02 proportionate build check — dependency-free, non-inference.
-// Validates parseability, registries, exclusive ownership, link resolution,
+// M02/M03 common build check — dependency-free, non-inference.
+// Maintained for the actual current construction stage (0.3.0-m03): validates
+// parseability, registries, exclusive ownership, link resolution,
 // record-against-schema validation (bounded local validator), frozen derived
 // identities, lineage coherence, conditional bindings, typed value grammars,
 // and representative negative cases for A1-A6. Not a Q-layer PASS.
@@ -145,7 +146,7 @@ for (const [id, s] of Object.entries(schemaFiles)) {
 // ---------- 1. parse every delivered JSON artifact ----------
 const schemas = fs.readdirSync(path.join(SK, "schemas")).filter(f => f.endsWith(".json"));
 const templates = fs.readdirSync(path.join(SK, "templates")).filter(f => f.endsWith(".json"));
-const manifests = ["registry.json", "content-manifest.json", "compatibility-manifest.json", "current-policy.json", "qualification-impact.json"];
+const manifests = ["registry.json", "content-manifest.json", "compatibility-manifest.json", "current-policy.json", "qualification-impact.json", "helper-manifest.json"];
 let plugin, registry;
 try { plugin = readJSON("plugin.json"); ok("plugin.json parses", true); } catch (e) { ok("plugin.json parses", false, e.message); }
 for (const f of schemas) { try { readJSON(`skills/orchestration-protocol/schemas/${f}`); ok(`schema parses: ${f}`, true); } catch (e) { ok(`schema parses: ${f}`, false, e.message); } }
@@ -154,11 +155,11 @@ for (const f of manifests) { try { readJSON(`skills/orchestration-protocol/manif
 registry = readJSON("skills/orchestration-protocol/manifests/registry.json");
 
 // ---------- 2. root metadata honesty ----------
-ok("plugin version is M02 draft", plugin.version === "0.2.0-m02");
+ok("plugin version is M03 draft", plugin.version === "0.3.0-m03");
 ok("plugin op_contract is 1.0.0", plugin.op_contract_version === "1.0.0");
 ok("plugin marks draft-unqualified", plugin.release_status === "draft-unqualified");
 ok("plugin marks Android compatibility UNVERIFIED", JSON.stringify(plugin).includes("UNVERIFIED"));
-ok("README labels M02 incomplete and unqualified, not M08", read("README.md").includes("M08 complete candidate") && read("README.md").includes("unqualified"));
+ok("README labels M03 incomplete and unqualified, not M08", read("README.md").includes("M08 complete candidate") && read("README.md").includes("unqualified"));
 
 // ---------- 3. registries ----------
 const profileIds = ["formal_research","definition_review","plan_review","execution_package_review","targeted_bug_hunt","global_bug_hunt","repair_units","focused_revalidation"];
@@ -167,17 +168,17 @@ ok("registry profiles carry exact module paths + versions", registry.profiles.ev
 ok("registry profiles all pending (no M06/M07 stubs shipped)", registry.profiles.every(p => p.status === "pending"));
 const sharedOwners = ["contracts-and-versioning","evidence-and-sources","security-and-effects","durable-storage","finite-claim-substrate","homogeneous-run-substrate","independence-and-integration","repair-and-revalidation"];
 ok("registry has all 8 shared owners", sharedOwners.every(id => registry.owners.some(o => o.owner_id === id)));
-ok("registry M02 owners implemented, downstream pending", registry.owners.filter(o => ["contracts-and-versioning","evidence-and-sources","security-and-effects","durable-storage"].includes(o.owner_id)).every(o => o.status === "implemented")
-  && registry.owners.filter(o => ["finite-claim-substrate","homogeneous-run-substrate","independence-and-integration","repair-and-revalidation"].includes(o.owner_id)).every(o => o.status === "pending"));
+ok("registry M02+M03 owners implemented, downstream pending", registry.owners.filter(o => ["contracts-and-versioning","evidence-and-sources","security-and-effects","durable-storage","finite-claim-substrate"].includes(o.owner_id)).every(o => o.status === "implemented")
+  && registry.owners.filter(o => ["homogeneous-run-substrate","independence-and-integration","repair-and-revalidation"].includes(o.owner_id)).every(o => o.status === "pending"));
 ok("registry carries no workflow milestone fields", !JSON.stringify(registry).includes("owner_card") && !JSON.stringify(registry).includes("milestone"));
 
 // ---------- 4. bounded surface ----------
 for (const p of registry.profiles) ok(`pending profile not shipped: ${p.profile_id}`, !fs.existsSync(path.join(ROOT, p.module)));
 for (const o of registry.owners.filter(o => o.status === "pending")) ok(`pending owner not shipped: ${o.owner_id}`, !fs.existsSync(path.join(ROOT, o.module)));
 ok("no profiles/ directory", !fs.existsSync(path.join(SK, "profiles")));
-ok("no scripts/ helper shipped in M02", !fs.existsSync(path.join(SK, "scripts")));
+ok("sole helper shipped in M03, no second helper", fs.existsSync(path.join(SK, "scripts", "op-helper.mjs")) && !fs.existsSync(path.join(SK, "scripts", "op-helper2.mjs")) && !fs.existsSync(path.join(SK, "scripts", "helper.py")));
 const refFiles = fs.readdirSync(path.join(SK, "references")).sort();
-ok("references/ holds exactly the 4 M02 owners", JSON.stringify(refFiles) === JSON.stringify(["contracts-and-versioning.md","durable-storage.md","evidence-and-sources.md","security-and-effects.md"]));
+ok("references/ holds exactly the 5 current owners", JSON.stringify(refFiles) === JSON.stringify(["contracts-and-versioning.md","durable-storage.md","evidence-and-sources.md","finite-claim-substrate.md","security-and-effects.md"]));
 
 // ---------- 5. exclusive normative ownership (currentness-resolution lives in contracts) ----------
 function ownerHeader(mdPath) {
@@ -189,7 +190,8 @@ const ownedFiles = ["skills/orchestration-protocol/SKILL.md",
   "skills/orchestration-protocol/references/contracts-and-versioning.md",
   "skills/orchestration-protocol/references/evidence-and-sources.md",
   "skills/orchestration-protocol/references/security-and-effects.md",
-  "skills/orchestration-protocol/references/durable-storage.md"];
+  "skills/orchestration-protocol/references/durable-storage.md",
+  "skills/orchestration-protocol/references/finite-claim-substrate.md"];
 const seen = new Map(); let overlap = "";
 for (const f of ownedFiles) {
   const h = ownerHeader(f);
@@ -201,8 +203,9 @@ const expectedDomains = ("product-boundary profile-routing freeze-load-gates fai
   "run-envelope identity-scopes envelope-equivalence canonical-serialization state-domains state-precedence currentness-resolution version-compatibility release-admission content-identity-graph compatibility-manifest current-policy-manifest qualification-impact qualification-admission detached-qualification extension-points " +
   "evidence-authority evidence-weight singleton-counterexample conflict-adjudication dissent-preservation evidence-as-data mechanical-metadata-allowlist value-binding " +
   "continuation-authority authority-verification effect-caps effect-validation forbidden-repairs receipt-interfaces verification-predicates credential-boundary checkpoint-record " +
-  "git-ledger result-immutability supersession-pointers archive-structure readback-proof provenance-lineage").split(" ");
-ok("expected M02 domains all owned exactly once", expectedDomains.every(d => seen.has(d)), expectedDomains.filter(d => !seen.has(d)).join(","));
+  "git-ledger result-immutability supersession-pointers archive-structure readback-proof provenance-lineage " +
+  "finite-ledger-dag finite-manifest finite-claim-ownership finite-nonce-source finite-publication-fence finite-reclaim finite-operation-identity finite-recovery-classification finite-conditional-write finite-provider-procedures finite-allocation-planning finite-context-packs").split(" ");
+ok("expected M02+M03 domains all owned exactly once", expectedDomains.every(d => seen.has(d)), expectedDomains.filter(d => !seen.has(d)).join(","));
 ok("durable-storage references contracts owner for currentness predicate",
   read("skills/orchestration-protocol/references/durable-storage.md").includes("contracts-and-versioning"));
 
@@ -230,7 +233,9 @@ const KEY_DEF = {
   partial_admission_snapshot: "admission_snapshot", partial_integrated_result: "integrated_result",
   partial_pointer: "current_result_pointer", complete_admission_snapshot: "admission_snapshot",
   complete_integrated_result: "integrated_result", complete_pointer: "current_result_pointer",
-  mechanical_metadata_unpublished: "mechanical_metadata", mechanical_metadata_descendant: "mechanical_metadata"
+  mechanical_metadata_unpublished: "mechanical_metadata", mechanical_metadata_descendant: "mechanical_metadata",
+  finite_publication_initial: "finite_publication",
+  finite_operation_not_applied: "finite_operation", finite_operation_unknown: "finite_operation"
 };
 const records = {};
 for (const f of templates) {
@@ -288,7 +293,7 @@ const recomputed = "content:" + digest(cm.entries);
 ok("construction identity uses declared canonical algorithm", recomputed === cm.construction_identity);
 ok("entry-key order does not change canonical identity",
   digest([{ ...cm.entries[0] }]) === digest([Object.fromEntries(Object.entries(cm.entries[0]).reverse())]));
-ok("interim identity labeled construction, not M08 candidate", (cm.manifest_id || "").startsWith("content:0.2.0-m02") && read("README.md").includes("M02"));
+ok("interim identity labeled construction, not M08 candidate", (cm.manifest_id || "").startsWith("content:0.3.0-m03") && read("README.md").includes("M03"));
 // Templates digest frozen in compatibility manifest, verified by readback.
 const compat = readJSON("skills/orchestration-protocol/manifests/compatibility-manifest.json");
 const tplEntries = templates.slice().sort().map(f => ({ path: `skills/orchestration-protocol/templates/${f}`, sha256: crypto.createHash("sha256").update(fs.readFileSync(path.join(SK, "templates", f))).digest("hex") }));
@@ -442,12 +447,12 @@ ok("current-policy manifest record validates against its closed def (C05-F02)",
   validate(allDefs["current_policy"].node, policy, allDefs["current_policy"].id, "current-policy").join("; ").slice(0, 300));
 ok("negative: revoked release fails closed", admitRelease("orchestration-protocol-skill@0.1.0", { ...policy, revoked_releases: ["orchestration-protocol-skill@0.1.0"] }, true) === "BLOCKED");
 ok("negative: below-floor release fails closed", admitRelease("orchestration-protocol-skill@0.1.0", policy, true) === "BLOCKED");
-ok("negative: stale policy fails closed", admitRelease("orchestration-protocol-skill@0.2.0-m02", { ...policy, stale: true }, true) === "BLOCKED");
-ok("negative: ambiguous policy fails closed", admitRelease("orchestration-protocol-skill@0.2.0-m02", { ...policy, ambiguous: true }, true) === "BLOCKED");
+ok("negative: stale policy fails closed", admitRelease("orchestration-protocol-skill@0.3.0-m03", { ...policy, stale: true }, true) === "BLOCKED");
+ok("negative: ambiguous policy fails closed", admitRelease("orchestration-protocol-skill@0.3.0-m03", { ...policy, ambiguous: true }, true) === "BLOCKED");
 ok("negative: malformed version fails closed", admitRelease("orchestration-protocol-skill@draft", policy, true) === "BLOCKED");
 ok("defined semantics: 0.10.0 satisfies 0.2.0 floor (lexical compare would fail)",
   admitRelease("orchestration-protocol-skill@0.10.0-x", policy, true) === "ADMITTED");
-ok("positive: pinned current release admitted structurally", admitRelease("orchestration-protocol-skill@0.2.0-m02", policy, true) === "ADMITTED");
+ok("positive: pinned current release admitted structurally", admitRelease("orchestration-protocol-skill@0.3.0-m03", policy, true) === "ADMITTED");
 ok("structural admission is not production eligibility", productionEligible(policy, true, true) === false);
 
 // ---------- 13. effects with whole-set validation ----------
@@ -551,18 +556,19 @@ function bindProvider(r, ctx) {
 }
 function structuralOccurrenceCondition(r) {
   // Necessary mechanical occurrence/readback shape only; never sufficient for
-  // production admission in M02 (no qualified source, current authority, or Q PASS).
+  // production admission in M03 (no qualified source, current authority, or Q PASS).
   return r.occurrence === "VERIFIED" && r.readback === "VERIFIED";
 }
 function productionAdmissibleInM02() {
-  // M02 construction snapshot has no qualified source, current authority, or
+  // M03 construction snapshot has no qualified source, current authority, or
   // qualification PASS; production admission is always closed here.
+  // Name retained for regression continuity with M02 evidence.
   return false;
 }
 const MECH_CTX = {
   work_kind: "finite-unit",
   wave_id: "wave:example:0001", assignment_id: "assign:0001", unit_id: "unit-01", run_id: null,
-  package_id: "orchestration-protocol-skill@0.2.0-m02", release_id: "orchestration-protocol-skill@0.2.0-m02",
+  package_id: "orchestration-protocol-skill@0.3.0-m03", release_id: "orchestration-protocol-skill@0.3.0-m03",
   subject_digest: "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
   coverage_digest: "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
   generation: 0, nonce_id: "nonce:0001",
@@ -783,7 +789,7 @@ ok("single non-PASS/stale/mismatched layer blocks admission (C06-F02)",
   && structuralAdmissionGate(Object.fromEntries(ALL_Q.map(q => [q, "PASS"])), false, true) === "BLOCKED"
   && structuralAdmissionGate(Object.fromEntries(ALL_Q.map(q => [q, "PASS"])), true, false) === "BLOCKED"
   && structuralAdmissionGate({ ...Object.fromEntries(ALL_Q.map(q => [q, "PASS"])), Q10: q10Verdict("UNKNOWN", "PASS") }, true, true) === "BLOCKED");
-ok("M02 snapshot with no PASS evidence never admits production (C06-F02)",
+ok("M03 snapshot with no PASS evidence never admits production (C06-F02)",
   structuralAdmissionGate({}, true, true) === "BLOCKED");
 
 // ---------- 17. required-field spot checks ----------

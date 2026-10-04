@@ -1,0 +1,41 @@
+{
+  "helper_id": "op-helper@0.3.0-m03",
+  "helper_path": "skills/orchestration-protocol/scripts/op-helper.mjs",
+  "helper_api": "op-helper-api/1.0.0",
+  "op_contract": "1.0.0",
+  "release_id": "orchestration-protocol-skill@0.3.0-m03",
+  "sha256": "30f88d58412d72a901638aed4e80390d8ef78a1cdb2328adeed0a2c22041c6c0",
+  "byte_length": 59123,
+  "node_runtime": "node >= 18, ESM, standard built-ins only (fs, path, crypto, zlib, url), no dependencies, no build step",
+  "commands": [
+    "probe",
+    "canonicalize",
+    "digest",
+    "validate-envelope",
+    "validate-claim",
+    "validate-publication",
+    "validate-reclaim",
+    "validate-metadata",
+    "validate-receipt",
+    "check-fence",
+    "validate-ancestry",
+    "plan-alloc",
+    "context-pack",
+    "validate-nonce",
+    "issue-claim-nonce",
+    "diagnose-csprng",
+    "validate-operation"
+  ],
+  "probe_contract": "probe reports helper/api/op-contract/release identity, capability inventory, forbids list, and limitations; it never embeds the helper digest",
+  "digest_algorithm": "sha256 over raw file bytes",
+  "forbids": [
+    "network",
+    "github-access",
+    "git-writes",
+    "subprocess-scheduling",
+    "credential-access",
+    "external-effects",
+    "semantic-decisions"
+  ],
+  "note": "Detached identity: this manifest attests the helper bytes; the helper never embeds its own digest or unknown Git commit hash. Verification reads back the recorded digest without regenerating expected values as evidence. Structural helper checks are never qualification proof."
+}

@@ -31,9 +31,9 @@
       "op-result-publication"
     ],
     "repair_mutation_envelope": null,
-    "op_release": "orchestration-protocol-skill@0.2.0-m02",
+    "op_release": "orchestration-protocol-skill@0.3.0-m03",
     "authority_channel": null,
     "authority_source_class": null,
-    "run_envelope_id": "runenv:740d6c7267b059f9dab8198b9840d17870b0972a955606246061fd20b0e35745"
+    "run_envelope_id": "runenv:4bd8760f9ff68211dd7a4714373b7ba948995c98a37ad977c75d94fc9281048f"
   }
 }

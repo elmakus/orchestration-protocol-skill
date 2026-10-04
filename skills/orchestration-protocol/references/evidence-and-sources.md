@@ -152,3 +152,11 @@ release an execution receipt always names a durable locator, so
 `NOT_APPLICABLE` is non-admissible until a later owner defines its
 binding. Schema validity remains distinct from authenticity and source
 qualification.
+
+Mechanical projection: the bundled helper (`scripts/op-helper.mjs`) implements
+exactly the §6 derivation/binding checks above; finite publication/operation
+bindings that consume them are owned by
+`references/finite-claim-substrate.md`, never restated here. The finite
+`conditional_fence` expected-absence vs expected-head distinction lives in
+that owner and its schema defs; the prior null-fence predicates above are
+unchanged.

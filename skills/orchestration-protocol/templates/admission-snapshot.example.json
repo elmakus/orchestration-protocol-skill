@@ -18,7 +18,7 @@
     "result_schema": "1.0",
     "caller_id": "caller:example:0001",
     "wave_id": "wave:example:0001",
-    "run_envelope_id": "runenv:740d6c7267b059f9dab8198b9840d17870b0972a955606246061fd20b0e35745",
+    "run_envelope_id": "runenv:4bd8760f9ff68211dd7a4714373b7ba948995c98a37ad977c75d94fc9281048f",
     "profile_id": "definition_review",
     "profile_semantics": "1.0.0",
     "subject": {
@@ -38,7 +38,7 @@
         "blob": "ffffffffffffffffffffffffffffffffffffffff"
       }
     },
-    "release_id": "orchestration-protocol-skill@0.2.0-m02",
+    "release_id": "orchestration-protocol-skill@0.3.0-m03",
     "execution_state": "COMPLETE",
     "applicability_state": "APPLICABLE",
     "currentness_state": "CURRENT",
@@ -65,7 +65,7 @@
     "durable_locator": "example/repo@aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:results/integrated-partial.md",
     "publication_readback": "VERIFIED",
     "qualification_snapshot_id": "qualsnap:example:0001",
-    "qualification_impact_id": "impact:0.2.0-m02",
+    "qualification_impact_id": "impact:0.3.0-m03",
     "supersession": null
   },
   "partial_pointer": {
@@ -91,7 +91,7 @@
     "result_schema": "1.0",
     "caller_id": "caller:example:0001",
     "wave_id": "wave:example:0001",
-    "run_envelope_id": "runenv:740d6c7267b059f9dab8198b9840d17870b0972a955606246061fd20b0e35745",
+    "run_envelope_id": "runenv:4bd8760f9ff68211dd7a4714373b7ba948995c98a37ad977c75d94fc9281048f",
     "profile_id": "definition_review",
     "profile_semantics": "1.0.0",
     "subject": {
@@ -111,7 +111,7 @@
         "blob": "ffffffffffffffffffffffffffffffffffffffff"
       }
     },
-    "release_id": "orchestration-protocol-skill@0.2.0-m02",
+    "release_id": "orchestration-protocol-skill@0.3.0-m03",
     "execution_state": "COMPLETE",
     "applicability_state": "APPLICABLE",
     "currentness_state": "CURRENT",
@@ -130,7 +130,7 @@
     "durable_locator": "example/repo@aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:results/integrated.md",
     "publication_readback": "VERIFIED",
     "qualification_snapshot_id": "qualsnap:example:0001",
-    "qualification_impact_id": "impact:0.2.0-m02",
+    "qualification_impact_id": "impact:0.3.0-m03",
     "supersession": null
   },
   "complete_pointer": {

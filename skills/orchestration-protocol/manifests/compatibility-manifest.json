@@ -1,6 +1,6 @@
 {
-  "manifest_id": "compat:0.2.0-m02",
-  "release_id": "orchestration-protocol-skill@0.2.0-m02",
+  "manifest_id": "compat:0.3.0-m03",
+  "release_id": "orchestration-protocol-skill@0.3.0-m03",
   "op_contract": "1.0.0",
   "profiles": [
     {
@@ -69,7 +69,7 @@
     {
       "owner_id": "finite-claim-substrate",
       "version": "1.0.0",
-      "status": "pending"
+      "status": "implemented"
     },
     {
       "owner_id": "homogeneous-run-substrate",
@@ -87,7 +87,7 @@
       "status": "pending"
     }
   ],
-  "helper_api": null,
-  "templates_digest": "221d8504b929a6c76fc0518c0bc21918daffa587f7ee2b59c77012b5ead1bfd2",
-  "note": "M02 construction snapshot: profile/substrate/helper identities are pending. No pending identity admits content."
+  "helper_api": "op-helper-api/1.0.0",
+  "templates_digest": "949cc341067443433b78e2e424d0f5fcaabd09d5514d3a3fdcba0b95bf0bae3d",
+  "note": "M03 construction snapshot: helper and finite-claim-substrate are implemented; three later owners and all eight profiles remain pending. No pending identity admits content."
 }

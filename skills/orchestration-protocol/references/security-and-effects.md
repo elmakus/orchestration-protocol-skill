@@ -144,11 +144,16 @@ exact postcondition/readback locator. Predicates:
   readback yields NO production action.
 - Uncertain remote-mutation occurrence: exact-read the target, classify,
   retry only after verified NOT_APPLIED, fail closed while UNKNOWN.
-- No host class is claimed qualified by M02; every native capability
+- No host class is claimed qualified by M03; every native capability
   predicate remains unverified (assumptions U-01..U-05 in `README.md`).
+- Finite operation identity, its `conditional_fence` expected-absence vs
+  expected-head form, and three-way recovery classification are owned by
+  `references/finite-claim-substrate.md` and projected by the helper; the
+  generic `ref-mutation` (non-null fence) vs `read-observation` (null fence)
+  predicates above are unchanged and never weakened by that adjacent extension.
 
 ## 7. Credential boundary
 
 Credentials remain provider-managed and are absent from package inputs,
-templates, examples, helper interfaces, receipts, and evidence. No M02
+templates, examples, helper interfaces, receipts, and evidence. No M03
 record carries secrets, tokens, private keys, or cookies.

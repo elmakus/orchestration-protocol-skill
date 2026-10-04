@@ -3,8 +3,9 @@
   "$id": "urn:op-skill:schema:v1:finite",
   "title": "OP v1 pre-worker checkpoint and finite heterogeneous allocator records",
   "version": "1.0.0",
-  "normative_owner": "security-and-effects",
-  "description": "Checkpoint gate record plus finite manifest/claim/reclaim action grammars with full immutable ownership/fencing bindings. Allocation algorithms belong to the pending finite-claim-substrate owner (M03); these are the M02 record contracts.",
+  "normative_owner": "finite-claim-substrate",
+  "normative_co_owner": "security-and-effects",
+  "description": "Checkpoint gate record (security-and-effects) plus finite manifest/claim/publication/reclaim/operation/fence grammars with full immutable ownership/fencing bindings. Normative allocation, fence, reclaim and operation semantics are owned by references/finite-claim-substrate.md; this file is their serialization projection. Checkpoint semantics remain owned by security-and-effects.",
   "defs": {
     "pre_worker_checkpoint": {
       "type": "object",
@@ -37,7 +38,7 @@
             "type": "object",
             "required": ["unit_id", "claim_generation"],
             "properties": {
-              "unit_id": { "type": "string", "minLength": 1 },
+              "unit_id": { "type": "string", "pattern": "^unit-[0-9]{2}$" },
               "claim_generation": { "type": "integer", "minimum": 0 }
             },
             "additionalProperties": false
@@ -55,12 +56,77 @@
         "subject": { "$ref": "urn:op-skill:schema:v1:identities#/defs/subject_identity" },
         "coverage": { "$ref": "urn:op-skill:schema:v1:identities#/defs/coverage_identity" },
         "release_id": { "type": "string", "minLength": 1 },
-        "unit_id": { "type": "string", "minLength": 1 },
+        "unit_id": { "type": "string", "pattern": "^unit-[0-9]{2}$" },
         "claim_generation": { "type": "integer", "minimum": 0 },
-        "attempt_nonce": { "type": "string", "minLength": 1 },
+        "attempt_nonce": { "type": "string", "pattern": "^[0-9a-f]{32,}$" },
         "nonce_source": { "type": "string", "const": "qualified-csprng-128" },
         "claim_commit": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
         "force": { "type": "boolean", "const": false }
+      },
+      "additionalProperties": false
+    },
+    "conditional_fence": {
+      "type": "object",
+      "required": ["fence_kind", "readback"],
+      "properties": {
+        "fence_kind": { "type": "string", "enum": ["expect-absent", "expect-head"] },
+        "expected_head": { "type": ["string", "null"], "pattern": "^[0-9a-f]{40}$" },
+        "absence_proof": {
+          "anyOf": [
+            { "type": "null" },
+            {
+              "type": "object",
+              "required": ["state", "readback", "proof_locator"],
+              "properties": {
+                "state": { "type": "string", "const": "ABSENT" },
+                "readback": { "type": "string", "enum": ["VERIFIED"] },
+                "proof_locator": { "type": "string", "minLength": 1 }
+              },
+              "additionalProperties": false
+            }
+          ]
+        },
+        "readback": { "type": "string", "enum": ["VERIFIED"] }
+      },
+      "additionalProperties": false
+    },
+    "finite_publication": {
+      "type": "object",
+      "required": ["publication_id", "manifest_id", "wave_id", "unit_id", "claim_generation", "attempt_nonce_id", "claim_commit", "publication_commit", "publication_blob", "output_path", "release_id", "fence", "ancestry", "readback", "force"],
+      "properties": {
+        "publication_id": { "type": "string", "minLength": 1 },
+        "manifest_id": { "type": "string", "minLength": 1 },
+        "wave_id": { "type": "string", "minLength": 1 },
+        "unit_id": { "type": "string", "pattern": "^unit-[0-9]{2}$" },
+        "claim_generation": { "type": "integer", "minimum": 0 },
+        "attempt_nonce_id": { "type": "string", "pattern": "^nonce:[0-9]{4}$" },
+        "claim_commit": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+        "publication_commit": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+        "publication_blob": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+        "output_path": { "type": "string", "pattern": "^results/[A-Za-z0-9-]+\\.md$" },
+        "release_id": { "type": "string", "minLength": 1 },
+        "fence": { "$ref": "#/defs/conditional_fence" },
+        "ancestry": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+        "readback": { "type": "string", "enum": ["VERIFIED"] },
+        "force": { "type": "boolean", "const": false }
+      },
+      "additionalProperties": false
+    },
+    "finite_operation": {
+      "type": "object",
+      "required": ["operation_id", "manifest_id", "wave_id", "unit_id", "claim_generation", "target", "fence", "intended_postcondition", "occurrence", "readback"],
+      "properties": {
+        "operation_id": { "type": "string", "pattern": "^op:[0-9]{4}$" },
+        "manifest_id": { "type": "string", "minLength": 1 },
+        "wave_id": { "type": "string", "minLength": 1 },
+        "unit_id": { "type": "string", "pattern": "^unit-[0-9]{2}$" },
+        "claim_generation": { "type": "integer", "minimum": 0 },
+        "target": { "type": "string", "pattern": "^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+:refs/heads/\\S+$" },
+        "fence": { "$ref": "#/defs/conditional_fence" },
+        "intended_postcondition": { "type": "string", "pattern": "^(ref-points-at:[0-9a-f]{40}|no-write-performed|path-content-matches:[0-9a-f]{64})$" },
+        "occurrence": { "type": "string", "enum": ["VERIFIED", "NOT_APPLIED", "UNKNOWN"] },
+        "readback": { "type": "string", "enum": ["VERIFIED", "NOT_APPLICABLE"] },
+        "proof_locator": { "type": ["string", "null"] }
       },
       "additionalProperties": false
     },
@@ -71,15 +137,15 @@
         "action_id": { "type": "string", "minLength": 1 },
         "manifest_id": { "type": "string", "minLength": 1 },
         "wave_id": { "type": "string", "minLength": 1 },
-        "unit_id": { "type": "string", "minLength": 1 },
+        "unit_id": { "type": "string", "pattern": "^unit-[0-9]{2}$" },
         "expected_generation": { "type": "integer", "minimum": 0 },
-        "expected_claim_state": { "type": "string", "minLength": 1 },
-        "expected_head": { "type": "string", "minLength": 1 },
+        "expected_claim_state": { "type": "string", "pattern": "^claim:unit-[0-9]{2}:gen[0-9]+:[a-z-]+$" },
+        "expected_head": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
         "terminal_result_check": {
           "type": "object",
           "required": ["unit_id", "found_valid_current_terminal", "readback"],
           "properties": {
-            "unit_id": { "type": "string", "minLength": 1 },
+            "unit_id": { "type": "string", "pattern": "^unit-[0-9]{2}$" },
             "found_valid_current_terminal": { "type": "boolean", "const": false },
             "readback": { "type": "string", "enum": ["VERIFIED"] }
           },

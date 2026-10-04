@@ -1,6 +1,6 @@
 {
   "policy_id": "op-release-policy",
-  "policy_version": "2026-10-04:m02-construction",
+  "policy_version": "2026-10-04:m03-construction",
   "policy_kind": "proposed-construction",
   "minimum_supported_release": "orchestration-protocol-skill@0.2.0-m02",
   "revoked_releases": [],

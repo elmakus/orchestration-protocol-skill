@@ -1,7 +1,7 @@
 {
   "name": "orchestration-protocol-skill",
-  "version": "0.2.0-m02",
-  "description": "Orchestration Protocol Skill v1 — M02 common-contract construction snapshot. Draft only: explicitly unqualified, not install-verified, not a production release.",
+  "version": "0.3.0-m03",
+  "description": "Orchestration Protocol Skill v1 — M03 helper/finite construction snapshot. Draft only: explicitly unqualified, not install-verified, not a production release.",
   "op_contract_version": "1.0.0",
   "result_schema_version": "1.0.0",
   "release_status": "draft-unqualified",
@@ -23,7 +23,8 @@
     "contracts-and-versioning",
     "evidence-and-sources",
     "security-and-effects",
-    "durable-storage"
+    "durable-storage",
+    "finite-claim-substrate"
   ],
   "portable_format": {
     "kind": "proposed-chatgpt-skills-layout",
