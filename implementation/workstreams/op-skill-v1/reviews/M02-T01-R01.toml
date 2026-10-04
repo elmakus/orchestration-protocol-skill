@@ -1,0 +1,22 @@
+workstream_id = "op-skill-v1"
+card_id = "M02-T01"
+attempt = "R01"
+verdict = "pending"
+evidence_path = ""
+
+[subject]
+class = "git_blob"
+repository = "elmakus/orchestration-protocol-skill"
+commit = "44028b513b8342dd13742180aaa95c4e37e1d905"
+path = "implementation/workstreams/op-skill-v1/results/M02-T01.md"
+blob = "c1dc96813d435ceb14f6f69bc211d329536045dc"
+
+[acceptance]
+class = "task_card"
+path = "implementation/workstreams/op-skill-v1/cards/M02-T01.md"
+commit = "80b54338333e76f04671a87635c82649865614ac"
+blob = "18505fe8484a47bb7b4a5219316ae615c6bbd4c6"
+
+[independence]
+materially_produced_or_repaired_subject = false
+basis = "This exact attempt is reserved for a fresh independent context that did not materially produce or repair the implementation, its technical evidence contributions, or the normalized result. Producing/repairing/check-contributing contexts and the result reconciler are excluded from issuing the verdict. Main only persists and reconciles the independently authored verdict."
