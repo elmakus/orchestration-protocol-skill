@@ -12,7 +12,7 @@ premium_a = "satisfied"
 premium_a_subject = "definition:R8|strategy:build-first-test-later@1|planning-cycle:2"
 premium_b = "satisfied"
 premium_b_subject = "elmakus/orchestration-protocol-skill@7cc48de130d5f03fdc4628a4ddf8dec3fcd3049c:planning/OP_SKILL_V1_PLAN_P2.md@94e010e29149f6145fa10c1abd25b2d8dc149e4d"
-premium_c = "due"
+premium_c = "satisfied"
 premium_c_subject = "elmakus/orchestration-protocol-skill@7cc48de130d5f03fdc4628a4ddf8dec3fcd3049c:planning/OP_SKILL_V1_PLAN_P2.md@94e010e29149f6145fa10c1abd25b2d8dc149e4d"
 
 [subject]
