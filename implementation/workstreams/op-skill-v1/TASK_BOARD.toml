@@ -1,5 +1,5 @@
 workstream_id = "op-skill-v1"
-revision = 7
+revision = 8
 
 [execution_ref]
 branch = "feat/op-skill-v1"
@@ -29,6 +29,12 @@ status = "in_progress"
 [cards.contract]
 class = "task_card"
 path = "implementation/workstreams/op-skill-v1/cards/M02-T01.md"
+
+[cards.result]
+class = "result"
+path = "implementation/workstreams/op-skill-v1/results/M02-T01.md"
+commit = "44028b513b8342dd13742180aaa95c4e37e1d905"
+blob = "c1dc96813d435ceb14f6f69bc211d329536045dc"
 
 [[jit_triggers]]
 id = "M01-live-feasibility-after-kit"
