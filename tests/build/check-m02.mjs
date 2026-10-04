@@ -231,7 +231,8 @@ ok("implemented links resolve; pending paths never presented as loaded", badLink
 const KEY_DEF = {
   partial_admission_snapshot: "admission_snapshot", partial_integrated_result: "integrated_result",
   partial_pointer: "current_result_pointer", complete_admission_snapshot: "admission_snapshot",
-  complete_integrated_result: "integrated_result", complete_pointer: "current_result_pointer"
+  complete_integrated_result: "integrated_result", complete_pointer: "current_result_pointer",
+  mechanical_metadata_unpublished: "mechanical_metadata", mechanical_metadata_descendant: "mechanical_metadata"
 };
 const records = {};
 for (const f of templates) {
@@ -257,6 +258,13 @@ ok("frozen envelope id verifies against semantic projection", runEnvelopeId(env)
 ok("derived run_envelope_id excluded from its own digest inputs", !("run_envelope_id" in semanticProjection({ ...env, run_envelope_id: "runenv:tampered" })));
 const tampered = { ...env, subject: { ...env.subject, path: "OTHER.md" } };
 ok("content change invalidates supplied derived identity", runEnvelopeId(tampered) !== frozenId);
+const tamperedCov = { ...env, coverage: { ...env.coverage, coverage_manifest: { ...env.coverage.coverage_manifest, blob: "0000000000000000000000000000000000000000" } } };
+ok("coverage-content change invalidates envelope binding", runEnvelopeId(tamperedCov) !== frozenId);
+const covDef = allDefs["coverage_identity"];
+ok("negative: label-only coverage without immutable identity rejected",
+  validate(covDef.node, { acceptance_id: "coverage:example:acceptance:v1" }, covDef.id, "coverage-probe").length > 0);
+ok("negative: moving branch/path label as coverage rejected",
+  validate(covDef.node, { acceptance_id: "refs/heads/main:ACCEPTANCE.md" }, covDef.id, "coverage-probe").length > 0);
 const envReordered = Object.fromEntries(Object.entries(env).reverse());
 ok("canonical digest deterministic across key order", runEnvelopeId(envReordered) === frozenId);
 ok("return_id excluded from envelope equivalence", runEnvelopeId({ ...env, return_id: "different-routing-999" }) === frozenId);
@@ -438,12 +446,17 @@ function slug(s) { return String(s).replace(/[^A-Za-z0-9]+/g, "-").replace(/^-+|
 // Every value must be derived from the frozen bound context, not chosen.
 // Expected values come from frozen package/envelope/assignment/manifest
 // and verified claim/publication identities — never the worker record.
+function requireCtx(ctx, fields, what) {
+  return fields.filter(f => ctx[f] === undefined).map(f => `${what}: missing required binding context '${f}'`);
+}
 function bindMetadata(m, ctx) {
-  const errs = [];
-  const seg = ctx.unit_id || ctx.run_id;
+  const errs = requireCtx(ctx, ["work_kind", "wave_id", "assignment_id", "package_id", "release_id", "subject_digest", "coverage_digest", "generation", "nonce_id", "repository", "claim_commit", "wave_base_commit", "blob", "ref_created", "published"], "metadata");
+  if (ctx.work_kind !== "finite-unit" && ctx.work_kind !== "homogeneous-run") errs.push("metadata: unknown work kind");
+  if (errs.length) return errs;
+  const seg = ctx.work_kind === "finite-unit" ? ctx.unit_id : ctx.run_id;
   if (m.assignment_id !== ctx.assignment_id) errs.push("assignment_id not bound to frozen assignment");
-  const unitOk = ctx.unit_id !== null && ctx.unit_id !== undefined && m.unit_id === ctx.unit_id && (m.run_id === null || m.run_id === undefined);
-  const runOk = ctx.run_id !== null && ctx.run_id !== undefined && m.run_id === ctx.run_id && (m.unit_id === null || m.unit_id === undefined);
+  const unitOk = ctx.work_kind === "finite-unit" && m.unit_id === ctx.unit_id && (m.run_id === null || m.run_id === undefined);
+  const runOk = ctx.work_kind === "homogeneous-run" && m.run_id === ctx.run_id && (m.unit_id === null || m.unit_id === undefined);
   if (!unitOk && !runOk) errs.push("unit/run not bound to one frozen work kind");
   if (m.package_id !== ctx.package_id) errs.push("package_id not bound to frozen envelope");
   if (m.release_id !== ctx.release_id) errs.push("release_id not bound to frozen envelope");
@@ -451,19 +464,33 @@ function bindMetadata(m, ctx) {
   if (m.coverage_digest !== ctx.coverage_digest) errs.push("coverage_digest not bound");
   if (m.claim_generation !== ctx.generation) errs.push("claim_generation not bound");
   if (m.attempt_nonce_id !== ctx.nonce_id) errs.push("attempt_nonce_id not bound");
-  if (m.blob !== ctx.blob) errs.push("blob not bound to verified publication");
+  const roleCommits = [ctx.claim_commit, ctx.wave_base_commit];
+  if (ctx.publication) roleCommits.push(ctx.publication.commit);
+  if (!roleCommits.includes(m.commit)) errs.push("commit not a bound claim/wave-base/publication role");
+  if (m.ancestry !== null && m.ancestry !== undefined && !roleCommits.includes(m.ancestry)) errs.push("ancestry not bound");
+  if (m.expected_head !== null && m.expected_head !== undefined && !roleCommits.includes(m.expected_head)) errs.push("expected_head not bound");
   if (m.branch !== `op/${slug(ctx.wave_id)}/${slug(seg)}`) errs.push("branch not derived from bound wave/unit");
   if (m.output_path !== `results/${slug(ctx.assignment_id)}.md`) errs.push("output_path not derived from bound assignment");
-  if (m.ref !== null && m.ref !== undefined && m.ref !== `refs/heads/${m.branch}`) errs.push("ref not bound to branch");
-  if (![ctx.claim_commit, ctx.wave_base_commit].includes(m.commit)) errs.push("commit not bound to claim/wave-base identity");
-  if (m.ancestry !== null && m.ancestry !== undefined && ![ctx.claim_commit, ctx.wave_base_commit].includes(m.ancestry)) errs.push("ancestry not bound");
-  if (m.expected_head !== null && m.expected_head !== undefined && ![ctx.claim_commit, ctx.wave_base_commit].includes(m.expected_head)) errs.push("expected_head not bound");
-  if (m.publication === null || m.publication === undefined) {
-    if (m.readback !== "NOT_APPLICABLE") errs.push("null publication requires NOT_APPLICABLE readback");
-  } else {
+  if (ctx.ref_created === true) {
+    if (m.ref !== `refs/heads/${m.branch}`) errs.push("created ref must equal refs/heads/<branch>");
+  } else if (ctx.ref_created === false) {
+    if (m.ref !== null && m.ref !== undefined) errs.push("no created ref: field must be absent (null)");
+  } else errs.push("metadata: missing ref applicability context");
+  if (ctx.published === true) {
+    if (!ctx.publication) errs.push("metadata: missing verified publication identity");
+    else {
+      const exp = `${ctx.publication.repository}@${ctx.publication.commit}:${ctx.publication.output_path}`;
+      if (m.publication !== exp) errs.push("publication not the exact verified P locator");
+      if (m.commit !== ctx.publication.commit) errs.push("record commit not the P publication commit");
+      if (m.blob !== ctx.publication.blob) errs.push("record blob not the P publication blob");
+      if (m.output_path !== ctx.publication.output_path) errs.push("record output not the P publication output");
+    }
     if (m.readback !== "VERIFIED") errs.push("published locator requires VERIFIED readback");
-    if (m.publication !== `${ctx.repository}@${m.commit}:${m.output_path}`) errs.push("publication not recomposed from bound values");
-  }
+  } else if (ctx.published === false) {
+    if (m.publication !== null && m.publication !== undefined) errs.push("unpublished context: publication must be absent (null)");
+    if (m.blob !== null && m.blob !== undefined) errs.push("unpublished context: blob must be absent (null)");
+    if (m.readback !== "NOT_APPLICABLE") errs.push("unpublished context requires NOT_APPLICABLE readback");
+  } else errs.push("metadata: missing publication applicability context");
   return errs;
 }
 function bindReceipt(r, pub, ctx) {
@@ -475,18 +502,35 @@ function bindReceipt(r, pub, ctx) {
   return errs;
 }
 function bindProvider(r, ctx) {
-  const errs = [];
+  const errs = requireCtx(ctx, ["operation_id", "repository", "branch", "operation_kind", "intended_postcondition_kind"], "provider");
+  if (ctx.operation_kind !== "ref-mutation" && ctx.operation_kind !== "read-observation") errs.push("provider: unknown operation kind");
+  if (errs.length) return errs;
   if (r.operation_id !== ctx.operation_id) errs.push("operation_id not the bound operation");
   if (r.target !== `${ctx.repository}:refs/heads/${ctx.branch}`) errs.push("target not recomposed from bound operation context");
-  if (r.expected_head !== null && r.expected_head !== undefined && r.expected_head !== ctx.expected_head) errs.push("expected_head not bound");
-  if (r.occurrence === "VERIFIED" && r.readback !== "VERIFIED") errs.push("verified occurrence requires verified readback");
-  if (r.occurrence === "NOT_APPLIED" && r.postcondition !== "no-write-performed") errs.push("not-applied occurrence requires no-write postcondition");
+  if (ctx.operation_kind === "ref-mutation") {
+    if (ctx.expected_head === undefined || ctx.expected_head === null) errs.push("ref-mutation requires a bound expected-head fence");
+    else if (r.expected_head !== ctx.expected_head) errs.push("expected_head not the bound fence");
+    if (ctx.intended_postcondition_kind !== "ref-points-at" && ctx.intended_postcondition_kind !== "no-write-performed") errs.push("ref-mutation intended kind");
+  } else {
+    if (r.expected_head !== null && r.expected_head !== undefined) errs.push("read-observation declares no fence");
+    if (ctx.intended_postcondition_kind !== "path-content-matches") errs.push("read-observation intended kind");
+    if (ctx.intended_content_digest === undefined || ctx.intended_content_digest === null) errs.push("read-observation requires a bound intended content digest");
+  }
   const pc = String(r.postcondition || "");
+  const isNoWrite = pc === "no-write-performed";
+  if ((r.occurrence === "NOT_APPLIED") !== isNoWrite) errs.push("occurrence/postcondition kind mismatch in both directions");
+  const kindOf = pc.startsWith("ref-points-at:") ? "ref-points-at" : pc.startsWith("path-content-matches:") ? "path-content-matches" : pc;
+  if (kindOf !== ctx.intended_postcondition_kind) errs.push("postcondition kind not bound by the declared operation");
   if (pc.startsWith("ref-points-at:") && pc.slice("ref-points-at:".length) !== ctx.intended_commit) errs.push("postcondition not bound to intended commit");
-  if (pc.startsWith("path-content-matches:") && (ctx.intended_content_digest === null || ctx.intended_content_digest === undefined || pc.slice("path-content-matches:".length) !== ctx.intended_content_digest)) errs.push("postcondition content not bound");
+  if (pc.startsWith("path-content-matches:") && pc.slice("path-content-matches:".length) !== ctx.intended_content_digest) errs.push("postcondition content not bound");
+  if (r.occurrence === "VERIFIED" && r.readback !== "VERIFIED") errs.push("verified occurrence requires verified readback");
   return errs;
 }
+function productionAdmissible(r) {
+  return r.occurrence === "VERIFIED" && r.readback === "VERIFIED";
+}
 const MECH_CTX = {
+  work_kind: "finite-unit",
   wave_id: "wave:example:0001", assignment_id: "assign:0001", unit_id: "unit-01", run_id: null,
   package_id: "orchestration-protocol-skill@0.2.0-m02", release_id: "orchestration-protocol-skill@0.2.0-m02",
   subject_digest: "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
@@ -495,12 +539,31 @@ const MECH_CTX = {
   repository: "example/repo",
   claim_commit: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
   wave_base_commit: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-  blob: "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+  blob: "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  ref_created: true, published: true,
+  publication: {
+    repository: "example/repo",
+    commit: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    blob: "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    output_path: "results/assign-0001.md"
+  }
+};
+const UNPUB_CTX = { ...MECH_CTX, ref_created: false, published: false, publication: null };
+const DESC_CTX = {
+  ...MECH_CTX,
+  publication: {
+    repository: "example/repo",
+    commit: "cccccccccccccccccccccccccccccccccccccccc",
+    blob: "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+    output_path: "results/assign-0001.md"
+  }
 };
 const OP_CTX = {
   operation_id: "op:0001", repository: "example/repo", branch: "op/wave-example-0001/unit-01",
+  operation_kind: "ref-mutation",
   expected_head: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
   intended_commit: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  intended_postcondition_kind: "ref-points-at",
   intended_content_digest: null
 };
 function validateMetadata(obj) {
@@ -522,6 +585,16 @@ ok("negative: wrong-bound nonce fails binding", bindMetadata({ ...mech, attempt_
 ok("negative: wrong-bound subject digest fails binding", bindMetadata({ ...mech, subject_digest: "sha256:0000000000000000000000000000000000000000000000000000000000000000" }, MECH_CTX).length > 0);
 ok("negative: unit and run both set fails work-kind binding", bindMetadata({ ...mech, run_id: "RUN-001" }, MECH_CTX).length > 0);
 ok("negative: published locator with NOT_APPLICABLE readback fails", bindMetadata({ ...mech, readback: "NOT_APPLICABLE" }, MECH_CTX).length > 0);
+ok("negative: null ref against created-ref context fails (suppression is not proof)", bindMetadata({ ...mech, ref: null }, MECH_CTX).length > 0);
+ok("negative: null publication against published context fails (suppression is not proof)", bindMetadata({ ...mech, publication: null, blob: null, readback: "NOT_APPLICABLE" }, MECH_CTX).length > 0);
+ok("positive: no-publication/no-ref example verifies against unpublished context",
+  bindMetadata(records["mechanical-receipt.example.json#mechanical_metadata_unpublished"], UNPUB_CTX).length === 0,
+  bindMetadata(records["mechanical-receipt.example.json#mechanical_metadata_unpublished"], UNPUB_CTX).join("; "));
+ok("positive: descendant publication verifies with claim lineage intact",
+  bindMetadata(records["mechanical-receipt.example.json#mechanical_metadata_descendant"], DESC_CTX).length === 0,
+  bindMetadata(records["mechanical-receipt.example.json#mechanical_metadata_descendant"], DESC_CTX).join("; "));
+ok("negative: missing binding context fails instead of defaulting permissive", bindMetadata(mech, {}).length > 0);
+ok("negative: ambiguous applicability context fails", bindMetadata(mech, { ...MECH_CTX, ref_created: undefined, published: undefined }).length > 0);
 const execReceipt = records["mechanical-receipt.example.json#execution_receipt"];
 ok("positive: execution receipt binds assignment and exact durable result", bindReceipt(execReceipt, mech.publication, MECH_CTX).length === 0, bindReceipt(execReceipt, mech.publication, MECH_CTX).join("; "));
 ok("negative: receipt with different durable result fails binding", bindReceipt({ ...execReceipt, durable_result: "example/repo@ffffffffffffffffffffffffffffffffffffffff:results/assign-0001.md" }, mech.publication, MECH_CTX).length > 0);
@@ -533,6 +606,32 @@ ok("negative: semantic target suffix fails binding", bindProvider({ ...provRecei
 ok("negative: closed-form postcondition for wrong commit fails binding", bindProvider({ ...provReceipt, postcondition: "ref-points-at:ffffffffffffffffffffffffffffffffffffffff" }, OP_CTX).length > 0);
 ok("negative: well-shaped wrong-bound operation fails binding", bindProvider({ ...provReceipt, operation_id: "op:9999" }, OP_CTX).length > 0);
 ok("negative: self-labelled success without verified readback fails", bindProvider({ ...provReceipt, occurrence: "VERIFIED", readback: "NOT_APPLICABLE" }, OP_CTX).length > 0);
+ok("negative: VERIFIED occurrence with no-write postcondition fails both ways", bindProvider({ ...provReceipt, occurrence: "VERIFIED", postcondition: "no-write-performed" }, OP_CTX).length > 0);
+ok("negative: NOT_APPLIED occurrence with write postcondition fails both ways", bindProvider({ ...provReceipt, occurrence: "NOT_APPLIED", postcondition: "ref-points-at:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" }, OP_CTX).length > 0);
+ok("negative: missing expected-head fence cannot prove ref-mutation", bindProvider({ ...provReceipt, expected_head: null }, OP_CTX).length > 0);
+ok("negative: postcondition kind freely selected outside intended kind fails",
+  bindProvider({ ...provReceipt, postcondition: "path-content-matches:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee" }, OP_CTX).length > 0);
+const NOWRITE_CTX = { ...OP_CTX, intended_postcondition_kind: "no-write-performed" };
+const noWriteReceipt = { ...provReceipt, occurrence: "NOT_APPLIED", postcondition: "no-write-performed" };
+ok("positive: bound no-write receipt verifies", bindProvider(noWriteReceipt, NOWRITE_CTX).length === 0, bindProvider(noWriteReceipt, NOWRITE_CTX).join("; "));
+const READ_CTX = {
+  operation_id: "op:0002", repository: "example/repo", branch: "op/wave-example-0001/unit-01",
+  operation_kind: "read-observation",
+  expected_head: null, intended_commit: null,
+  intended_postcondition_kind: "path-content-matches",
+  intended_content_digest: "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+};
+const readReceipt = {
+  operation_id: "op:0002", target: "example/repo:refs/heads/op/wave-example-0001/unit-01",
+  expected_head: null, occurrence: "VERIFIED",
+  postcondition: "path-content-matches:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+  readback: "VERIFIED"
+};
+ok("positive: bound read-observation verifies with null fence", bindProvider(readReceipt, READ_CTX).length === 0, bindProvider(readReceipt, READ_CTX).join("; "));
+ok("negative: read-observation declaring a fence fails", bindProvider({ ...readReceipt, expected_head: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" }, READ_CTX).length > 0);
+ok("negative: missing operation-kind context fails", bindProvider(provReceipt, { operation_id: "op:0001", repository: "example/repo", branch: "op/wave-example-0001/unit-01" }).length > 0);
+ok("negative: UNKNOWN occurrence is not production-admissible", productionAdmissible({ ...provReceipt, occurrence: "UNKNOWN" }) === false);
+ok("positive: bound VERIFIED receipt is production-admissible", productionAdmissible(provReceipt) === true);
 ok("negative: semantic blocker payload outside closed inventory", (() => {
   const def = allDefs["execution_receipt"];
   return validate(def.node, { ...records["mechanical-receipt.example.json#execution_receipt"], blocker: "red:critical-blocker" }, def.id, "receipt-probe").length > 0;

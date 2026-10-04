@@ -11,16 +11,29 @@
       "path": "SPEC.md",
       "blob": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
     },
-    "coverage": { "acceptance_id": "coverage:example:acceptance:v1" },
+    "coverage": {
+      "acceptance_id": "coverage:example:acceptance:v1",
+      "coverage_manifest": {
+        "identity_class": "git",
+        "repository": "example/repo",
+        "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "path": "ACCEPTANCE.md",
+        "blob": "ffffffffffffffffffffffffffffffffffffffff"
+      }
+    },
     "continuation_authority_id": null,
     "prerequisite_ids": [],
     "return_id": "routing-only-example-001",
-    "requested_effects": ["op-result-publication"],
-    "effective_effects": ["op-result-publication"],
+    "requested_effects": [
+      "op-result-publication"
+    ],
+    "effective_effects": [
+      "op-result-publication"
+    ],
     "repair_mutation_envelope": null,
     "op_release": "orchestration-protocol-skill@0.2.0-m02",
     "authority_channel": null,
     "authority_source_class": null,
-    "run_envelope_id": "runenv:b7c06ff6d3015c56d0d5621f7f63981a1d6703e50b6db8ca6bf6ea450d44d728"
+    "run_envelope_id": "runenv:740d6c7267b059f9dab8198b9840d17870b0972a955606246061fd20b0e35745"
   }
 }

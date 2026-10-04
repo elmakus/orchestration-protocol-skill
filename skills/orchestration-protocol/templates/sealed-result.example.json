@@ -12,7 +12,14 @@
       "blob": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
     },
     "coverage": {
-      "acceptance_id": "coverage:example:acceptance:v1"
+      "acceptance_id": "coverage:example:acceptance:v1",
+      "coverage_manifest": {
+        "identity_class": "git",
+        "repository": "example/repo",
+        "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "path": "ACCEPTANCE.md",
+        "blob": "ffffffffffffffffffffffffffffffffffffffff"
+      }
     },
     "release_id": "orchestration-protocol-skill@0.2.0-m02",
     "generation_binding": {

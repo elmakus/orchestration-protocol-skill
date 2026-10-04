@@ -1,5 +1,5 @@
 {
-  "_synthetic": "SYNTHETIC container: label is data outside records, never digested. Every value below is mechanically derived from the frozen bound context (wave wave:example:0001, assignment assign:0001, unit unit-01, repo example/repo, claim/base commit aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa) per evidence-and-sources section 6 — none is freely chosen. Grammars: schemas/metadata.schema.json mechanical_metadata/execution_receipt/provider_receipt.",
+  "_synthetic": "SYNTHETIC container: label is data outside records, never digested. Every value below is mechanically derived from the frozen bound context (wave wave:example:0001, assignment assign:0001, unit unit-01, repo example/repo, claim/base commit aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa) per evidence-and-sources section 6 \u2014 none is freely chosen. Grammars: schemas/metadata.schema.json mechanical_metadata/execution_receipt/provider_receipt.",
   "mechanical_metadata": {
     "assignment_id": "assign:0001",
     "unit_id": "unit-01",
@@ -34,5 +34,45 @@
     "occurrence": "VERIFIED",
     "postcondition": "ref-points-at:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
     "readback": "VERIFIED"
+  },
+  "mechanical_metadata_unpublished": {
+    "assignment_id": "assign:0001",
+    "unit_id": "unit-01",
+    "run_id": null,
+    "package_id": "orchestration-protocol-skill@0.2.0-m02",
+    "release_id": "orchestration-protocol-skill@0.2.0-m02",
+    "subject_digest": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+    "coverage_digest": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+    "claim_generation": 0,
+    "attempt_nonce_id": "nonce:0001",
+    "branch": "op/wave-example-0001/unit-01",
+    "ref": null,
+    "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "blob": null,
+    "output_path": "results/assign-0001.md",
+    "publication": null,
+    "readback": "NOT_APPLICABLE",
+    "ancestry": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "expected_head": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  },
+  "mechanical_metadata_descendant": {
+    "assignment_id": "assign:0001",
+    "unit_id": "unit-01",
+    "run_id": null,
+    "package_id": "orchestration-protocol-skill@0.2.0-m02",
+    "release_id": "orchestration-protocol-skill@0.2.0-m02",
+    "subject_digest": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+    "coverage_digest": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+    "claim_generation": 0,
+    "attempt_nonce_id": "nonce:0001",
+    "branch": "op/wave-example-0001/unit-01",
+    "ref": "refs/heads/op/wave-example-0001/unit-01",
+    "commit": "cccccccccccccccccccccccccccccccccccccccc",
+    "blob": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+    "output_path": "results/assign-0001.md",
+    "publication": "example/repo@cccccccccccccccccccccccccccccccccccccccc:results/assign-0001.md",
+    "readback": "VERIFIED",
+    "ancestry": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "expected_head": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
   }
 }

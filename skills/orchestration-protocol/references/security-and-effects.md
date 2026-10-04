@@ -122,6 +122,23 @@ exact postcondition/readback locator. Predicates:
   readback; a self-labelled success with any other readback proves
   nothing. `UNKNOWN` occurrence prohibits the originating production
   action regardless of readback.
+- One coherent operation-context predicate governs kind, fence, intended
+  postcondition, and occurrence together. The declared operation kind is
+  `ref-mutation` or `read-observation`, validated before any branch:
+  - `ref-mutation` requires a non-null expected head equal to the bound
+    fence; a missing expected-head fence cannot prove the bound
+    operation. Its intended postcondition kind is `ref-points-at` (or
+    `no-write-performed` only with occurrence `NOT_APPLIED`).
+  - `read-observation` requires a null expected head (no fence to check)
+    and a `path-content-matches` postcondition bound to the declared
+    intended content digest.
+  - Occurrence and postcondition kind imply each other both ways:
+    `NOT_APPLIED` holds exactly with `no-write-performed`; `VERIFIED`
+    never pairs with `no-write-performed`. The intended postcondition
+    kind is bound by the declared operation, never freely selected among
+    unrelated grammar branches by the receipt.
+  - Required kind context missing or ambiguous fails before coordinator
+    consumption.
 - A self-labelled success receipt is NOT authenticity/atomicity proof.
 - Missing qualified source, expected-head fence, current authority, or exact
   readback yields NO production action.

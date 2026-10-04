@@ -3,11 +3,29 @@
   "homogeneous_batch": {
     "batch_revision_id": "batch:example:0001:rev0",
     "wave_id": "wave:example:0002",
-    "run_envelope_id": "runenv:b7c06ff6d3015c56d0d5621f7f63981a1d6703e50b6db8ca6bf6ea450d44d728",
-    "subject": { "identity_class": "captured-content", "sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff", "byte_length": 128, "capture_method": "example-capture" },
-    "coverage": { "acceptance_id": "coverage:example:gbh:v1" },
+    "run_envelope_id": "runenv:740d6c7267b059f9dab8198b9840d17870b0972a955606246061fd20b0e35745",
+    "subject": {
+      "identity_class": "captured-content",
+      "sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      "byte_length": 128,
+      "capture_method": "example-capture"
+    },
+    "coverage": {
+      "acceptance_id": "coverage:example:acceptance:v1",
+      "coverage_manifest": {
+        "identity_class": "git",
+        "repository": "example/repo",
+        "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "path": "ACCEPTANCE.md",
+        "blob": "ffffffffffffffffffffffffffffffffffffffff"
+      }
+    },
     "release_id": "orchestration-protocol-skill@0.2.0-m02",
-    "reserved_runs": ["RUN-001", "RUN-002", "RUN-003"],
+    "reserved_runs": [
+      "RUN-001",
+      "RUN-002",
+      "RUN-003"
+    ],
     "state": "OPEN"
   },
   "homogeneous_run": {
@@ -15,14 +33,30 @@
     "batch_revision_id": "batch:example:0001:rev0",
     "recovery_state": "ACTIVE",
     "current_attempt_id": "attempt:RUN-001:0001",
-    "attempt_history": ["attempt:RUN-001:0001"]
+    "attempt_history": [
+      "attempt:RUN-001:0001"
+    ]
   },
   "current_attempt": {
     "attempt_id": "attempt:RUN-001:0001",
     "run_id": "RUN-001",
     "batch_revision_id": "batch:example:0001:rev0",
-    "subject": { "identity_class": "captured-content", "sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff", "byte_length": 128, "capture_method": "example-capture" },
-    "coverage": { "acceptance_id": "coverage:example:gbh:v1" },
+    "subject": {
+      "identity_class": "captured-content",
+      "sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      "byte_length": 128,
+      "capture_method": "example-capture"
+    },
+    "coverage": {
+      "acceptance_id": "coverage:example:acceptance:v1",
+      "coverage_manifest": {
+        "identity_class": "git",
+        "repository": "example/repo",
+        "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "path": "ACCEPTANCE.md",
+        "blob": "ffffffffffffffffffffffffffffffffffffffff"
+      }
+    },
     "release_id": "orchestration-protocol-skill@0.2.0-m02",
     "state": "ACTIVE"
   },
@@ -31,10 +65,26 @@
     "parent_wave_id": "wave:example:0002",
     "parent_batch_revision_id": "batch:example:0001:rev0",
     "deficit_snapshot": 1,
-    "subject": { "identity_class": "captured-content", "sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff", "byte_length": 128, "capture_method": "example-capture" },
-    "coverage": { "acceptance_id": "coverage:example:gbh:v1" },
+    "subject": {
+      "identity_class": "captured-content",
+      "sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      "byte_length": 128,
+      "capture_method": "example-capture"
+    },
+    "coverage": {
+      "acceptance_id": "coverage:example:acceptance:v1",
+      "coverage_manifest": {
+        "identity_class": "git",
+        "repository": "example/repo",
+        "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "path": "ACCEPTANCE.md",
+        "blob": "ffffffffffffffffffffffffffffffffffffffff"
+      }
+    },
     "release_id": "orchestration-protocol-skill@0.2.0-m02",
-    "supplemental_runs": ["RUN-101"],
+    "supplemental_runs": [
+      "RUN-101"
+    ],
     "expected_head": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
     "single_use": true
   }

@@ -88,6 +88,6 @@
     }
   ],
   "helper_api": null,
-  "templates_digest": "a6de7a47265ca59da23f781cf89639d95ed9a2565d49d49253ae962abce23e97",
+  "templates_digest": "75d6042c226fcfc4ed3f9cc232de9c7bd2890efae2117858a49f4050fc777fa4",
   "note": "M02 construction snapshot: profile/substrate/helper identities are pending. No pending identity admits content."
 }

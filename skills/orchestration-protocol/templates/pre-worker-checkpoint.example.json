@@ -3,7 +3,7 @@
   "pre_worker_checkpoint": {
     "checkpoint_id": "ckpt:example:0001",
     "wave_id": "wave:example:0001",
-    "run_envelope_id": "runenv:b7c06ff6d3015c56d0d5621f7f63981a1d6703e50b6db8ca6bf6ea450d44d728",
+    "run_envelope_id": "runenv:740d6c7267b059f9dab8198b9840d17870b0972a955606246061fd20b0e35745",
     "envelope_digest": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
     "release_id": "orchestration-protocol-skill@0.2.0-m02",
     "policy_id": "op-release-policy:2026-10-04:m02-construction",

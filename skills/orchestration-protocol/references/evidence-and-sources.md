@@ -108,8 +108,19 @@ manifest and verified claim/publication/readback identities for that
 field — never from the returned worker record itself. Let `A` be the
 bound assignment (id, unit-or-run, wave, generation, nonce), `M` the
 bound manifest (manifest id, wave-base commit), `E` the bound envelope
-(package id, release id, subject/coverage digests), and `P` the verified
-claim/publication (commit, blob, output, publication locator, readback).
+(package id, release id, subject/coverage digests), `C` the bound claim
+(commit), and `P` the exact verified publication (repository, commit,
+blob, output path, locator, readback). Claim, wave-base, and publication
+are distinct roles: a result publication commit may legitimately be a
+descendant of the claim commit, so commit-typed fields admit any bound
+role identity while output/blob/locator fields bind exactly `P`.
+
+The context must also carry frozen authoritative applicability/stage
+facts: whether a ref was created (`ref_created`) and whether anything
+was published (`published`). Both presence and absence are checked
+against those facts; required context missing or ambiguous fails rather
+than defaulting to a permissive null branch. Missing context never
+proves that no ref/publication exists.
 
 | field | binding |
 |---|---|
@@ -121,13 +132,13 @@ claim/publication (commit, blob, output, publication locator, readback).
 | `claim_generation` | exactly `A` generation |
 | `attempt_nonce_id` | exactly `A` nonce id |
 | `branch` | `op/<slug(wave)>/<slug(unit-or-run)>` |
-| `ref` | null only when no ref was created (read-only assignment); otherwise exactly `refs/heads/<branch>` |
-| `commit`, `expected_head` | equal a bound `P` claim or `M` wave-base commit |
-| `blob` | exactly the `P` blob for the declared output |
+| `ref` | checked against `ref_created`: true requires exactly `refs/heads/<branch>`; false requires null |
+| `commit`, `expected_head` | equal the bound `C`, `M` wave-base, or `P` publication commit |
+| `blob` | null exactly when nothing is published; otherwise exactly the `P` blob for the declared output |
 | `output_path` | `results/<slug(assignment)>.md` |
-| `publication` | null only when nothing was published; otherwise exactly `<repo>@<commit>:<output_path>` recomposed from bound values |
-| `readback` | `NOT_APPLICABLE` only with null publication; otherwise `VERIFIED` by exact readback |
-| `ancestry` | a bound `P`/`M` commit, never prose |
+| `publication` | checked against `published`: false requires null; true requires exactly the verified `P` locator (`<repo>@<P-commit>:<P-output>`), with record commit/blob/output equal to the `P` commit/blob/output |
+| `readback` | `NOT_APPLICABLE` exactly with null publication; otherwise `VERIFIED` by exact readback |
+| `ancestry` | a bound `C`/`M`/`P` commit recording lineage (e.g. the claim commit for a descendant publication), never prose |
 
 ### 6.2 Execution-receipt binding
 

@@ -12,15 +12,15 @@
     },
     {
       "component": "reference:contracts-and-versioning:1.0.0",
-      "identity": "45361c321dc09bd8295a2ca34c96ff244fbb1aecabcaae33572508c823a09516"
+      "identity": "fb3efc1addc770aaadfa9550825796fdc008074e1efa6fe1f44ae429d3252a3f"
     },
     {
       "component": "reference:evidence-and-sources:1.0.0",
-      "identity": "213c7b8976318ebabf6be3b9e6ec01aa3442f44e595c6874470c8058ed4d9675"
+      "identity": "ebd8c41fb10ecf626516b4cb07574de8bab28625460548e71210e48724f8d266"
     },
     {
       "component": "reference:security-and-effects:1.0.0",
-      "identity": "148110c34af960f580271b6108c384cbfc9c30c8e4f68aa7f88777ad0bc1631a"
+      "identity": "1c56c712397d7a8c3cd0eea7a52c979b17fa4a616641619588ec6d555d1eaf96"
     },
     {
       "component": "reference:durable-storage:1.0.0",
@@ -28,11 +28,11 @@
     },
     {
       "component": "schemas:v1",
-      "identity": "e7b28032f89569744e996c929de3de94c50c1d64c7a79dd2f6001c72727eb625"
+      "identity": "b73b07a73d36f237239586d7ce0bc0912c4cace60c41a52153522beb8c7da5ad"
     },
     {
       "component": "templates:synthetic-examples",
-      "identity": "a6de7a47265ca59da23f781cf89639d95ed9a2565d49d49253ae962abce23e97"
+      "identity": "75d6042c226fcfc4ed3f9cc232de9c7bd2890efae2117858a49f4050fc777fa4"
     },
     {
       "component": "host:android-chatgpt",

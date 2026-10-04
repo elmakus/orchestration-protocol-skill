@@ -57,15 +57,10 @@
     },
     "coverage_identity": {
       "type": "object",
-      "required": ["acceptance_id"],
+      "required": ["acceptance_id", "coverage_manifest"],
       "properties": {
         "acceptance_id": { "type": "string", "minLength": 1 },
-        "coverage_manifest": {
-          "anyOf": [
-            { "$ref": "#/defs/composite_manifest" },
-            { "type": "null" }
-          ]
-        }
+        "coverage_manifest": { "$ref": "#/defs/subject_identity" }
       },
       "additionalProperties": false
     }

@@ -3,28 +3,64 @@
   "partial_admission_snapshot": {
     "snapshot_id": "admit:example:partial:0001",
     "wave_id": "wave:example:0001",
-    "admitted_results": ["sealed:example:0001"],
-    "missing_set": [{ "member": "unit-02", "reason": "blocked: required evidence source unavailable" }]
+    "admitted_results": [
+      "sealed:example:0001"
+    ],
+    "missing_set": [
+      {
+        "member": "unit-02",
+        "reason": "blocked: required evidence source unavailable"
+      }
+    ]
   },
   "partial_integrated_result": {
     "integrated_result_id": "integrated:example:partial:0001",
     "result_schema": "1.0",
     "caller_id": "caller:example:0001",
     "wave_id": "wave:example:0001",
-    "run_envelope_id": "runenv:b7c06ff6d3015c56d0d5621f7f63981a1d6703e50b6db8ca6bf6ea450d44d728",
+    "run_envelope_id": "runenv:740d6c7267b059f9dab8198b9840d17870b0972a955606246061fd20b0e35745",
     "profile_id": "definition_review",
     "profile_semantics": "1.0.0",
-    "subject": { "identity_class": "git", "repository": "example/repo", "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "path": "SPEC.md", "blob": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb" },
-    "coverage": { "acceptance_id": "coverage:example:acceptance:v1" },
+    "subject": {
+      "identity_class": "git",
+      "repository": "example/repo",
+      "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "path": "SPEC.md",
+      "blob": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+    },
+    "coverage": {
+      "acceptance_id": "coverage:example:acceptance:v1",
+      "coverage_manifest": {
+        "identity_class": "git",
+        "repository": "example/repo",
+        "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "path": "ACCEPTANCE.md",
+        "blob": "ffffffffffffffffffffffffffffffffffffffff"
+      }
+    },
     "release_id": "orchestration-protocol-skill@0.2.0-m02",
     "execution_state": "COMPLETE",
     "applicability_state": "APPLICABLE",
     "currentness_state": "CURRENT",
     "coverage_state": "INCOMPLETE",
     "profile_disposition": "INCOMPLETE",
-    "findings": [{ "finding_id": "F-00", "statement": "synthetic negative evidence recorded without overriding partial precedence", "blocking": true }],
-    "dissent": [{ "statement": "synthetic preserved dissent on scope completeness" }],
-    "uncertainty": [{ "statement": "synthetic unresolved uncertainty on missing unit coverage" }],
+    "findings": [
+      {
+        "finding_id": "F-00",
+        "statement": "synthetic negative evidence recorded without overriding partial precedence",
+        "blocking": true
+      }
+    ],
+    "dissent": [
+      {
+        "statement": "synthetic preserved dissent on scope completeness"
+      }
+    ],
+    "uncertainty": [
+      {
+        "statement": "synthetic unresolved uncertainty on missing unit coverage"
+      }
+    ],
     "admission_snapshot_id": "admit:example:partial:0001",
     "durable_locator": "example/repo@aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:results/integrated-partial.md",
     "publication_readback": "VERIFIED",
@@ -36,13 +72,18 @@
     "pointer_id": "current:example:partial:0001",
     "subject_digest": "digest:example:subject:0001",
     "current_result_id": "integrated:example:partial:0001",
-    "supersession_chain": ["integrated:example:partial:0001"],
+    "supersession_chain": [
+      "integrated:example:partial:0001"
+    ],
     "readback": "VERIFIED"
   },
   "complete_admission_snapshot": {
     "snapshot_id": "admit:example:complete:0001",
     "wave_id": "wave:example:0001",
-    "admitted_results": ["sealed:example:0001", "sealed:example:0002"],
+    "admitted_results": [
+      "sealed:example:0001",
+      "sealed:example:0002"
+    ],
     "missing_set": []
   },
   "complete_integrated_result": {
@@ -50,18 +91,39 @@
     "result_schema": "1.0",
     "caller_id": "caller:example:0001",
     "wave_id": "wave:example:0001",
-    "run_envelope_id": "runenv:b7c06ff6d3015c56d0d5621f7f63981a1d6703e50b6db8ca6bf6ea450d44d728",
+    "run_envelope_id": "runenv:740d6c7267b059f9dab8198b9840d17870b0972a955606246061fd20b0e35745",
     "profile_id": "definition_review",
     "profile_semantics": "1.0.0",
-    "subject": { "identity_class": "git", "repository": "example/repo", "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "path": "SPEC.md", "blob": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb" },
-    "coverage": { "acceptance_id": "coverage:example:acceptance:v1" },
+    "subject": {
+      "identity_class": "git",
+      "repository": "example/repo",
+      "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "path": "SPEC.md",
+      "blob": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+    },
+    "coverage": {
+      "acceptance_id": "coverage:example:acceptance:v1",
+      "coverage_manifest": {
+        "identity_class": "git",
+        "repository": "example/repo",
+        "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "path": "ACCEPTANCE.md",
+        "blob": "ffffffffffffffffffffffffffffffffffffffff"
+      }
+    },
     "release_id": "orchestration-protocol-skill@0.2.0-m02",
     "execution_state": "COMPLETE",
     "applicability_state": "APPLICABLE",
     "currentness_state": "CURRENT",
     "coverage_state": "COMPLETE",
     "profile_disposition": "RED",
-    "findings": [{ "finding_id": "F-01", "statement": "synthetic accepted blocking finding", "blocking": true }],
+    "findings": [
+      {
+        "finding_id": "F-01",
+        "statement": "synthetic accepted blocking finding",
+        "blocking": true
+      }
+    ],
     "dissent": [],
     "uncertainty": [],
     "admission_snapshot_id": "admit:example:complete:0001",
@@ -75,7 +137,9 @@
     "pointer_id": "current:example:complete:0001",
     "subject_digest": "digest:example:subject:0001",
     "current_result_id": "integrated:example:complete:0001",
-    "supersession_chain": ["integrated:example:complete:0001"],
+    "supersession_chain": [
+      "integrated:example:complete:0001"
+    ],
     "readback": "VERIFIED"
   }
 }

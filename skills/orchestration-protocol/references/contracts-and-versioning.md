@@ -16,6 +16,11 @@ A compatible caller binds at least:
 - stable `profile_id`;
 - accepted `profile_semantics_version` compatible range/identity;
 - exact immutable subject identity (§2);
+- exact immutable coverage/acceptance identity (§2): an `acceptance_id`
+  routing label plus a required `coverage_manifest` in one supported
+  immutable class. The label is retained separately but never substitutes
+  for the identity; hashing the label alone does not bind acceptance
+  content.
 - exact immutable coverage/acceptance identity;
 - caller-owned continuation authority identity where applicable;
 - optional `return_id` routing/correlation metadata;

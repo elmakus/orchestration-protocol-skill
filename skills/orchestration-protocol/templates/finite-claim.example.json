@@ -1,19 +1,43 @@
 {
-  "_synthetic": "SYNTHETIC container: label is data outside records, never digested. The nonce below is fixed synthetic bytes for syntax only — never qualified entropy, freshness, or a production claim. Grammars: schemas/finite.schema.json finite_manifest/finite_claim/reclaim_action.",
+  "_synthetic": "SYNTHETIC container: label is data outside records, never digested. The nonce below is fixed synthetic bytes for syntax only \u2014 never qualified entropy, freshness, or a production claim. Grammars: schemas/finite.schema.json finite_manifest/finite_claim/reclaim_action.",
   "finite_manifest": {
     "manifest_id": "fmanifest:example:0001",
     "wave_id": "wave:example:0001",
-    "wave_base": { "repository": "example/repo", "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" },
+    "wave_base": {
+      "repository": "example/repo",
+      "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    },
     "units": [
-      { "unit_id": "unit-01", "claim_generation": 0 },
-      { "unit_id": "unit-02", "claim_generation": 0 }
+      {
+        "unit_id": "unit-01",
+        "claim_generation": 0
+      },
+      {
+        "unit_id": "unit-02",
+        "claim_generation": 0
+      }
     ]
   },
   "finite_claim": {
     "manifest_id": "fmanifest:example:0001",
     "wave_id": "wave:example:0001",
-    "subject": { "identity_class": "git", "repository": "example/repo", "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "path": "SPEC.md", "blob": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb" },
-    "coverage": { "acceptance_id": "coverage:example:acceptance:v1" },
+    "subject": {
+      "identity_class": "git",
+      "repository": "example/repo",
+      "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "path": "SPEC.md",
+      "blob": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+    },
+    "coverage": {
+      "acceptance_id": "coverage:example:acceptance:v1",
+      "coverage_manifest": {
+        "identity_class": "git",
+        "repository": "example/repo",
+        "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "path": "ACCEPTANCE.md",
+        "blob": "ffffffffffffffffffffffffffffffffffffffff"
+      }
+    },
     "release_id": "orchestration-protocol-skill@0.2.0-m02",
     "unit_id": "unit-01",
     "claim_generation": 0,
