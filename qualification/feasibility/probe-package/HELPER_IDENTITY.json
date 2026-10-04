@@ -2,7 +2,7 @@
   "helper_artifact": "probe-package/scripts/op-helper.mjs",
   "helper_api": "0.1.0-testonly",
   "language": "plain ESM JavaScript (Node >= 20), no third-party dependencies, no build step",
-  "sha256_observed": "ef4265c771ab17a079fdf6db1856c3257fa81f3c2b6172dc6e321f2ad3bc1803",
+  "sha256_observed": "667673acbc79e6ea0dc9fa1ce98c648cdee5bccffb28e34e1ee12431322e93f7",
   "observed_on": "2026-10-04 (local dev host)",
   "crypto_source_local": "node:crypto.randomBytes",
   "node_version_observed": "v22.23.3",

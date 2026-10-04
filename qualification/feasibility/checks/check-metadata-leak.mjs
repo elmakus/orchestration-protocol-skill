@@ -3,6 +3,10 @@
  * check-metadata-leak.mjs — synthetic metadata-leak negative corpus +
  * mechanical non-semantic reporting path (non-inference, local only).
  *
+ * Bounded fixture scope: exactly the channels/tokens in the corpus
+ * `tested_scope`. This proves rejection of the listed encodings only; it is
+ * not universal semantic-isolation proof (see SCOPE-LIMIT-01, which the
+ * bounded grammar admits and the harness flags OUT_OF_SCOPE).
  * Covers R8 §11.3 / Q7 channel classes: branch/ref names, commit messages,
  * output names/paths, claim/provenance fields, receipt values.
  * The validator MUST NOT echo rejected semantic payload contents; reports
@@ -18,6 +22,18 @@ const corpus = JSON.parse(readFileSync(join(root, 'fixtures', 'negative-metadata
 
 let failures = 0;
 for (const c of corpus.cases) {
+  if (c.channel === 'scope_limit_demo') {
+    // Known-limit witness: the bounded grammar is expected to ADMIT this
+    // outside-denylist encoding; the harness flags it OUT_OF_SCOPE.
+    const r = validateBranchName(c.attempted_branch);
+    const flagged = r.verdict === 'ADMISSIBLE' ? 'OUT_OF_SCOPE' : 'IN_SCOPE';
+    console.log(JSON.stringify({ id: c.id, channel: c.channel, verdict: r.verdict, code: r.code, expect: c.expect, scope: flagged }));
+    if (c.expect !== 'ADMISSIBLE-OOS' || flagged !== 'OUT_OF_SCOPE') {
+      console.error(`MISMATCH ${c.id}: bounded-grammar limit not demonstrated`);
+      failures++;
+    }
+    continue;
+  }
   let verdict;
   let code = '';
   if (c.channel === 'branch_name') {
@@ -70,4 +86,4 @@ if (failures > 0) {
   console.error(`METADATA-LEAK CHECKS: ${failures} failure(s)`);
   process.exit(1);
 }
-console.log('METADATA-LEAK CHECKS: synthetic semantic metadata rejected without echo; native channels remain unqualified (see CAPABILITY_MATRIX.md)');
+console.log('METADATA-LEAK CHECKS: listed semantic encodings rejected without echo; denylist is bounded (SCOPE-LIMIT-01 OUT_OF_SCOPE); native channels remain unqualified (see CAPABILITY_MATRIX.md)');

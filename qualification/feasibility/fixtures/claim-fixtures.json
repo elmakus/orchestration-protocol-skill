@@ -1,6 +1,7 @@
 {
   "role": "local disposable-Git fixture descriptors (test-only, temp repos only)",
-  "note": "Realized by checks/check-git-fencing.sh in newly created temporary repositories. Never alters project refs.",
+  "note": "Realized by checks/check-git-fencing.sh in newly created temporary repositories. Never alters project refs. Claimant-side mutations go only through the fenced create/update primitive (expected-old-head + generation/owner + fast-forward ancestry); direct update-ref appears in harness setup solely to model world states (third-party advances, missing refs). Fence model is a primitive feasibility witness, not a production allocator or proof of remote atomicity.",
+  "occurrence_rule": "VERIFIED requires observed == intended (positive postcondition readback). NOT_APPLIED requires observed == proven precondition with the operation identity absent. Any third/divergent/advanced/unreadable state is UNKNOWN: fail closed, never retryable. A bare observed != intended mismatch never proves NOT_APPLIED.",
   "fixtures": [
     {
       "id": "GIT-READBACK-01",
@@ -8,19 +9,27 @@
     },
     {
       "id": "GIT-CLAIM-01",
-      "goal": "expected-old-head non-force claim: two competing claimers, one current winner, loser rejected on stale expected head"
+      "goal": "fenced creation race: two competing claimers, one current winner, loser rejected on existing ref"
+    },
+    {
+      "id": "GIT-CLAIM-02",
+      "goal": "fenced advance: expected-old-head + ownership + ancestry; stale loser rejected with ref unchanged"
     },
     {
       "id": "GIT-STALE-ABA-01",
-      "goal": "stale writer and ABA writer rejected: old generation cannot publish; replayed head cannot advance"
+      "goal": "backwards write to an already-seen value rejected by fast-forward ancestry with ref unchanged"
+    },
+    {
+      "id": "GIT-STALE-ABA-02",
+      "goal": "stale-ownership write (revoked generation/owner, fresh descendant value) and already-seen-value ref-reuse rejected with ref unchanged; current owner still advances"
     },
     {
       "id": "GIT-PUBLISH-01",
-      "goal": "publication equivalent with expected-head fence + exact readback"
+      "goal": "publication equivalent with fenced update + exact readback"
     },
     {
       "id": "GIT-LOST-01",
-      "goal": "lost-response classification: VERIFIED / NOT_APPLIED / UNKNOWN from exact target reads"
+      "goal": "lost-response classification over (intended, precondition, observed): VERIFIED / NOT_APPLIED / UNKNOWN, with third/divergent/advanced-head and missing-ref negatives UNKNOWN and never retryable"
     }
   ]
 }

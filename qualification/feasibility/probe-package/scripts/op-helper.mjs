@@ -181,9 +181,12 @@ export function validateGitAncestry(suppliedHeads) {
   return { verdict: 'ADMISSIBLE', code: 'ANCESTRY_OK' };
 }
 
-/* Closed, semantic-free coordinator metadata grammar (mechanical fields only).
- * Any semantic finding/disposition/conclusion text is rejected before
- * coordinator consumption. Diagnostics never echo payload contents. */
+/* Bounded fixture-scope coordinator metadata fence (mechanical fields only).
+ * Scope: exactly the channels, keys, and token/regex lists exercised in
+ * fixtures/negative-metadata-corpus.json `tested_scope`. This is a bounded
+ * negative fixture, not universal semantic-isolation proof: payloads outside
+ * the listed tokens/channels are untested here and remain unqualified.
+ * Diagnostics never echo payload contents. */
 const META_ALLOW = {
   assignment_id: UNIT_ID,
   unit_id: UNIT_ID,
@@ -268,6 +271,51 @@ export function buildContextPack(input, maxBytes = 4096) {
 /* Narrow CSPRNG generation: fresh 128-bit random component only. */
 export function generateAttemptNonceHex() {
   return randomBytes(NONCE_BYTES_REQUIRED).toString('hex');
+}
+
+/* ---------- local simulated-claim issuance path (test-only) ---------- */
+/*
+ * Shape admission (validateClaimMetadata) checks only value shape plus the
+ * caller-declared source label. A label is not proof of cryptographic
+ * origin, and no entropy is ever inferred from a nonce value here.
+ * Simulated claim authority in this local test path comes only from the
+ * audited issuance path below: a nonce issued in-session by
+ * issueAttemptNonce() through node:crypto.randomBytes and presented back
+ * from the same session registry. A self-supplied hex value carrying a
+ * qualified label, but never issued in-session, is rejected with
+ * NONCE_ORIGIN_UNPROVEN and acquires no simulated claim authority.
+ * Failure/injected-failure returns ok:false and authorizes nothing.
+ */
+export function createNonceRegistry() {
+  return { issued: new Set() };
+}
+
+export function issueAttemptNonce(registry, opts = {}) {
+  if (!registry || !registry.issued || typeof registry.issued.add !== 'function') {
+    return { ok: false, code: 'REGISTRY_INVALID' };
+  }
+  if (opts && opts.simulateFailure === true) {
+    return { ok: false, code: 'RNG_UNAVAILABLE_SIM' };
+  }
+  try {
+    const hex = randomBytes(NONCE_BYTES_REQUIRED).toString('hex');
+    registry.issued.add(hex);
+    return { ok: true, nonce_hex: hex };
+  } catch {
+    return { ok: false, code: 'RNG_FAILURE' };
+  }
+}
+
+export function authorizeLocalSimulatedClaim(input, registry) {
+  const shape = validateClaimMetadata(input);
+  if (shape.verdict !== 'ADMISSIBLE') return shape;
+  if (!registry || !registry.issued || typeof registry.issued.has !== 'function') {
+    return { verdict: 'REJECTED', code: 'NONCE_ORIGIN_UNPROVEN' };
+  }
+  if (!registry.issued.has(input.attempt_nonce_hex)) {
+    return { verdict: 'REJECTED', code: 'NONCE_ORIGIN_UNPROVEN' };
+  }
+  return { verdict: 'ADMISSIBLE', code: 'SIM_CLAIM_OK' };
 }
 
 /* ---------- minimal CLI for local checks (no network, no side effects) ---------- */

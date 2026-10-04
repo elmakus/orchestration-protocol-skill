@@ -3,18 +3,21 @@
   "qualified_local_source": "node:crypto.randomBytes/qualified-local-only",
   "nonce_bits_required": 128,
   "nonce_hex_chars_required": 32,
+  "authority_rule": "Simulated claim authority comes only from the audited in-session issuance path (issueAttemptNonce through node:crypto.randomBytes plus same-session registry presentation). A caller-supplied nonce_source label is not proof of cryptographic origin; no entropy is inferred from a nonce value. Shape admission (validateClaimMetadata) alone grants no simulated claim authority.",
   "rules": [
-    "Fresh 128-bit random component required for every simulated claim nonce.",
-    "Timestamp, counter, model-generated text, Math.random, or predictable source MUST be rejected before claim.",
-    "Unavailable/invalid qualified CSPRNG prohibits claim creation and fails closed (BLOCKED).",
-    "Random output is excluded from deterministic-byte equality assertions; only shape/source/length are asserted deterministically."
+    "Fresh 128-bit random component required for every simulated claim nonce, issued via issueAttemptNonce in-session.",
+    "Timestamp, counter, model-generated text, Math.random, predictable, or self-labelled values MUST NOT acquire simulated claim authority (NONCE_ORIGIN_UNPROVEN).",
+    "Unavailable/invalid/failed qualified CSPRNG prohibits claim creation and fails closed (BLOCKED); a failed issuance mints no registry entry.",
+    "Random output is excluded from deterministic-byte equality assertions; only shape/issuance/policy are asserted deterministically."
   ],
   "weak_fixtures_that_must_fail": [
+    "self-labelled predictable hex with a qualified label (shape admits value, authority gate rejects)",
+    "foreign/empty registry presentation",
     "timestamp-derived nonce",
     "counter-derived nonce",
     "short nonce (<32 hex chars)",
-    "predictable constant nonce",
-    "rng_unavailable simulation"
+    "rng_unavailable simulation",
+    "injected generator failure simulation"
   ],
   "native_note": "Local qualification only. Android/native RNG availability remains BLOCKED until NATIVE_PROCEDURE.md is realized."
 }

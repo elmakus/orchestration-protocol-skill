@@ -1,6 +1,15 @@
 {
   "corpus_role": "synthetic pre-integration metadata-leak negative corpus (test-only, no real findings)",
-  "note": "All payloads are synthetic. The validator MUST reject semantic placements without echoing payload contents.",
+  "note": "All payloads are synthetic. The validator MUST reject semantic placements without echoing payload contents. This corpus is a BOUNDED fixture: it exercises exactly the channels/tokens in tested_scope. Anything outside that scope is untested here and remains unqualified; the token denylist is not universal semantic-isolation proof.",
+  "tested_scope": {
+    "channels": ["branch_name", "commit_message", "output_path", "provenance_field", "receipt_value", "unknown_field", "mechanical_only"],
+    "branch_denylist_tokens": ["green", "red", "finding", "findings", "severity", "critical", "blocking", "blocked", "vuln", "vulnerability", "exploit", "escalate", "pass", "fail"],
+    "commit_message_pattern": "finding|critical|blocking|green|red (case-insensitive)",
+    "output_path_pattern": "GREEN|RED|CRITICAL|BLOCKING as path token (case-insensitive)",
+    "provenance_semantic_keys": ["finding", "findings", "severity", "disposition", "conclusion", "conclusions", "summary", "blocker_text", "semantic", "verdict_text"],
+    "receipt_value_hint": "GREEN|RED|CRITICAL|HIGH SEVERITY|BLOCKING FINDING|VULNERAB|EXPLOIT|SECRET|PASSWORD (case-insensitive)",
+    "explicitly_out_of_scope": "paraphrased/synonymous semantic encodings outside the listed tokens, newly discovered installed channels, full host isolation"
+  },
   "cases": [
     {
       "id": "NEG-BRANCH-01",
@@ -8,7 +17,7 @@
       "record": { "assignment_id": "unit-001", "output_path": "results/unit-001.json" },
       "attempted_branch": "claims/unit-001-GREEN-finding",
       "expect": "REJECTED",
-      "reason": "branch name carries semantic disposition GREEN"
+      "reason": "branch name carries denylisted semantic tokens GREEN/finding"
     },
     {
       "id": "NEG-COMMIT-01",
@@ -16,14 +25,14 @@
       "record": { "assignment_id": "unit-002", "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" },
       "attempted_message": "integrate: critical blocking finding fixed",
       "expect": "REJECTED",
-      "reason": "commit message carries semantic finding text"
+      "reason": "commit message matches semantic pattern (critical/blocking/finding)"
     },
     {
       "id": "NEG-PATH-01",
       "channel": "output_path",
       "record": { "assignment_id": "unit-003", "output_path": "results/RED-critical-unit-003.json" },
       "expect": "REJECTED",
-      "reason": "output name carries semantic disposition RED"
+      "reason": "output name carries semantic path tokens RED/critical"
     },
     {
       "id": "NEG-PROVENANCE-01",
@@ -60,6 +69,14 @@
       },
       "expect": "ADMISSIBLE",
       "reason": "purely mechanical allowlisted fields"
+    },
+    {
+      "id": "SCOPE-LIMIT-01",
+      "channel": "scope_limit_demo",
+      "record": { "assignment_id": "unit-009", "output_path": "results/unit-009.json" },
+      "attempted_branch": "claims/unit-009-outcome-note",
+      "expect": "ADMISSIBLE-OOS",
+      "reason": "KNOWN LIMIT: 'outcome-note' is outside the denylisted token set, so the bounded grammar admits it; this admission is flagged OUT_OF_SCOPE, not a semantic clearance. Proves the denylist is not universal isolation."
     }
   ]
 }

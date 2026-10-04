@@ -1,0 +1,38 @@
+{
+  "role": "detached frozen fixture/oracle/harness-set identity record (test-only)",
+  "algorithm": "sha256(file bytes); oracle_identity = sha256(sorted path:digest lines)",
+  "inputs": [
+    "fixtures/negative-metadata-corpus.json",
+    "fixtures/claim-fixtures.json",
+    "fixtures/csprng-policy.json",
+    "checks/check-identities.mjs",
+    "checks/check-csprng.mjs",
+    "checks/check-metadata-leak.mjs",
+    "checks/check-git-fencing.sh",
+    "checks/check-tamper.sh",
+    "checks/run-all.sh",
+    "probe-package/HELPER_IDENTITY.json"
+  ],
+  "exclusions": [
+    "fixtures/FIXTURE_MANIFEST.json (separate package-content identity, never conflated)",
+    "this ORACLE_MANIFEST.json itself (acyclic)",
+    "probe-package/* shipped content (bound by FIXTURE_MANIFEST.json)",
+    "PACKAGE_OBSERVATIONS.md / CAPABILITY_MATRIX.md / NATIVE_PROCEDURE.md / TEST_ENVELOPE.md / README.md",
+    "evidence file implementation/workstreams/op-skill-v1/evidence/M01-T01_IMPLEMENTATION.md",
+    ".git state"
+  ],
+  "per_file_sha256": {
+    "fixtures/negative-metadata-corpus.json": "5eba48dec95937d1e343b3daa322c626c706bf6e402af88958072853f67b3b5f",
+    "fixtures/claim-fixtures.json": "89634a169ffbe9150b3bbde202391d6cc19fab481658f31ccdc7aab8885b7607",
+    "fixtures/csprng-policy.json": "154b62ed85c86dc848e4201662a8d16157f4bd1536117cfa05eeedd1c79e0066",
+    "checks/check-identities.mjs": "80da391edcdacd64270f6a2baf56cf4021bb40060be635cd8073da484520e94e",
+    "checks/check-csprng.mjs": "44fdda461ae7cdd5197a8932b342d9dcb3edc896410ca3ffaf4b4200443c94f6",
+    "checks/check-metadata-leak.mjs": "6f6f085b6a80f1b5b654b90420623d660b3f5ffe49b0a949d9b30278b679617b",
+    "checks/check-git-fencing.sh": "3f514e042e1ff337a5ff3587340a9e09a52b7cf251ca1aec94f4b9e55670953a",
+    "checks/check-tamper.sh": "4533a2d3212a3e6639a0c364fccaf2b9f04ade624242091915da8524cbfd2295",
+    "checks/run-all.sh": "1403ee2695d593179ee9d30293780557644ecb659b4f0c8ee0af2704e683cd7e",
+    "probe-package/HELPER_IDENTITY.json": "b39b772cdbe23cc80fc6e818af2a5ab48c776173445abeda0921de3afad4227b"
+  },
+  "oracle_identity_sha256": "8291748adbe7ad7bf63530bcfeb6df9ca26c390fe378a646f717ba08a66e6e09",
+  "note": "Freezes the exact oracle/harness set the checks ran against. Verify mode detects fixture, harness, and helper-observation tampering without regenerating."
+}

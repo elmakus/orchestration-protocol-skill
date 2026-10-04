@@ -1,19 +1,26 @@
 # Bounded native procedure (owner-assisted, M01-T01 preparation only)
 
 > This procedure authorizes nothing by itself. Each native step requires
-> separately authorized exact candidate/fixture identities, disposable targets,
-> and the environment-authorized guarded test realization (see
-> `TEST_ENVELOPE.md`). Missing owner authority or access is a real stop, not
-> permission for broad M02–M07 implementation. Do not choose real targets or
-> account settings here.
+> separately authorized exact candidate/fixture identities, the owner-bound
+> intended account/device scope, isolated disposable content targets, and the
+> environment-authorized guarded test realization (see `TEST_ENVELOPE.md`).
+> Missing owner authority or access is a real stop, not permission for broad
+> M02–M07 implementation. This procedure chooses no account/device and
+> grants no effects; it never substitutes a different account for the
+> intended owner scope.
 
 ## Prerequisites (all must be bound before any native step)
 
-- P0: exact immutable candidate identity (package digest from
-  `FIXTURE_MANIFEST.json` lineage) and exact fixture-set identity, separately
-  authorized in writing by the owner.
-- P1: disposable install/invocation target (test account/device/sandbox)
-  named by the owner; no production account, no consumer repository.
+- P0: exact immutable candidate identity (`FIXTURE_MANIFEST.json`
+  package_identity_sha256), helper linkage (`HELPER_IDENTITY.json`
+  digest/API), and exact fixture-set identity (`ORACLE_MANIFEST.json`
+  oracle_identity_sha256), separately authorized in writing by the owner.
+- P1: intended account/device scope plus disposable content targets. The
+  owner declares the exact intended account/device identity in the envelope
+  authorization (procedure names nothing); disposable test content/targets
+  (repos, branches, payloads, effect sandboxes) are isolated under that
+  separately bound owner authority. No production account, no consumer
+  repository, no procedure-chosen substitute account.
 - P2: complete allowed-effect list plus causally triggered automation inventory
   for each step; any unknown/forbidden downstream effect blocks the step.
 - P3: non-secret readback plan per step (exact artifact identity + VERIFIED /
@@ -24,13 +31,14 @@
 
 ## Steps (each records exact commands, outputs, readbacks, limitations)
 
-- N1 Installation: install the exact candidate on the disposable target via
-  the owner-operated flow. Record host/tool fingerprints, prompts, and the
-  exact installed artifact digest read back against the candidate. Native
+- N1 Installation: install the exact candidate inside the owner-bound
+  intended scope via the owner-operated flow, touching only disposable
+  content targets. Record host/tool fingerprints, prompts, and the exact
+  installed artifact digest read back against the candidate. Native
   installability predicate stays BLOCKED until VERIFIED readback.
 - N2 Invocation: launch the probe skill through the qualified invocation path
-  only. Record the exact invocation, assignment package identity, and output
-  locator. No semantic OP wave is run.
+  only, inside the owner-bound scope. Record the exact invocation,
+  assignment package identity, and output locator. No semantic OP wave is run.
 - N3 Bundled ESM: execute `op-helper.mjs --audit-csprng` and
   `--validate-claim` on the exact fixture on-device. Record outputs. Any
   incompatibility is FAIL evidence; only exact incompatibility evidence can
@@ -38,9 +46,11 @@
 - N4 CSPRNG: audit the on-device RNG source path, generate concurrent fresh
   nonces, prove >=128-bit entropy per claim, and prove weak/predictable
   sources rejected and unavailable RNG fails closed without creating a claim.
-- N5 Provider Git fencing/readback: on disposable targets only, repeat
-  object/ref readback, two-claimer expected-old-head, stale/ABA rejection,
-  publication fence + readback, and VERIFIED/NOT_APPLIED/UNKNOWN
+- N5 Provider Git fencing/readback: on disposable content targets under the
+  owner-bound scope only, repeat object/ref readback, fenced
+  expected-old-head + ownership + fast-forward-ancestry claim/publication
+  equivalents, stale/backwards/stale-ownership/ref-reuse rejection with refs
+  left unchanged, and three-way VERIFIED/proven-NOT_APPLIED/UNKNOWN
   classification through the provider primitives. Local temp-repo results do
   not substitute for this step.
 - N6 Release policy: resolve the canonical current release-policy manifest
@@ -67,9 +77,11 @@
   claim/provenance fields, receipts, plus any newly discovered channel) and
   run the Q7/Q10 negative leak fixture on each; deterministic
   rejection/non-admission is required before coordinator semantic exposure.
-- N11 Owner setup disposition: obtain the durable exact-candidate/setup
-  disposition ACCEPTABLE, UNACCEPTABLE, or UNKNOWN. UNACCEPTABLE = FAIL;
-  UNKNOWN = BLOCKED. Blanket permission is never requested.
+- N11 Owner setup disposition: obtain the durable disposition for the exact
+  candidate within the exact owner-bound intended scope: ACCEPTABLE,
+  UNACCEPTABLE, or UNKNOWN. UNACCEPTABLE = FAIL; UNKNOWN = BLOCKED.
+  Blanket permission is never requested; the scope is never widened beyond
+  the authorized envelope.
 
 ## Stop / reroute
 

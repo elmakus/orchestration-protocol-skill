@@ -8,11 +8,22 @@
 
 - Date: 2026-10-04 (UTC).
 - Method: local inspection of this repository plus the accepted Definition R8 /
-  P1 authority snapshot only. **No live network fetch, no Android/account
-  probe, no consumer/remote Git write was performed** (per Card exclusion).
-- Retrieval of "current official ChatGPT Android plugin requirements" from the
-  network was deliberately not attempted in this offline test-only obligation;
-  see uncertainty rows below.
+  P1 authority snapshot, plus narrow public read-only documentation retrieval
+  (no Android/account probe, no consumer/remote Git write, per Card exclusion).
+- Public read-only retrieval actually performed (curl GET, no credentials):
+  - `https://developers.openai.com/` → HTTP 200, 345587 bytes,
+    sha256 `b4c5edf07f4843f4e9e12740dd60ef8534f6c8ea9161f13830fb46f195f00ed0`.
+  - `https://developers.openai.com/apps-sdk/` (followed redirect to
+    `https://developers.openai.com/plugins`) → HTTP 200, 374901 bytes,
+    sha256 `995c75665cf6fe786ffb66097970ae7545ea6473267ccc0ea97df4a45165768c`.
+  - Both pages are script-rendered shells: no static `<title>`/schema tokens
+    for a plugin/skill manifest, `plugin.json` field set, or Android
+    skill-manifest surface were retrievable from the static bodies (only
+    bundle token counts, e.g. `plugin.json`: 0 hits, `manifest`: 0 hits).
+    Full bodies were discarded after hashing; no content is vendored here.
+  - Outcome: real retrieval attempted; a usable current official
+    skills-only/Android package schema remains UNAVAILABLE from this path —
+    recorded as uncertainty below, not invented as compatibility.
 
 ## Proposed portable root metadata (observed, not verified against host)
 
@@ -24,8 +35,8 @@
 | probe skill path | `skills/orchestration-protocol-probe/SKILL.md` | file exists, sha256 `67cffefd…295293` | OBSERVED-LOCAL |
 | helper path | `scripts/op-helper.mjs` | file exists, sha256 `ef4265c7…3bc1803` | OBSERVED-LOCAL |
 | engines.node | `>=20` (observed runtime `v22.23.3`) | local `node --version` | OBSERVED-LOCAL |
-| Installed-surface plugin schema | unknown | no live host/docs retrieval | UNKNOWN — BLOCKED |
-| Official ChatGPT Android skill-manifest field set | unknown | no live docs retrieval | UNKNOWN — BLOCKED |
+| Installed-surface plugin schema | unknown | public docs GETs 2026-10-04 returned script shells (hashes above), no static schema retrievable | UNKNOWN — BLOCKED |
+| Official ChatGPT Android skill-manifest field set | unknown | same retrieval; `plugin.json`/`manifest` 0 static hits | UNKNOWN — BLOCKED |
 | Account/device surface (P1 M01 "intended account/device") | unbound | owner setup not yet provided | UNKNOWN — BLOCKED |
 
 ## Helper source observations (local)
@@ -46,7 +57,8 @@
 ## Uncertainty that stays explicit
 
 - Current official package requirements, manifest schema version, plugin
-  installation protocol, signing/permission model: UNKNOWN.
+  installation protocol, signing/permission model: UNKNOWN (public read-only
+  retrieval attempted 2026-10-04; usable schema unavailable from that path).
 - Whether the proposed `plugin.json` shape matches the current qualified
   portable root metadata format: UNVERIFIED.
 - Whether plain ESM executes on the intended Android surface and whether a
