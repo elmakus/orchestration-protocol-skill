@@ -109,6 +109,19 @@ exact postcondition/readback locator. Predicates:
   `path-content-matches:<64-hex-digest>`. Free-form outcome prose is not
   a receipt and must never reach the coordinator as an alternate semantic
   channel.
+- Operation identities are mechanically assigned (`op:NNNN`) and bound to
+  the authorized operation — never freely named from semantic output.
+- A target is exactly `<repository>:refs/heads/<branch>` recomposed from
+  the bound operation context (repository plus the mechanically derived
+  bound branch); any other ref suffix is non-admissible.
+- A postcondition is checked against the same context: `ref-points-at:X`
+  requires `X` to equal the bound intended commit; `no-write-performed`
+  requires occurrence `NOT_APPLIED`; `path-content-matches:D` requires a
+  bound intended content digest equal to `D`.
+- Occurrence/readback coherence: `VERIFIED` occurrence requires `VERIFIED`
+  readback; a self-labelled success with any other readback proves
+  nothing. `UNKNOWN` occurrence prohibits the originating production
+  action regardless of readback.
 - A self-labelled success receipt is NOT authenticity/atomicity proof.
 - Missing qualified source, expected-head fence, current authority, or exact
   readback yields NO production action.

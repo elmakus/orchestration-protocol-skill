@@ -100,3 +100,44 @@ coordinator consumption.
   `missing:claim`, `missing:generation`, `unavailable:helper`,
   `unavailable:native`, `conflict:state`, `conflict:binding`.
   No other `word:word` value is admissible.
+
+### 6.1 Complete per-field binding (mechanical metadata)
+
+Expected values come from the exact frozen package/envelope/assignment/
+manifest and verified claim/publication/readback identities for that
+field — never from the returned worker record itself. Let `A` be the
+bound assignment (id, unit-or-run, wave, generation, nonce), `M` the
+bound manifest (manifest id, wave-base commit), `E` the bound envelope
+(package id, release id, subject/coverage digests), and `P` the verified
+claim/publication (commit, blob, output, publication locator, readback).
+
+| field | binding |
+|---|---|
+| `assignment_id` | exactly `A` id |
+| `unit_id` / `run_id` | exactly one equals its bound counterpart and the other is null, matching finite-unit vs homogeneous-run work |
+| `package_id` | exactly `E` package id |
+| `release_id` | exactly `E` release id |
+| `subject_digest`, `coverage_digest` | exactly the `E` digests |
+| `claim_generation` | exactly `A` generation |
+| `attempt_nonce_id` | exactly `A` nonce id |
+| `branch` | `op/<slug(wave)>/<slug(unit-or-run)>` |
+| `ref` | null only when no ref was created (read-only assignment); otherwise exactly `refs/heads/<branch>` |
+| `commit`, `expected_head` | equal a bound `P` claim or `M` wave-base commit |
+| `blob` | exactly the `P` blob for the declared output |
+| `output_path` | `results/<slug(assignment)>.md` |
+| `publication` | null only when nothing was published; otherwise exactly `<repo>@<commit>:<output_path>` recomposed from bound values |
+| `readback` | `NOT_APPLICABLE` only with null publication; otherwise `VERIFIED` by exact readback |
+| `ancestry` | a bound `P`/`M` commit, never prose |
+
+### 6.2 Execution-receipt binding
+
+A receipt binds the same assignment and the exact declared durable
+result: `assignment_id` equals `A` id; `durable_result` equals the bound
+`P` publication locator exactly. `status` is objective execution ability
+only. `blocker` is null exactly when `status` is `COMPLETE`, and a closed
+§6 inventory code otherwise — never a semantic conclusion. In this
+release an execution receipt always names a durable locator, so
+`readback` MUST be `VERIFIED` by exact readback; the grammar-reserved
+`NOT_APPLICABLE` is non-admissible until a later owner defines its
+binding. Schema validity remains distinct from authenticity and source
+qualification.

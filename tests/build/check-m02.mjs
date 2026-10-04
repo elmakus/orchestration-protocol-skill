@@ -436,23 +436,72 @@ ok("positive: pure in-cap effect set admitted", validateEffects(["op-result-publ
 const mech = records["mechanical-receipt.example.json#mechanical_metadata"];
 function slug(s) { return String(s).replace(/[^A-Za-z0-9]+/g, "-").replace(/^-+|-+$/g, ""); }
 // Every value must be derived from the frozen bound context, not chosen.
+// Expected values come from frozen package/envelope/assignment/manifest
+// and verified claim/publication identities — never the worker record.
 function bindMetadata(m, ctx) {
   const errs = [];
   const seg = ctx.unit_id || ctx.run_id;
+  if (m.assignment_id !== ctx.assignment_id) errs.push("assignment_id not bound to frozen assignment");
+  const unitOk = ctx.unit_id !== null && ctx.unit_id !== undefined && m.unit_id === ctx.unit_id && (m.run_id === null || m.run_id === undefined);
+  const runOk = ctx.run_id !== null && ctx.run_id !== undefined && m.run_id === ctx.run_id && (m.unit_id === null || m.unit_id === undefined);
+  if (!unitOk && !runOk) errs.push("unit/run not bound to one frozen work kind");
+  if (m.package_id !== ctx.package_id) errs.push("package_id not bound to frozen envelope");
+  if (m.release_id !== ctx.release_id) errs.push("release_id not bound to frozen envelope");
+  if (m.subject_digest !== ctx.subject_digest) errs.push("subject_digest not bound");
+  if (m.coverage_digest !== ctx.coverage_digest) errs.push("coverage_digest not bound");
+  if (m.claim_generation !== ctx.generation) errs.push("claim_generation not bound");
+  if (m.attempt_nonce_id !== ctx.nonce_id) errs.push("attempt_nonce_id not bound");
+  if (m.blob !== ctx.blob) errs.push("blob not bound to verified publication");
   if (m.branch !== `op/${slug(ctx.wave_id)}/${slug(seg)}`) errs.push("branch not derived from bound wave/unit");
   if (m.output_path !== `results/${slug(ctx.assignment_id)}.md`) errs.push("output_path not derived from bound assignment");
   if (m.ref !== null && m.ref !== undefined && m.ref !== `refs/heads/${m.branch}`) errs.push("ref not bound to branch");
   if (![ctx.claim_commit, ctx.wave_base_commit].includes(m.commit)) errs.push("commit not bound to claim/wave-base identity");
   if (m.ancestry !== null && m.ancestry !== undefined && ![ctx.claim_commit, ctx.wave_base_commit].includes(m.ancestry)) errs.push("ancestry not bound");
   if (m.expected_head !== null && m.expected_head !== undefined && ![ctx.claim_commit, ctx.wave_base_commit].includes(m.expected_head)) errs.push("expected_head not bound");
-  if (m.publication !== `${ctx.repository}@${m.commit}:${m.output_path}`) errs.push("publication not recomposed from bound values");
+  if (m.publication === null || m.publication === undefined) {
+    if (m.readback !== "NOT_APPLICABLE") errs.push("null publication requires NOT_APPLICABLE readback");
+  } else {
+    if (m.readback !== "VERIFIED") errs.push("published locator requires VERIFIED readback");
+    if (m.publication !== `${ctx.repository}@${m.commit}:${m.output_path}`) errs.push("publication not recomposed from bound values");
+  }
+  return errs;
+}
+function bindReceipt(r, pub, ctx) {
+  const errs = [];
+  if (r.assignment_id !== ctx.assignment_id) errs.push("receipt assignment not bound");
+  if (r.durable_result !== pub) errs.push("receipt result not the exact declared durable result");
+  if ((r.blocker === null || r.blocker === undefined) !== (r.status === "COMPLETE")) errs.push("blocker null exactly for COMPLETE status");
+  if (r.readback !== "VERIFIED") errs.push("execution receipt requires VERIFIED readback");
+  return errs;
+}
+function bindProvider(r, ctx) {
+  const errs = [];
+  if (r.operation_id !== ctx.operation_id) errs.push("operation_id not the bound operation");
+  if (r.target !== `${ctx.repository}:refs/heads/${ctx.branch}`) errs.push("target not recomposed from bound operation context");
+  if (r.expected_head !== null && r.expected_head !== undefined && r.expected_head !== ctx.expected_head) errs.push("expected_head not bound");
+  if (r.occurrence === "VERIFIED" && r.readback !== "VERIFIED") errs.push("verified occurrence requires verified readback");
+  if (r.occurrence === "NOT_APPLIED" && r.postcondition !== "no-write-performed") errs.push("not-applied occurrence requires no-write postcondition");
+  const pc = String(r.postcondition || "");
+  if (pc.startsWith("ref-points-at:") && pc.slice("ref-points-at:".length) !== ctx.intended_commit) errs.push("postcondition not bound to intended commit");
+  if (pc.startsWith("path-content-matches:") && (ctx.intended_content_digest === null || ctx.intended_content_digest === undefined || pc.slice("path-content-matches:".length) !== ctx.intended_content_digest)) errs.push("postcondition content not bound");
   return errs;
 }
 const MECH_CTX = {
-  wave_id: "wave:example:0001", assignment_id: "assign:0001", unit_id: "unit-01",
+  wave_id: "wave:example:0001", assignment_id: "assign:0001", unit_id: "unit-01", run_id: null,
+  package_id: "orchestration-protocol-skill@0.2.0-m02", release_id: "orchestration-protocol-skill@0.2.0-m02",
+  subject_digest: "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+  coverage_digest: "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+  generation: 0, nonce_id: "nonce:0001",
   repository: "example/repo",
   claim_commit: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-  wave_base_commit: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  wave_base_commit: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  blob: "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+};
+const OP_CTX = {
+  operation_id: "op:0001", repository: "example/repo", branch: "op/wave-example-0001/unit-01",
+  expected_head: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  intended_commit: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  intended_content_digest: null
 };
 function validateMetadata(obj) {
   const def = allDefs["mechanical_metadata"];
@@ -465,6 +514,25 @@ ok("negative: semantic branch payload fails binding although charset-safe", bind
 ok("negative: semantic ref payload fails binding", bindMetadata({ ...mech, ref: "refs/heads/red-critical-blocker" }, MECH_CTX).length > 0);
 ok("negative: semantic output-path payload fails binding", bindMetadata({ ...mech, output_path: "results/all-blockers-found.md" }, MECH_CTX).length > 0);
 ok("negative: semantic assignment payload fails closed identity grammar", validateMetadata({ ...mech, assignment_id: "RED_CRITICAL_BLOCKER" }).length > 0);
+ok("negative: semantic assignment payload fails binding although well-shaped", bindMetadata({ ...mech, assignment_id: "assign:9999", output_path: "results/assign-0001.md", publication: mech.publication }, MECH_CTX).length > 0);
+ok("negative: semantic package payload fails binding", bindMetadata({ ...mech, package_id: "red/all-blockers-found" }, MECH_CTX).length > 0);
+ok("negative: well-shaped wrong-bound blob fails binding", bindMetadata({ ...mech, blob: "ffffffffffffffffffffffffffffffffffffffff" }, MECH_CTX).length > 0);
+ok("negative: wrong-bound generation fails binding", bindMetadata({ ...mech, claim_generation: 1 }, MECH_CTX).length > 0);
+ok("negative: wrong-bound nonce fails binding", bindMetadata({ ...mech, attempt_nonce_id: "nonce:0002" }, MECH_CTX).length > 0);
+ok("negative: wrong-bound subject digest fails binding", bindMetadata({ ...mech, subject_digest: "sha256:0000000000000000000000000000000000000000000000000000000000000000" }, MECH_CTX).length > 0);
+ok("negative: unit and run both set fails work-kind binding", bindMetadata({ ...mech, run_id: "RUN-001" }, MECH_CTX).length > 0);
+ok("negative: published locator with NOT_APPLICABLE readback fails", bindMetadata({ ...mech, readback: "NOT_APPLICABLE" }, MECH_CTX).length > 0);
+const execReceipt = records["mechanical-receipt.example.json#execution_receipt"];
+ok("positive: execution receipt binds assignment and exact durable result", bindReceipt(execReceipt, mech.publication, MECH_CTX).length === 0, bindReceipt(execReceipt, mech.publication, MECH_CTX).join("; "));
+ok("negative: receipt with different durable result fails binding", bindReceipt({ ...execReceipt, durable_result: "example/repo@ffffffffffffffffffffffffffffffffffffffff:results/assign-0001.md" }, mech.publication, MECH_CTX).length > 0);
+ok("negative: receipt BLOCKED status without blocker code fails", bindReceipt({ ...execReceipt, status: "BLOCKED" }, mech.publication, MECH_CTX).length > 0);
+const provReceipt = records["mechanical-receipt.example.json#provider_receipt"];
+ok("positive: provider receipt binds operation/target/postcondition/readback", bindProvider(provReceipt, OP_CTX).length === 0, bindProvider(provReceipt, OP_CTX).join("; "));
+ok("negative: semantic operation payload fails binding although open-charset", bindProvider({ ...provReceipt, operation_id: "op:all-blockers-found:critical-red" }, OP_CTX).length > 0);
+ok("negative: semantic target suffix fails binding", bindProvider({ ...provReceipt, target: "example/repo:refs/heads/red-critical-blocker" }, OP_CTX).length > 0);
+ok("negative: closed-form postcondition for wrong commit fails binding", bindProvider({ ...provReceipt, postcondition: "ref-points-at:ffffffffffffffffffffffffffffffffffffffff" }, OP_CTX).length > 0);
+ok("negative: well-shaped wrong-bound operation fails binding", bindProvider({ ...provReceipt, operation_id: "op:9999" }, OP_CTX).length > 0);
+ok("negative: self-labelled success without verified readback fails", bindProvider({ ...provReceipt, occurrence: "VERIFIED", readback: "NOT_APPLICABLE" }, OP_CTX).length > 0);
 ok("negative: semantic blocker payload outside closed inventory", (() => {
   const def = allDefs["execution_receipt"];
   return validate(def.node, { ...records["mechanical-receipt.example.json#execution_receipt"], blocker: "red:critical-blocker" }, def.id, "receipt-probe").length > 0;

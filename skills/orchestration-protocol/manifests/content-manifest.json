@@ -1,7 +1,7 @@
 {
   "manifest_id": "content:0.2.0-m02",
   "release_id": "orchestration-protocol-skill@0.2.0-m02",
-  "construction_identity": "content:c7493f1435771528a2401cc6e843c55951ead889c3ce458f55107561189d9e40",
+  "construction_identity": "content:461fcf8bbc7cb631d63c97e466338b51b3d2f7c4aad518dc55483a96b21af813",
   "excludes": [
     "skills/orchestration-protocol/manifests/content-manifest.json",
     "detached policy/qualification/readback attestations",
@@ -23,7 +23,7 @@
     },
     {
       "path": "skills/orchestration-protocol/manifests/compatibility-manifest.json",
-      "sha256": "73e84dfd5c0d1762760f0dbda05df4bafd473815ec97bdcc309a471cc67910f0"
+      "sha256": "810b29d6bc3ecbc34b918655d41e3f8dc060f354750e8fc5594fe8d2614185c8"
     },
     {
       "path": "skills/orchestration-protocol/manifests/current-policy.json",
@@ -31,7 +31,7 @@
     },
     {
       "path": "skills/orchestration-protocol/manifests/qualification-impact.json",
-      "sha256": "3ab42b56827521e756d5837ee465ccdf22895a00a1ebeaab4989dabc0f313386"
+      "sha256": "e0c0657726397d5e028e6304c4d577a1ef750eef3bbe1ff68e93593daffa0abf"
     },
     {
       "path": "skills/orchestration-protocol/manifests/registry.json",
@@ -47,11 +47,11 @@
     },
     {
       "path": "skills/orchestration-protocol/references/evidence-and-sources.md",
-      "sha256": "23fec28eff471476a999e886d5b1359f7565db1e87d23fae24a034dbdf66c717"
+      "sha256": "213c7b8976318ebabf6be3b9e6ec01aa3442f44e595c6874470c8058ed4d9675"
     },
     {
       "path": "skills/orchestration-protocol/references/security-and-effects.md",
-      "sha256": "c423dece22ad0c669049e9f0deede10465d1b5c7dc2ab02da812471678846f98"
+      "sha256": "148110c34af960f580271b6108c384cbfc9c30c8e4f68aa7f88777ad0bc1631a"
     },
     {
       "path": "skills/orchestration-protocol/schemas/envelope.schema.json",
@@ -71,7 +71,7 @@
     },
     {
       "path": "skills/orchestration-protocol/schemas/metadata.schema.json",
-      "sha256": "2bd13a0784bfaaf49dd5950073f81de625a76ebaa99b99b3c56762c22cea4f34"
+      "sha256": "0375d47ca8b1b4a3bb1d0b02a61c4a6ac4597d84edab2f354200abd7b16aab4a"
     },
     {
       "path": "skills/orchestration-protocol/schemas/policy.schema.json",
@@ -99,7 +99,7 @@
     },
     {
       "path": "skills/orchestration-protocol/templates/mechanical-receipt.example.json",
-      "sha256": "adf197b725317cf88e5dc4e2f386db86c3c2462814938a93a23ae439b38c7de0"
+      "sha256": "08876709e46d032036b73f27b0e5ec4c4fb3eee7c5837805abb065c431bb3c87"
     },
     {
       "path": "skills/orchestration-protocol/templates/pre-worker-checkpoint.example.json",

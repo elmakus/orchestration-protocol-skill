@@ -28,7 +28,7 @@
     "blocker": null
   },
   "provider_receipt": {
-    "operation_id": "op:example:0001",
+    "operation_id": "op:0001",
     "target": "example/repo:refs/heads/op/wave-example-0001/unit-01",
     "expected_head": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
     "occurrence": "VERIFIED",

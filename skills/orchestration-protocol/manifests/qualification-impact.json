@@ -16,11 +16,11 @@
     },
     {
       "component": "reference:evidence-and-sources:1.0.0",
-      "identity": "23fec28eff471476a999e886d5b1359f7565db1e87d23fae24a034dbdf66c717"
+      "identity": "213c7b8976318ebabf6be3b9e6ec01aa3442f44e595c6874470c8058ed4d9675"
     },
     {
       "component": "reference:security-and-effects:1.0.0",
-      "identity": "c423dece22ad0c669049e9f0deede10465d1b5c7dc2ab02da812471678846f98"
+      "identity": "148110c34af960f580271b6108c384cbfc9c30c8e4f68aa7f88777ad0bc1631a"
     },
     {
       "component": "reference:durable-storage:1.0.0",
@@ -28,11 +28,11 @@
     },
     {
       "component": "schemas:v1",
-      "identity": "76e940b5dd15bc9188510679bd9fd487d94e40bdba1a8e2977b143cb2e8f0cc0"
+      "identity": "e7b28032f89569744e996c929de3de94c50c1d64c7a79dd2f6001c72727eb625"
     },
     {
       "component": "templates:synthetic-examples",
-      "identity": "e7a9b1991cf12ca5afefe5942cff13e5408f65f1c7317c6a759703bacadb8363"
+      "identity": "a6de7a47265ca59da23f781cf89639d95ed9a2565d49d49253ae962abce23e97"
     },
     {
       "component": "host:android-chatgpt",
