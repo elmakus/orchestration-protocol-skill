@@ -1,5 +1,5 @@
 workstream_id = "op-skill-v1"
-revision = 4
+revision = 5
 
 [execution_ref]
 branch = "feat/op-skill-v1"
@@ -22,8 +22,26 @@ blob = "607abe772a8889c2b2bf4c5fbfffd3db414d49de"
 class = "review_attempt"
 path = "implementation/workstreams/op-skill-v1/reviews/M01-T01-R01.toml"
 
+[[cards]]
+id = "M01-T02"
+status = "blocked"
+
+[cards.contract]
+class = "task_card"
+path = "implementation/workstreams/op-skill-v1/cards/M01-T02.md"
+
+[cards.blocker]
+class = "blocker"
+path = "implementation/workstreams/op-skill-v1/blockers/M01-T02-native-test-realization.toml"
+
 [[jit_triggers]]
 id = "M01-live-feasibility-after-kit"
 after_card = "M01-T01"
-state = "satisfied"
+state = "consumed"
 condition = "After the exact reviewed feasibility-kit result is DONE, bind the installed Android/account setup, permitted native test realization, exact candidate/fixtures and disposable effects/readback targets; materialize the bounded live M01 gate only when these inputs are knowable. Missing owner authority or access is a real stop, not permission for broad M02-M07 implementation."
+
+[[jit_triggers]]
+id = "M01-live-probes-after-envelope"
+after_card = "M01-T02"
+state = "waiting"
+condition = "Only after the exact accepted native-envelope readiness result is DONE and all guarded realization, owner scope, candidate/fixture, isolated-target, complete-effect and readback inputs are verified, derive a bounded installed-surface M01 feasibility Card. Do not materialize a placeholder live test or start broad M02-M07 implementation while M01 is unresolved."

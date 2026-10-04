@@ -1,0 +1,5 @@
+workstream_id = "op-skill-v1"
+card_id = "M01-T02"
+class = "runtime_access_input"
+summary = "No accepted environment-guarded test realization reaches the intended native Android surface; available guard shapes realize CLI/child-agent tests. Owner setup, isolated content targets, effects and readbacks also remain unbound. Native readiness cannot be inferred from the reviewed local kit."
+evidence_path = "implementation/workstreams/op-skill-v1/evidence/M01-T02_NATIVE_READINESS_BLOCKER_2026-10-04.md"
