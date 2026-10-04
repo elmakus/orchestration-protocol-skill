@@ -198,7 +198,7 @@ for (const f of ownedFiles) {
 }
 ok("no semantic domain has two normative owners", overlap === "", overlap);
 const expectedDomains = ("product-boundary profile-routing freeze-load-gates fail-closed-dispatch ownership-map " +
-  "run-envelope identity-scopes envelope-equivalence canonical-serialization state-domains state-precedence currentness-resolution version-compatibility release-admission content-identity-graph compatibility-manifest current-policy-manifest extension-points " +
+  "run-envelope identity-scopes envelope-equivalence canonical-serialization state-domains state-precedence currentness-resolution version-compatibility release-admission content-identity-graph compatibility-manifest current-policy-manifest qualification-impact qualification-admission detached-qualification extension-points " +
   "evidence-authority evidence-weight singleton-counterexample conflict-adjudication dissent-preservation evidence-as-data mechanical-metadata-allowlist value-binding " +
   "continuation-authority authority-verification effect-caps effect-validation forbidden-repairs receipt-interfaces verification-predicates credential-boundary checkpoint-record " +
   "git-ledger result-immutability supersession-pointers archive-structure readback-proof provenance-lineage").split(" ");
@@ -685,6 +685,27 @@ ok("positive: mechanical capability blocker code admitted", (() => {
 const impact = readJSON("skills/orchestration-protocol/manifests/qualification-impact.json");
 const ALL_Q = ["Q0","Q1","Q2","Q3","Q4","Q5","Q6","Q7","Q8","Q9","Q10"];
 function invalidates(cls) { return (impact.change_classes.find(c => c.change_class === cls) || { invalidates: [] }).invalidates; }
+// Conservative impact resolution (contracts §10, bounded projection): actually
+// unknown, missing, malformed, or unbounded classification information resolves
+// to all-Q and can never produce an empty or narrowing invalidation set.
+function resolveInvalidates(manifestObj, cls) {
+  const entry = ((manifestObj && manifestObj.change_classes) || []).find(c => c && c.change_class === cls);
+  if (!entry || !Array.isArray(entry.invalidates) || entry.invalidates.length === 0) return [...ALL_Q];
+  if (!entry.invalidates.every(q => ALL_Q.includes(q))) return [...ALL_Q];
+  return [...entry.invalidates];
+}
+function impactUnion(manifestObj, classes) {
+  const out = [];
+  for (const cls of classes) for (const q of resolveInvalidates(manifestObj, cls)) if (!out.includes(q)) out.push(q);
+  return out;
+}
+// Prior PASS reuse requires an exact bounded no-dependency proof object;
+// absence from a lookup table, or a null/informal claim, never suffices.
+// Structural shape gate only — never qualification evidence.
+function passReuseAdmissible(layer, proof) {
+  return !!proof && proof.kind === "bounded-no-dependency-proof" && proof.layer === layer
+    && proof.verifiedReadback === "VERIFIED" && typeof proof.observation === "string";
+}
 ok("common-contract change invalidates dependent state/profile/integration/allocator/helper layers (C05-F04)",
   ["Q0","Q1","Q5","Q6"].every(q => invalidates("common-contract-text-change").includes(q))
   && ["Q2","Q3","Q4","Q8"].every(q => invalidates("common-contract-text-change").includes(q)));
@@ -697,6 +718,28 @@ ok("representative homogeneous-schema change invalidates Q4 batch evidence (C05-
   invalidates("schema-template-record-change").includes("Q4"));
 ok("representative common-identity change invalidates Q8 helper evidence (C05-F04)",
   invalidates("common-contract-text-change").includes("Q8"));
+ok("schema/record change covers metadata/proof Q7/Q10 and helper-input Q8 (C06-F01)",
+  ["Q7","Q8","Q10"].every(q => invalidates("schema-template-record-change").includes(q)));
+ok("helper-artifact change covers content Q0 and allocation Q2/Q3 (C06-F01)",
+  ["Q0","Q2","Q3"].every(q => invalidates("helper-artifact-change").includes(q)));
+ok("actually unknown class resolves to all-Q, never empty (C06-F01)",
+  ALL_Q.every(q => resolveInvalidates(impact, "future-unclassified-shared-mechanism-change").includes(q))
+  && resolveInvalidates(impact, "future-unclassified-shared-mechanism-change").length === ALL_Q.length);
+ok("missing classification resolves to all-Q (C06-F01)",
+  ALL_Q.every(q => resolveInvalidates(impact, "no-such-class").includes(q)));
+ok("malformed/empty classification resolves to all-Q, never narrowing (C06-F01)",
+  ALL_Q.every(q => resolveInvalidates({ change_classes: [{ change_class: "x", invalidates: [] }] }, "x").includes(q))
+  && ALL_Q.every(q => resolveInvalidates({ change_classes: [] }, "x").includes(q)));
+ok("multiple classifications union without dropping evidence (C06-F01)",
+  (() => { const u = impactUnion(impact, ["schema-template-record-change", "helper-artifact-change"]);
+    return ["Q0","Q2","Q3","Q7","Q8","Q10"].every(q => u.includes(q))
+      && invalidates("schema-template-record-change").every(q => u.includes(q))
+      && invalidates("helper-artifact-change").every(q => u.includes(q)); })());
+ok("PASS reuse without bounded proof is never admissible (C06-F01)",
+  passReuseAdmissible("Q9", null) === false && passReuseAdmissible("Q9", { kind: "informal-note" }) === false);
+ok("PASS reuse admits only exact bounded proof shape, still not qualification (C06-F01)",
+  passReuseAdmissible("Q9", { kind: "bounded-no-dependency-proof", layer: "Q9", verifiedReadback: "VERIFIED", observation: "synthetic shape only" }) === true
+  && passReuseAdmissible("Q9", { kind: "bounded-no-dependency-proof", layer: "Q8", verifiedReadback: "VERIFIED", observation: "x" }) === false);
 ok("registry change invalidates profile/integration layers", invalidates("registry-owner-profile-change").includes("Q5"));
 ok("unknown/unbounded change invalidates all Q layers",
   ALL_Q.every(q => invalidates("unclassified-material-change").includes(q)));
@@ -711,7 +754,39 @@ for (const item of impact.inventory) {
 }
 ok("inventory holds concrete digests or explicit unavailable observations", invBad === "", invBad);
 
-// ---------- 16. required-field spot checks ----------
+// ---------- 16. qualification admission gate (contracts §10, bounded projection) ----------
+// Structural predicates only: no Q layer is run and no PASS is claimed here.
+function q10Verdict(ownerDisposition, technical) {
+  if (ownerDisposition === "UNACCEPTABLE") return "FAIL";
+  if (ownerDisposition !== "ACCEPTABLE") return "BLOCKED";
+  return technical;
+}
+function structuralAdmissionGate(layerVerdicts, candidateMatches, policyCurrent) {
+  if (!policyCurrent) return "BLOCKED";
+  if (!candidateMatches) return "BLOCKED";
+  if (ALL_Q.some(q => layerVerdicts[q] === undefined)) return "BLOCKED";
+  if (ALL_Q.some(q => layerVerdicts[q] !== "PASS")) return "BLOCKED";
+  return "ADMITTED";
+}
+const qualRec = records["qualification-record.example.json#qualification_record"];
+ok("shipped qualification example remains BLOCKED synthetic data (C06-F02)",
+  qualRec.verdict === "BLOCKED" && qualRec.layer === "Q1");
+ok("Q10 UNACCEPTABLE maps to FAIL (C06-F02)", q10Verdict("UNACCEPTABLE", "PASS") === "FAIL");
+ok("Q10 UNKNOWN/absent maps to BLOCKED (C06-F02)",
+  q10Verdict("UNKNOWN", "PASS") === "BLOCKED" && q10Verdict(null, "PASS") === "BLOCKED" && q10Verdict(undefined, "PASS") === "BLOCKED");
+ok("Q10 ACCEPTABLE defers to technical predicates (C06-F02)",
+  q10Verdict("ACCEPTABLE", "PASS") === "PASS" && q10Verdict("ACCEPTABLE", "FAIL") === "FAIL" && q10Verdict("ACCEPTABLE", "BLOCKED") === "BLOCKED");
+ok("hypothetical all-PASS same-candidate current gate admits structurally only (C06-F02)",
+  structuralAdmissionGate(Object.fromEntries(ALL_Q.map(q => [q, "PASS"])), true, true) === "ADMITTED");
+ok("single non-PASS/stale/mismatched layer blocks admission (C06-F02)",
+  structuralAdmissionGate({ ...Object.fromEntries(ALL_Q.map(q => [q, "PASS"])), Q7: "BLOCKED" }, true, true) === "BLOCKED"
+  && structuralAdmissionGate(Object.fromEntries(ALL_Q.map(q => [q, "PASS"])), false, true) === "BLOCKED"
+  && structuralAdmissionGate(Object.fromEntries(ALL_Q.map(q => [q, "PASS"])), true, false) === "BLOCKED"
+  && structuralAdmissionGate({ ...Object.fromEntries(ALL_Q.map(q => [q, "PASS"])), Q10: q10Verdict("UNKNOWN", "PASS") }, true, true) === "BLOCKED");
+ok("M02 snapshot with no PASS evidence never admits production (C06-F02)",
+  structuralAdmissionGate({}, true, true) === "BLOCKED");
+
+// ---------- 17. required-field spot checks ----------
 ok("envelope carries authority-channel binding fields", "authority_channel" in env && "authority_source_class" in env);
 ok("proof carries prior/candidate/supersession binding", !!proof.prior_result_id && !!proof.candidate_digest && !!proof.supersession_state);
 ok("integrated results carry findings/dissent/uncertainty/envelope/impact", complete.integ.findings && complete.integ.dissent && complete.integ.uncertainty && !!complete.integ.run_envelope_id && !!complete.integ.qualification_impact_id);

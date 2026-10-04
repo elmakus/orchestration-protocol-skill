@@ -1,7 +1,7 @@
 {
   "manifest_id": "content:0.2.0-m02",
   "release_id": "orchestration-protocol-skill@0.2.0-m02",
-  "construction_identity": "content:4ef29c89f5555efef8bc4a57501e97f1d74b405b9bc722b58fc48b314d52d7fd",
+  "construction_identity": "content:6ebdcb9f02df5fd84b4f7dfb666bfc6f30849450c9059425c4ad5711faba6121",
   "excludes": [
     "skills/orchestration-protocol/manifests/content-manifest.json",
     "detached policy/qualification/readback attestations",
@@ -31,7 +31,7 @@
     },
     {
       "path": "skills/orchestration-protocol/manifests/qualification-impact.json",
-      "sha256": "cd4447e4657cbb8c8fc48743e0add9baa5b9637cbfce16f334db1be835b46117"
+      "sha256": "d2e09edb35ebb91911f54571e1288d680475b5ac32e49f60ef13cb36f9283a50"
     },
     {
       "path": "skills/orchestration-protocol/manifests/registry.json",
@@ -39,7 +39,7 @@
     },
     {
       "path": "skills/orchestration-protocol/references/contracts-and-versioning.md",
-      "sha256": "6d4482a69f68211777384d91fd481570fff3c24df9c3536245b24054487589b2"
+      "sha256": "03d69b154867ddc178827ad08cf34a302fb8c539bf2f42dbc609b5605729d2bc"
     },
     {
       "path": "skills/orchestration-protocol/references/durable-storage.md",

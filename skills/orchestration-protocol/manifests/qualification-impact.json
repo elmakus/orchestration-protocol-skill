@@ -12,7 +12,7 @@
     },
     {
       "component": "reference:contracts-and-versioning:1.0.0",
-      "identity": "6d4482a69f68211777384d91fd481570fff3c24df9c3536245b24054487589b2"
+      "identity": "03d69b154867ddc178827ad08cf34a302fb8c539bf2f42dbc609b5605729d2bc"
     },
     {
       "component": "reference:evidence-and-sources:1.0.0",
@@ -80,7 +80,10 @@
         "Q3",
         "Q4",
         "Q5",
-        "Q6"
+        "Q6",
+        "Q7",
+        "Q8",
+        "Q10"
       ]
     },
     {
@@ -119,6 +122,9 @@
     {
       "change_class": "helper-artifact-change",
       "invalidates": [
+        "Q0",
+        "Q2",
+        "Q3",
         "Q8",
         "Q10"
       ]

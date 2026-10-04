@@ -1,11 +1,13 @@
-<!-- normative-owner: contracts-and-versioning | version: 1.0.0 | domains: run-envelope, identity-scopes, envelope-equivalence, canonical-serialization, state-domains, state-precedence, currentness-resolution, version-compatibility, release-admission, content-identity-graph, compatibility-manifest, current-policy-manifest, extension-points -->
+<!-- normative-owner: contracts-and-versioning | version: 1.0.0 | domains: run-envelope, identity-scopes, envelope-equivalence, canonical-serialization, state-domains, state-precedence, currentness-resolution, version-compatibility, release-admission, content-identity-graph, compatibility-manifest, current-policy-manifest, qualification-impact, qualification-admission, detached-qualification, extension-points -->
 # Shared owner — contracts and versioning (`1.0.0`)
 
 Sole normative owner of the caller/run envelope, identity scopes and
 equivalence, canonical serialization, caller-visible state domains and
 pre-acceptance precedence, version/compatibility relations, release
-admission, the package content-identity graph, and the compatibility and
-current-policy manifests. Other documents may cite these rules only as
+admission, the package content-identity graph, the compatibility,
+current-policy and qualification-impact manifests, the production
+qualification-admission gate, and detached qualification-record semantics.
+Other documents may cite these rules only as
 non-normative explanation.
 
 ## 1. Caller/Run Envelope
@@ -231,3 +233,51 @@ No extension point may redefine state precedence (§4), identity equivalence
 (§3), or currentness resolution (§5). If two canonical
 owners appear to govern one rule or contradict, execution/qualification
 fails closed.
+
+## 10. Qualification-impact and admission contract
+
+Sole normative owner of the common qualification-impact and production
+admission interfaces (record grammars: `schemas/policy.schema.json`; live
+manifest: `manifests/qualification-impact.json`; synthetic example:
+`templates/qualification-record.example.json`). The manifest `rule`/`note`
+annotations and the change-class table are non-normative projections of
+this section, never independent authority. Qualification procedure,
+exhaustive oracle generation, and actual/native observations belong to
+M08/M09 and are not defined here.
+
+- Conservative dependency classification: every classified change maps to
+  all Q0-Q10 layers whose PASS evidence could depend on it. Broad classes
+  cover all plausible dependencies; an omitted layer's prior PASS may be
+  reused only with an exact safely bounded change/dependency proof
+  establishing no dependency, never by absence from a lookup table.
+- True unknown fallback: an unrecognized, missing, malformed, or unbounded
+  classification or dependency description invalidates all Q0-Q10
+  (conservative all-Q default). Such information can never produce an
+  empty or narrowing invalidation set.
+- Union: where multiple classifications apply to one observed change, the
+  required invalidation set is the union of their dependency sets;
+  combining classifications never drops affected evidence.
+- Detached qualification records carry exactly one of PASS/FAIL/BLOCKED per
+  layer for one exact immutable candidate, with exact fixture-set,
+  probe-set, evidence-locator, and candidate bindings. PASS requires every
+  mandatory predicate of that layer evaluated with positive evidence; FAIL
+  requires terminal violated-predicate evidence; BLOCKED means no
+  trustworthy PASS/FAIL decision (missing, denied, ambiguous, stale,
+  incompatible, or non-terminal authority, capability, access, fixture,
+  state, readback, or evidence). UNKNOWN, pending, missing, and ambiguous
+  evidence are never PASS. Self-authored labels, schema validity alone, or
+  hypothetical fixture structure are never qualification proof; evidence,
+  currentness, and provenance must be verified by exact readback.
+- Production admission requires all Q0-Q10 required PASS evidence for the
+  same exact candidate/tuple, current (non-stale, unambiguous, positively
+  read-back) qualification and distribution-policy state, and compatible
+  integrity-bound identities (release, content, policy, qualification).
+  Any missing, failed, blocked, stale, superseded, ambiguous, or
+  candidate-mismatched layer blocks admission.
+- Q10 additionally requires an exact durable owner ACCEPTABLE setup
+  disposition plus all mandatory technical predicates positive. Owner
+  UNACCEPTABLE maps to FAIL; UNKNOWN (or absent) maps to BLOCKED.
+  Missing, negative, ambiguous, or stale owner/technical proof cannot admit.
+- This M02 construction snapshot (`0.2.0-m02`) is unqualified and ineligible
+  for production regardless of schema validity, structural admission
+  results, or hypothetical fixture shape; no Q0-Q10 PASS is claimed here.
