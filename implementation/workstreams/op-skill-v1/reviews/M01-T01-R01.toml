@@ -1,0 +1,20 @@
+workstream_id = "op-skill-v1"
+card_id = "M01-T01"
+attempt = "R01"
+verdict = "pending"
+evidence_path = ""
+
+[subject]
+class = "git_blob"
+repository = "elmakus/orchestration-protocol-skill"
+commit = "b89c7a2b9f3e3d65f28deff0486d2b2b2e44e7e2"
+path = "implementation/workstreams/op-skill-v1/results/M01-T01.md"
+blob = "607abe772a8889c2b2bf4c5fbfffd3db414d49de"
+
+[acceptance]
+class = "task_card"
+path = "implementation/workstreams/op-skill-v1/cards/M01-T01.md"
+
+[independence]
+materially_produced_or_repaired_subject = false
+basis = "Review is assigned to a fresh independent context that did not execute or repair the exact implementation or normalized result. The producing/correcting context and result reconciler are excluded from issuing this verdict."

@@ -1,5 +1,5 @@
 workstream_id = "op-skill-v1"
-revision = 2
+revision = 3
 
 [execution_ref]
 branch = "feat/op-skill-v1"
@@ -17,6 +17,10 @@ class = "result"
 path = "implementation/workstreams/op-skill-v1/results/M01-T01.md"
 commit = "b89c7a2b9f3e3d65f28deff0486d2b2b2e44e7e2"
 blob = "607abe772a8889c2b2bf4c5fbfffd3db414d49de"
+
+[[cards.review_attempts]]
+class = "review_attempt"
+path = "implementation/workstreams/op-skill-v1/reviews/M01-T01-R01.toml"
 
 [[jit_triggers]]
 id = "M01-live-feasibility-after-kit"
