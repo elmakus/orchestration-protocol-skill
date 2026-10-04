@@ -1,4 +1,4 @@
-<!-- normative-owner: evidence-and-sources | version: 1.0.0 | domains: evidence-authority, evidence-weight, singleton-counterexample, conflict-adjudication, dissent-preservation, evidence-as-data, mechanical-metadata-allowlist -->
+<!-- normative-owner: evidence-and-sources | version: 1.0.0 | domains: evidence-authority, evidence-weight, singleton-counterexample, conflict-adjudication, dissent-preservation, evidence-as-data, mechanical-metadata-allowlist, value-binding -->
 # Shared owner — evidence and sources (`1.0.0`)
 
 Sole normative owner of evidence authority/weight, the strong singleton
@@ -69,5 +69,34 @@ Rules:
   before coordinator consumption.
 - No denylist is relied upon as a universal semantic-isolation proof.
 - A semantic finding is written only inside the sealed lane-result body.
-  Mechanical execution blockers may name the missing capability/state
-  without disclosing a substantive conclusion.
+  Mechanical execution blockers use only the closed capability-code
+  inventory in §6 and never carry a substantive conclusion.
+
+## 6. Deterministic derivation, binding, and closed code inventories
+
+Coordinator-visible values are never freely chosen. They are
+mechanically derived from frozen bound inputs by fixed rules, and every
+declared channel/value is classified; unclassified values fail before
+coordinator consumption.
+
+- Identity forms: assignment `assign:NNNN`, unit `unit-NN`, run `RUN-NNN`,
+  nonce `nonce:NNNN`, attempt `attempt:RUN-NNN:NNNN` (digits only).
+- `branch = op/<slug(wave_id)>/<slug(unit-or-run-id)>`, where slug
+  replaces every non-alphanumeric run with one `-` and trims edges.
+- `output_path = results/<slug(assignment_id)>.md`.
+- `ref`, when present, is exactly `refs/heads/<branch>`.
+- `commit`, `blob`, and `expected_head` are 40-hex Git identities that
+  MUST equal a bound claim, publication, or wave-base identity for the
+  same assignment context; valid shape with a wrong binding is
+  non-admissible.
+- `ancestry` is a bound 40-hex commit (claim or wave base), never prose.
+- `publication`/`durable_result` is exactly
+  `<repository>@<commit>:<output_path>` recomposed from the same bound
+  values; any deviation is non-admissible.
+- `subject_digest`/`coverage_digest` are typed digest references
+  (`runenv:`/`content:`/`sha256:` plus 64 hex).
+- Receipt blocker codes are this closed inventory only:
+  `none`, `missing:authority`, `missing:evidence`, `missing:provider-read`,
+  `missing:claim`, `missing:generation`, `unavailable:helper`,
+  `unavailable:native`, `conflict:state`, `conflict:binding`.
+  No other `word:word` value is admissible.

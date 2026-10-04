@@ -2,14 +2,31 @@
   "_synthetic": "SYNTHETIC container: label is data outside the record, never digested; semantic body omitted, only detached content-identity linkage modeled. Grammar: schemas/results.schema.json#/defs/sealed_result.",
   "sealed_result": {
     "result_id": "sealed:example:0001",
-    "assignment_id": "assign:example:0001",
+    "assignment_id": "assign:0001",
     "wave_id": "wave:example:0001",
-    "subject": { "identity_class": "git", "repository": "example/repo", "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "path": "SPEC.md", "blob": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb" },
-    "coverage": { "acceptance_id": "coverage:example:acceptance:v1" },
+    "subject": {
+      "identity_class": "git",
+      "repository": "example/repo",
+      "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "path": "SPEC.md",
+      "blob": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+    },
+    "coverage": {
+      "acceptance_id": "coverage:example:acceptance:v1"
+    },
     "release_id": "orchestration-protocol-skill@0.2.0-m02",
-    "generation_binding": { "unit_id": "unit-01", "claim_generation": 0, "attempt_nonce_id": "nonce:example:0001" },
+    "generation_binding": {
+      "unit_id": "unit-01",
+      "claim_generation": 0,
+      "attempt_nonce_id": "nonce:0001"
+    },
     "attempt_binding": null,
-    "content_identity": { "repository": "example/repo", "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "path": "results/lane-01.md", "blob": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb" },
+    "content_identity": {
+      "repository": "example/repo",
+      "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "path": "results/lane-01.md",
+      "blob": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+    },
     "publication": "example/repo@aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:results/lane-01.md",
     "readback": "VERIFIED"
   }

@@ -8,59 +8,198 @@
   "defs": {
     "homogeneous_batch": {
       "type": "object",
-      "required": ["batch_revision_id", "wave_id", "run_envelope_id", "subject", "coverage", "release_id", "reserved_runs", "state"],
+      "required": [
+        "batch_revision_id",
+        "wave_id",
+        "run_envelope_id",
+        "subject",
+        "coverage",
+        "release_id",
+        "reserved_runs",
+        "state"
+      ],
       "properties": {
-        "batch_revision_id": { "type": "string", "minLength": 1 },
-        "wave_id": { "type": "string", "minLength": 1 },
-        "run_envelope_id": { "type": "string", "pattern": "^runenv:[0-9a-f]{64}$" },
-        "subject": { "$ref": "urn:op-skill:schema:v1:identities#/defs/subject_identity" },
-        "coverage": { "$ref": "urn:op-skill:schema:v1:identities#/defs/coverage_identity" },
-        "release_id": { "type": "string", "minLength": 1 },
-        "reserved_runs": { "type": "array", "minItems": 1, "items": { "type": "string" } },
-        "state": { "type": "string", "enum": ["OPEN", "CLOSED"] }
+        "batch_revision_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "wave_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "run_envelope_id": {
+          "type": "string",
+          "pattern": "^runenv:[0-9a-f]{64}$"
+        },
+        "subject": {
+          "$ref": "urn:op-skill:schema:v1:identities#/defs/subject_identity"
+        },
+        "coverage": {
+          "$ref": "urn:op-skill:schema:v1:identities#/defs/coverage_identity"
+        },
+        "release_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "reserved_runs": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        },
+        "state": {
+          "type": "string",
+          "enum": [
+            "OPEN",
+            "CLOSED"
+          ]
+        }
       },
       "additionalProperties": false
     },
     "homogeneous_run": {
       "type": "object",
-      "required": ["run_id", "batch_revision_id", "recovery_state", "current_attempt_id"],
+      "required": [
+        "run_id",
+        "batch_revision_id",
+        "recovery_state",
+        "current_attempt_id"
+      ],
       "properties": {
-        "run_id": { "type": "string", "minLength": 1 },
-        "batch_revision_id": { "type": "string", "minLength": 1 },
-        "recovery_state": { "type": "string", "enum": ["RESERVED", "ACTIVE", "COMPLETE", "FAILED", "BLOCKED", "ABANDONED"] },
-        "current_attempt_id": { "type": "string", "minLength": 1 },
-        "attempt_history": { "type": "array", "items": { "type": "string" } }
+        "run_id": {
+          "type": "string",
+          "pattern": "^RUN-[0-9]{3}$"
+        },
+        "batch_revision_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "recovery_state": {
+          "type": "string",
+          "enum": [
+            "RESERVED",
+            "ACTIVE",
+            "COMPLETE",
+            "FAILED",
+            "BLOCKED",
+            "ABANDONED"
+          ]
+        },
+        "current_attempt_id": {
+          "type": "string",
+          "pattern": "^attempt:RUN-[0-9]{3}:[0-9]{4}$"
+        },
+        "attempt_history": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
       },
       "additionalProperties": false
     },
     "current_attempt": {
       "type": "object",
-      "required": ["attempt_id", "run_id", "batch_revision_id", "subject", "coverage", "release_id", "state"],
+      "required": [
+        "attempt_id",
+        "run_id",
+        "batch_revision_id",
+        "subject",
+        "coverage",
+        "release_id",
+        "state"
+      ],
       "properties": {
-        "attempt_id": { "type": "string", "minLength": 1 },
-        "run_id": { "type": "string", "minLength": 1 },
-        "batch_revision_id": { "type": "string", "minLength": 1 },
-        "subject": { "$ref": "urn:op-skill:schema:v1:identities#/defs/subject_identity" },
-        "coverage": { "$ref": "urn:op-skill:schema:v1:identities#/defs/coverage_identity" },
-        "release_id": { "type": "string", "minLength": 1 },
-        "state": { "type": "string", "enum": ["ACTIVE", "REPLACED", "TERMINAL"] }
+        "attempt_id": {
+          "type": "string",
+          "pattern": "^attempt:RUN-[0-9]{3}:[0-9]{4}$"
+        },
+        "run_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "batch_revision_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "subject": {
+          "$ref": "urn:op-skill:schema:v1:identities#/defs/subject_identity"
+        },
+        "coverage": {
+          "$ref": "urn:op-skill:schema:v1:identities#/defs/coverage_identity"
+        },
+        "release_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "state": {
+          "type": "string",
+          "enum": [
+            "ACTIVE",
+            "REPLACED",
+            "TERMINAL"
+          ]
+        }
       },
       "additionalProperties": false
     },
     "supplemental_action": {
       "type": "object",
-      "required": ["action_id", "parent_wave_id", "parent_batch_revision_id", "deficit_snapshot", "subject", "coverage", "release_id", "supplemental_runs", "expected_head", "single_use"],
+      "required": [
+        "action_id",
+        "parent_wave_id",
+        "parent_batch_revision_id",
+        "deficit_snapshot",
+        "subject",
+        "coverage",
+        "release_id",
+        "supplemental_runs",
+        "expected_head",
+        "single_use"
+      ],
       "properties": {
-        "action_id": { "type": "string", "minLength": 1 },
-        "parent_wave_id": { "type": "string", "minLength": 1 },
-        "parent_batch_revision_id": { "type": "string", "minLength": 1 },
-        "deficit_snapshot": { "type": "integer", "minimum": 1 },
-        "subject": { "$ref": "urn:op-skill:schema:v1:identities#/defs/subject_identity" },
-        "coverage": { "$ref": "urn:op-skill:schema:v1:identities#/defs/coverage_identity" },
-        "release_id": { "type": "string", "minLength": 1 },
-        "supplemental_runs": { "type": "array", "minItems": 1, "items": { "type": "string" } },
-        "expected_head": { "type": "string", "minLength": 1 },
-        "single_use": { "type": "boolean", "const": true }
+        "action_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "parent_wave_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "parent_batch_revision_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "deficit_snapshot": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "subject": {
+          "$ref": "urn:op-skill:schema:v1:identities#/defs/subject_identity"
+        },
+        "coverage": {
+          "$ref": "urn:op-skill:schema:v1:identities#/defs/coverage_identity"
+        },
+        "release_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "supplemental_runs": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        },
+        "expected_head": {
+          "type": "string",
+          "minLength": 1
+        },
+        "single_use": {
+          "type": "boolean",
+          "const": true
+        }
       },
       "additionalProperties": false
     }

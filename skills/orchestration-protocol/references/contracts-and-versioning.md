@@ -122,14 +122,15 @@ Deterministic terminal precedence (owned here; profiles MUST NOT redefine):
 5. Else execution or coverage `INCOMPLETE` → `INCOMPLETE`.
 6. Else the only acceptance-evaluation tuple is execution `COMPLETE` +
    applicability `APPLICABLE` + currentness `CURRENT` + coverage `COMPLETE`;
-   apply the profile truth rule (profile-owned predicate through §7).
+   apply the profile truth rule (profile-owned predicate through §9).
 7. Any unlisted or contradictory tuple is invalid → `BLOCKED`. In
    particular: an applicable profile whose mandatory coverage/work set
    resolves empty without a proven profile NOT_APPLICABLE predicate is
    BLOCKED (never GREEN, never INCOMPLETE-as-success, never profile
    truth); and a tuple such as APPLICABLE + CURRENT + COMPLETE +
-   coverage NOT_APPLICABLE, or any value outside the finite domains, is
-   contradictory → `BLOCKED` rather than truth evaluation.
+   coverage NOT_APPLICABLE, or any value outside the finite domains
+   (including applicability), is contradictory → `BLOCKED` rather than
+   truth evaluation.
 
 `BLOCKED` takes precedence over `INCOMPLETE`. `NOT_APPLICABLE` is terminal
 and neutral, never GREEN. Coverage `NOT_APPLICABLE` requires applicability
@@ -137,7 +138,7 @@ and neutral, never GREEN. Coverage `NOT_APPLICABLE` requires applicability
 whose mandatory coverage/work set resolves empty without an explicit
 profile NOT_APPLICABLE predicate is invalid/BLOCKED, never GREEN/clear.
 For the legal acceptance tuple, profile truth is total per profile family
-as declared through §7 extension points (e.g. review GREEN iff no accepted
+as declared through §9 extension points (e.g. review GREEN iff no accepted
 blocking finding remains; research COMPLETE iff synthesis obligations hold).
 
 ## 5. Consume-time currentness resolution

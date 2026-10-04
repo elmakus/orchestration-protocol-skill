@@ -10,10 +10,13 @@
     "authorized_profile": "repair_units",
     "authorized_action": "claim-repair-unit",
     "prior_result_id": "result:example:accepted:0007",
-    "prior_obligation_ids": ["F-01", "F-02"],
-    "subject_digest": "digest:example:subject:0001",
-    "candidate_digest": "digest:example:candidate:0001",
-    "effect_envelope_digest": "digest:example:effects:0001",
+    "prior_obligation_ids": [
+      "F-01",
+      "F-02"
+    ],
+    "subject_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+    "candidate_digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+    "effect_envelope_digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
     "supersession_state": "CURRENT",
     "channel_binding": "same-channel",
     "verdict": "GENUINE"

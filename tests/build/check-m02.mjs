@@ -201,7 +201,7 @@ for (const f of ownedFiles) {
 ok("no semantic domain has two normative owners", overlap === "", overlap);
 const expectedDomains = ("product-boundary profile-routing freeze-load-gates fail-closed-dispatch ownership-map " +
   "run-envelope identity-scopes envelope-equivalence canonical-serialization state-domains state-precedence currentness-resolution version-compatibility release-admission content-identity-graph compatibility-manifest current-policy-manifest extension-points " +
-  "evidence-authority evidence-weight singleton-counterexample conflict-adjudication dissent-preservation evidence-as-data mechanical-metadata-allowlist " +
+  "evidence-authority evidence-weight singleton-counterexample conflict-adjudication dissent-preservation evidence-as-data mechanical-metadata-allowlist value-binding " +
   "continuation-authority authority-verification effect-caps effect-validation forbidden-repairs receipt-interfaces verification-predicates credential-boundary checkpoint-record " +
   "git-ledger result-immutability supersession-pointers archive-structure readback-proof provenance-lineage").split(" ");
 ok("expected M02 domains all owned exactly once", expectedDomains.every(d => seen.has(d)), expectedDomains.filter(d => !seen.has(d)).join(","));
@@ -283,6 +283,7 @@ ok("compatibility templates_digest is concrete and verifies", /^[0-9a-f]{64}$/.t
 
 // ---------- 9. corrected state precedence (BLOCKED for empty/contradictory) ----------
 function evaluateDisposition(s) {
+  if (!["APPLICABLE", "NOT_APPLICABLE", "UNKNOWN"].includes(s.applicability)) return "BLOCKED";
   if (s.applicability === "UNKNOWN") return "BLOCKED";
   if (s.applicability === "NOT_APPLICABLE") {
     if (s.na_proven === true && s.execution === "COMPLETE" && s.currentness === "CURRENT" && s.coverage === "NOT_APPLICABLE" && s.disposition === "NOT_APPLICABLE") return "NOT_APPLICABLE";
@@ -298,6 +299,8 @@ function evaluateDisposition(s) {
   if (s.execution === "INCOMPLETE" || s.coverage === "INCOMPLETE") return "INCOMPLETE";
   return "EVALUATE_TRUTH";
 }
+ok("corrected: invalid applicability value never reaches truth",
+  evaluateDisposition({ applicability: "IMPOSSIBLE", currentness: "CURRENT", execution: "COMPLETE", coverage: "COMPLETE" }) === "BLOCKED");
 ok("corrected: applicable empty mandatory work is BLOCKED, not INCOMPLETE",
   evaluateDisposition({ applicability: "APPLICABLE", currentness: "CURRENT", execution: "COMPLETE", coverage: "INCOMPLETE", empty_mandatory_work: true }) === "BLOCKED");
 ok("corrected: APPLICABLE+CURRENT+COMPLETE+coverage-NA is contradictory BLOCKED",
@@ -429,15 +432,45 @@ ok("negative: forbidden repair effect (comments) rejected", validateEffects(["co
 ok("negative: unclassifiable/unknown effect rejected", validateEffects(["mystery-effect"]) === "BLOCKED");
 ok("positive: pure in-cap effect set admitted", validateEffects(["op-result-publication"]) === "ADMITTED");
 
-// ---------- 14. closed typed metadata value grammars ----------
+// ---------- 14. closed typed metadata value grammars + derivation binding ----------
 const mech = records["mechanical-receipt.example.json#mechanical_metadata"];
+function slug(s) { return String(s).replace(/[^A-Za-z0-9]+/g, "-").replace(/^-+|-+$/g, ""); }
+// Every value must be derived from the frozen bound context, not chosen.
+function bindMetadata(m, ctx) {
+  const errs = [];
+  const seg = ctx.unit_id || ctx.run_id;
+  if (m.branch !== `op/${slug(ctx.wave_id)}/${slug(seg)}`) errs.push("branch not derived from bound wave/unit");
+  if (m.output_path !== `results/${slug(ctx.assignment_id)}.md`) errs.push("output_path not derived from bound assignment");
+  if (m.ref !== null && m.ref !== undefined && m.ref !== `refs/heads/${m.branch}`) errs.push("ref not bound to branch");
+  if (![ctx.claim_commit, ctx.wave_base_commit].includes(m.commit)) errs.push("commit not bound to claim/wave-base identity");
+  if (m.ancestry !== null && m.ancestry !== undefined && ![ctx.claim_commit, ctx.wave_base_commit].includes(m.ancestry)) errs.push("ancestry not bound");
+  if (m.expected_head !== null && m.expected_head !== undefined && ![ctx.claim_commit, ctx.wave_base_commit].includes(m.expected_head)) errs.push("expected_head not bound");
+  if (m.publication !== `${ctx.repository}@${m.commit}:${m.output_path}`) errs.push("publication not recomposed from bound values");
+  return errs;
+}
+const MECH_CTX = {
+  wave_id: "wave:example:0001", assignment_id: "assign:0001", unit_id: "unit-01",
+  repository: "example/repo",
+  claim_commit: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  wave_base_commit: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+};
 function validateMetadata(obj) {
   const def = allDefs["mechanical_metadata"];
   return validate(def.node, obj, def.id, "metadata-probe");
 }
 ok("positive: mechanical receipt admitted", validateMetadata(mech).length === 0);
+ok("positive: example values are exactly derived from the bound context", bindMetadata(mech, MECH_CTX).length === 0, bindMetadata(mech, MECH_CTX).join("; "));
 ok("negative: added semantic field rejected", validateMetadata({ ...mech, severity: "high", conclusion: "looks good" }).length > 0);
-ok("negative: semantic leak inside branch value rejected", validateMetadata({ ...mech, branch: "op/wave-01/GREEN-deploy-now" }).length > 0);
+ok("negative: semantic branch payload fails binding although charset-safe", bindMetadata({ ...mech, branch: "op/all-blockers-found/critical-red" }, MECH_CTX).length > 0);
+ok("negative: semantic ref payload fails binding", bindMetadata({ ...mech, ref: "refs/heads/red-critical-blocker" }, MECH_CTX).length > 0);
+ok("negative: semantic output-path payload fails binding", bindMetadata({ ...mech, output_path: "results/all-blockers-found.md" }, MECH_CTX).length > 0);
+ok("negative: semantic assignment payload fails closed identity grammar", validateMetadata({ ...mech, assignment_id: "RED_CRITICAL_BLOCKER" }).length > 0);
+ok("negative: semantic blocker payload outside closed inventory", (() => {
+  const def = allDefs["execution_receipt"];
+  return validate(def.node, { ...records["mechanical-receipt.example.json#execution_receipt"], blocker: "red:critical-blocker" }, def.id, "receipt-probe").length > 0;
+})());
+ok("negative: valid-shape but wrong-bound commit fails binding", bindMetadata({ ...mech, commit: "ffffffffffffffffffffffffffffffffffffffff", publication: `example/repo@ffffffffffffffffffffffffffffffffffffffff:${mech.output_path}` }, MECH_CTX).length > 0);
+ok("negative: uppercase semantic branch fails binding to bound context", bindMetadata({ ...mech, branch: "op/wave-01/GREEN-deploy-now" }, MECH_CTX).length > 0);
 ok("negative: free-form blocker text rejected", (() => {
   const def = allDefs["execution_receipt"];
   return validate(def.node, { ...records["mechanical-receipt.example.json#execution_receipt"], blocker: "severity high, looks RED" }, def.id, "receipt-probe").length > 0;

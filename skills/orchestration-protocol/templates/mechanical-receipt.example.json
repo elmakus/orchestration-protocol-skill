@@ -1,29 +1,29 @@
 {
-  "_synthetic": "SYNTHETIC container: label is data outside records, never digested. Grammars: schemas/metadata.schema.json mechanical_metadata/execution_receipt/provider_receipt.",
+  "_synthetic": "SYNTHETIC container: label is data outside records, never digested. Every value below is mechanically derived from the frozen bound context (wave wave:example:0001, assignment assign:0001, unit unit-01, repo example/repo, claim/base commit aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa) per evidence-and-sources section 6 — none is freely chosen. Grammars: schemas/metadata.schema.json mechanical_metadata/execution_receipt/provider_receipt.",
   "mechanical_metadata": {
-    "assignment_id": "assign:example:0001",
+    "assignment_id": "assign:0001",
     "unit_id": "unit-01",
     "run_id": null,
     "package_id": "orchestration-protocol-skill@0.2.0-m02",
     "release_id": "orchestration-protocol-skill@0.2.0-m02",
-    "subject_digest": "digest:example:subject:0001",
-    "coverage_digest": "digest:example:coverage:0001",
+    "subject_digest": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+    "coverage_digest": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
     "claim_generation": 0,
-    "attempt_nonce_id": "nonce:example:0001",
+    "attempt_nonce_id": "nonce:0001",
     "branch": "op/wave-example-0001/unit-01",
-    "ref": null,
+    "ref": "refs/heads/op/wave-example-0001/unit-01",
     "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
     "blob": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
-    "output_path": "results/lane-01.md",
-    "publication": "example/repo@aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:results/lane-01.md",
+    "output_path": "results/assign-0001.md",
+    "publication": "example/repo@aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:results/assign-0001.md",
     "readback": "VERIFIED",
-    "ancestry": "ancestry:example:0001",
+    "ancestry": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
     "expected_head": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
   },
   "execution_receipt": {
-    "assignment_id": "assign:example:0001",
+    "assignment_id": "assign:0001",
     "status": "COMPLETE",
-    "durable_result": "example/repo@aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:results/lane-01.md",
+    "durable_result": "example/repo@aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:results/assign-0001.md",
     "readback": "VERIFIED",
     "blocker": null
   },
@@ -32,7 +32,7 @@
     "target": "example/repo:refs/heads/op/wave-example-0001/unit-01",
     "expected_head": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
     "occurrence": "VERIFIED",
-    "postcondition": "ref points at claim commit; claim commit ancestry includes wave base",
+    "postcondition": "ref-points-at:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
     "readback": "VERIFIED"
   }
 }

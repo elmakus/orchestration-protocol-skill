@@ -101,9 +101,14 @@ consumer mutation at all.
 Concrete proposed provider/tool/source receipt interfaces (grammar:
 `schemas/metadata.schema.json`): operation identity, expected-head/ancestry
 precondition, target state locator, occurrence classification
-(`VERIFIED | NOT_APPLIED | UNKNOWN`), and exact postcondition/readback
-locator. Predicates:
+(`VERIFIED | NOT_APPLIED | UNKNOWN`), a closed postcondition form, and
+exact postcondition/readback locator. Predicates:
 
+- Postconditions use closed mechanical forms only:
+  `ref-points-at:<40-hex-commit>`, `no-write-performed`, or
+  `path-content-matches:<64-hex-digest>`. Free-form outcome prose is not
+  a receipt and must never reach the coordinator as an alternate semantic
+  channel.
 - A self-labelled success receipt is NOT authenticity/atomicity proof.
 - Missing qualified source, expected-head fence, current authority, or exact
   readback yields NO production action.
